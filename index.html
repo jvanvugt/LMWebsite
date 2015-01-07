@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Theme Template for Bootstrap</title>
+    <title>Levend Monopoly 2015</title>
 
     <!-- Bootstrap core CSS -->
     <link href="/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -39,8 +39,20 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-			<li class="active"><a href="/" >Overzicht</a></li>
-			<li><a href="/invoer">Invoer</a></li>
+			<li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Team<span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="/">Team 1</a></li>
+                <li><a href="/">Team 2</a></li>
+                <li><a href="/">Team 3</a></li>
+                <li><a href="/">Team 4</a></li>
+                <li><a href="/">Team 6</a></li>
+                <li><a href="/">Team 7</a></li>
+                <li><a href="/">Team 8</a></li>
+                <li><a href="/">Team 9</a></li>
+                <li><a href="/">Team 10</a></li>
+              </ul>
+      </li>
 			<li><a href="/admin">Admin</a></li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -54,24 +66,13 @@
         <h1>Jury overzicht</h1>
         <p>Overzicht van de teams</p>
       </div>
-		<div class="dropdown">
-		  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-			Selecteer een team
-			<span class="caret"></span>
-		  </button>
-		  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-			<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Team 1</a></li>
-			<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Team 2</a></li>
-			<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Team 3</a></li>
-			<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Team 4</a></li>
-		  </ul>
-		</div>
 
       <div class="page-header">
         <h1>Teamnaam</h1>
       </div>
 
-	  info over het team komt hier
+	  <button type="button" class="btn btn-lg btn-success">Overzicht</button>
+    <button type="button" class="btn btn-lg btn-default">Invoer</button>
 
 
     </div> <!-- /container -->
