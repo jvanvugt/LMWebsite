@@ -1,4 +1,4 @@
-LMWebstie
+LMWebsite
 =========
 
 Website voor Levend Monopoly
