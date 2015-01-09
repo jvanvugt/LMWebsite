@@ -8,7 +8,6 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
-	<script src="https://cdn.firebase.com/js/client/2.1.0/firebase.js"></script>
 
     <title>Levend Monopoly 2015</title>
 
@@ -43,15 +42,15 @@
 			<li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Team<span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
-                <li><a href="/team">Team 1</a></li>
-                <li><a href="/team">Team 2</a></li>
-                <li><a href="/team">Team 3</a></li>
-                <li><a href="/team">Team 4</a></li>
-                <li><a href="/team">Team 6</a></li>
-                <li><a href="/team">Team 7</a></li>
-                <li><a href="/team">Team 8</a></li>
-                <li><a href="/team">Team 9</a></li>
-                <li><a href="/team">Team 10</a></li>
+                <li><a href="/">Team 1</a></li>
+                <li><a href="/">Team 2</a></li>
+                <li><a href="/">Team 3</a></li>
+                <li><a href="/">Team 4</a></li>
+                <li><a href="/">Team 6</a></li>
+                <li><a href="/">Team 7</a></li>
+                <li><a href="/">Team 8</a></li>
+                <li><a href="/">Team 9</a></li>
+                <li><a href="/">Team 10</a></li>
               </ul>
       </li>
 			<li><a href="/admin">Admin</a></li>
@@ -62,55 +61,23 @@
 
     <div class="container theme-showcase" role="main">
 
-	      <!-- Main jumbotron for a primary marketing message or call to action -->
+      <!-- Main jumbotron for a primary marketing message or call to action -->
       <div class="jumbotron">
-        <h1>Spel overzicht</h1>
-        <p>Overzicht van alle teams</p>
+        <h1>Jury overzicht</h1>
+        <p>Overzicht van de teams</p>
       </div>
+
       <div class="page-header">
-        <h1>Overzicht</h1>
+        <h1>Teamnaam</h1>
       </div>
-	
-	<table class="table table-striped" id="summary-table">
-            <thead>
-              <tr>
-                <th>Naam</th>
-                <th>Jury lid</th>
-                <th>Totaal bedrag</th>
-				<th>Rang</th>
-				<th>Huidige locatie</th>
-				<th>Laatste update</th>
-              </tr>
-            </thead>
-            <tbody>
-            </tbody>
-          </table>
+
+	  <button type="button" class="btn btn-lg btn-success">Overzicht</button>
+    <button type="button" class="btn btn-lg btn-default">Invoer</button>
+
 
     </div> <!-- /container -->
 
-	<script>
-	
-	
-	
-	var firebase = new Firebase("https://cognac-monopoly.firebaseio.com/");
-	var table = document.getElementById('summary-table').getElementsByTagName('tbody')[0];
-	
-	firebase.child("teams/").on("child_added", function(data) {
-		team = data.val();
-		var row = table.insertRow(table.rows.length);
-		row.insertCell(0).appendChild(document.createTextNode(team.balance));
-		row.insertCell(0).appendChild(document.createTextNode(team.judge));
-		row.insertCell(0).appendChild(document.createTextNode(team.name));
-		
-		firebase.child("teams/").on("child_removed", function(removed_data) {
-			if (removed_data.key() == data.key()){
-				table.removeChild(row);
-			}
-		});
-	});
 
-	
-	</script>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
