@@ -85,7 +85,7 @@
 
 	var firebase = new Firebase("https://cognac-monopoly.firebaseio.com/");
   var dropdown = document.getElementById("teams-dropdown");
-	var table = document.getElementById('summary-table').getElementsByTagName('tbody')[0];
+	var table = document.getElementById("summary-table").getElementsByTagName("tbody")[0];
 
 	firebase.child("teams/").on("child_added", function(data) {
 		team = data.val();
