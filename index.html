@@ -87,25 +87,45 @@
   var dropdown = document.getElementById("teams-dropdown");
 	var table = document.getElementById("summary-table").getElementsByTagName("tbody")[0];
 
+
+  function addTeamRow(table, team, index) {
+    var row = table.insertRow(index);
+    row.insertCell(0).appendChild(document.createTextNode("TODO")); // Latest Update
+    row.insertCell(0).appendChild(document.createTextNode("TODO")); // Current location
+    row.insertCell(0).appendChild(document.createTextNode("TODO")); // ranking
+    row.insertCell(0).appendChild(document.createTextNode(team.balance));
+    row.insertCell(0).appendChild(document.createTextNode(team.judge));
+    row.insertCell(0).appendChild(document.createTextNode(team.name));
+    return row;
+  }
+
+
 	firebase.child("teams/").on("child_added", function(data) {
 		team = data.val();
-		var row = table.insertRow(table.rows.length);
-		row.insertCell(0).appendChild(document.createTextNode(team.balance));
-		row.insertCell(0).appendChild(document.createTextNode(team.judge));
-		row.insertCell(0).appendChild(document.createTextNode(team.name));
+		var row = addTeamRow(table, team, table.rows.length);
 
-    var li = document.createElement("li");
+
+    var dropDownItem = document.createElement("li");
     var link = document.createElement("a");
     link.href = "/";
     link.appendChild(document.createTextNode(team.name));
-    li.appendChild(link);
-    dropdown.appendChild(li);
+    dropDownItem.appendChild(link);
+    dropdown.appendChild(dropDownItem);
 
 		firebase.child("teams/").on("child_removed", function(removed_data) {
-			if (removed_data.key() == data.key()){
+			if (removed_data.key() === data.key()){
 				table.removeChild(row);
 			}
 		});
+
+    firebase.child("teams/").on("child_changed", function(changed_data) {
+      if (changed_data.key() === data.key()){
+        team = changed_data.val();
+        var rowIndex = row.rowIndex - 1;
+        table.removeChild(row);
+        row = addTeamRow(table, team, rowIndex);
+      }
+    });
 	});
 
 
