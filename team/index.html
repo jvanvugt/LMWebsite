@@ -8,6 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
+  <script src="https://cdn.firebase.com/js/client/2.1.0/firebase.js"></script>
 
     <title>Levend Monopoly 2015</title>
 
@@ -39,21 +40,12 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-			<li class="dropdown">
+      <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Team<span class="caret"></span></a>
-              <ul class="dropdown-menu" role="menu">
-                <li><a href="/">Team 1</a></li>
-                <li><a href="/">Team 2</a></li>
-                <li><a href="/">Team 3</a></li>
-                <li><a href="/">Team 4</a></li>
-                <li><a href="/">Team 6</a></li>
-                <li><a href="/">Team 7</a></li>
-                <li><a href="/">Team 8</a></li>
-                <li><a href="/">Team 9</a></li>
-                <li><a href="/">Team 10</a></li>
+              <ul id="teams-dropdown"class="dropdown-menu" role="menu">
               </ul>
       </li>
-			<li><a href="/admin">Admin</a></li>
+      <li><a href="/admin">Admin</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -61,23 +53,111 @@
 
     <div class="container theme-showcase" role="main">
 
-      <!-- Main jumbotron for a primary marketing message or call to action -->
+        <!-- Main jumbotron for a primary marketing message or call to action -->
       <div class="jumbotron">
-        <h1>Jury overzicht</h1>
-        <p>Overzicht van de teams</p>
+        <h1>Team overzicht</h1>
+        <p>Overzicht van een team</p>
+      </div>
+      <div id="header" class="page-header">
+        <h1></h1>
       </div>
 
-      <div class="page-header">
-        <h1>Teamnaam</h1>
+      <div class="panel panel-info">
+            <div class="panel-heading">
+              <h3 class="panel-title">Leden</h3>
+            </div>
+            <div id="members-panel" class="panel-body">
+
+            </div>
       </div>
 
-	  <button type="button" class="btn btn-lg btn-success">Overzicht</button>
-    <button type="button" class="btn btn-lg btn-default">Invoer</button>
 
+      <div class="panel panel-info">
+            <div class="panel-heading">
+              <h3 class="panel-title">Bedrag</h3>
+            </div>
+            <div id="balance-panel" class="panel-body">
+
+            </div>
+      </div>
+
+      <div class="panel panel-info">
+            <div class="panel-heading">
+              <h3 class="panel-title">Jurylid</h3>
+            </div>
+            <div id="judge-panel" class="panel-body">
+
+            </div>
+      </div>
+
+      <div class="panel panel-info">
+            <div class="panel-heading">
+              <h3 class="panel-title">Bezochte straten</h3>
+            </div>
+            <div id="streets-panel" class="panel-body">
+
+            </div>
+      </div>
+
+      <div class="panel panel-info">
+            <div class="panel-heading">
+              <h3 class="panel-title">Hotels</h3>
+            </div>
+            <div id="hotel-panel" class="panel-body">
+
+            </div>
+      </div>
+
+      <div class="panel panel-info">
+            <div class="panel-heading">
+              <h3 class="panel-title">Gehaalde opdrachten</h3>
+            </div>
+            <div id="tasks-panel" class="panel-body">
+
+            </div>
+      </div>
 
     </div> <!-- /container -->
 
+  <script>
 
+
+
+  var firebase = new Firebase("https://cognac-monopoly.firebaseio.com/");
+  var dropdown = document.getElementById("teams-dropdown");
+  var header = document.getElementById("header").getElementsByTagName("h1")[0];
+  var content = document.getElementById("content");
+  var membersPanel = document.getElementById("members-panel");
+  var balancePanel = document.getElementById("balance-panel"); // kan rang bij
+  var judgePanel = document.getElementById("judge-panel");
+  var streetsPanel = document.getElementById("streets-panel"); // hier kunnen de hotels bij
+  var tasksPanel = document.getElementById("tasks-panel");
+
+  firebase.child("teams/").on("child_added", function(data) {
+    team = data.val();
+
+    var dropDownItem = document.createElement("li");
+    team.link = document.createElement("a");
+    team.link.href = "/team#" + data.key();
+    team.link.appendChild(document.createTextNode(team.name));
+    dropDownItem.appendChild(team.link.cloneNode(true));
+    dropdown.appendChild(dropDownItem);
+
+    if(data.key() === window.location.hash.substring(1,window.location.hash.length)) {
+      header.innerHTML = team.name;
+      balancePanel.innerHTML += team.balance;
+      judgePanel.innerHTML += team.judge;
+    }
+
+    firebase.child("teams/").on("child_changed", function(changed_data) {
+      if (changed_data.key() === data.key()){
+        team = changed_data.val();
+      }
+    });
+  });
+
+
+  </script>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->

@@ -87,7 +87,6 @@
   var dropdown = document.getElementById("teams-dropdown");
 	var table = document.getElementById("summary-table").getElementsByTagName("tbody")[0];
 
-
   function addTeamRow(table, team, index) {
     var row = table.insertRow(index);
     row.insertCell(0).appendChild(document.createTextNode("TODO")); // Latest Update
@@ -99,13 +98,12 @@
     return row;
   }
 
-
 	firebase.child("teams/").on("child_added", function(data) {
 		team = data.val();
 
     var dropDownItem = document.createElement("li");
     team.link = document.createElement("a");
-    team.link.href = "/";
+    team.link.href = "/team#" + data.key();
     team.link.appendChild(document.createTextNode(team.name));
     dropDownItem.appendChild(team.link.cloneNode(true));
     dropdown.appendChild(dropDownItem);
