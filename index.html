@@ -95,33 +95,33 @@
     row.insertCell(0).appendChild(document.createTextNode("TODO")); // ranking
     row.insertCell(0).appendChild(document.createTextNode(team.balance));
     row.insertCell(0).appendChild(document.createTextNode(team.judge));
-    row.insertCell(0).appendChild(document.createTextNode(team.name));
+    row.insertCell(0).appendChild(team.link);
     return row;
   }
 
 
 	firebase.child("teams/").on("child_added", function(data) {
 		team = data.val();
-		var row = addTeamRow(table, team, table.rows.length);
-
 
     var dropDownItem = document.createElement("li");
-    var link = document.createElement("a");
-    link.href = "/";
-    link.appendChild(document.createTextNode(team.name));
-    dropDownItem.appendChild(link);
+    team.link = document.createElement("a");
+    team.link.href = "/";
+    team.link.appendChild(document.createTextNode(team.name));
+    dropDownItem.appendChild(team.link.cloneNode(true));
     dropdown.appendChild(dropDownItem);
+
+    team.tableRow = addTeamRow(table, team, table.rows.length);
 
 		firebase.child("teams/").on("child_removed", function(removed_data) {
 			if (removed_data.key() === data.key()){
-				table.removeChild(row);
+				table.removeChild(team.tableRow);
 			}
 		});
 
     firebase.child("teams/").on("child_changed", function(changed_data) {
       if (changed_data.key() === data.key()){
         team = changed_data.val();
-        var rowIndex = row.rowIndex - 1;
+        var rowIndex = team.row.rowIndex - 1;
         table.removeChild(row);
         row = addTeamRow(table, team, rowIndex);
       }
