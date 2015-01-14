@@ -42,16 +42,7 @@
           <ul class="nav navbar-nav">
 			<li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Team<span class="caret"></span></a>
-              <ul class="dropdown-menu" role="menu">
-                <li><a href="/team">Team 1</a></li>
-                <li><a href="/team">Team 2</a></li>
-                <li><a href="/team">Team 3</a></li>
-                <li><a href="/team">Team 4</a></li>
-                <li><a href="/team">Team 6</a></li>
-                <li><a href="/team">Team 7</a></li>
-                <li><a href="/team">Team 8</a></li>
-                <li><a href="/team">Team 9</a></li>
-                <li><a href="/team">Team 10</a></li>
+              <ul id="teams-dropdown"class="dropdown-menu" role="menu">
               </ul>
       </li>
 			<li><a href="/admin">Admin</a></li>
@@ -70,7 +61,7 @@
       <div class="page-header">
         <h1>Overzicht</h1>
       </div>
-	
+
 	<table class="table table-striped" id="summary-table">
             <thead>
               <tr>
@@ -89,19 +80,27 @@
     </div> <!-- /container -->
 
 	<script>
-	
-	
-	
+
+
+
 	var firebase = new Firebase("https://cognac-monopoly.firebaseio.com/");
+  var dropdown = document.getElementById("teams-dropdown");
 	var table = document.getElementById('summary-table').getElementsByTagName('tbody')[0];
-	
+
 	firebase.child("teams/").on("child_added", function(data) {
 		team = data.val();
 		var row = table.insertRow(table.rows.length);
 		row.insertCell(0).appendChild(document.createTextNode(team.balance));
 		row.insertCell(0).appendChild(document.createTextNode(team.judge));
 		row.insertCell(0).appendChild(document.createTextNode(team.name));
-		
+
+    var li = document.createElement("li");
+    var link = document.createElement("a");
+    link.href = "/";
+    link.appendChild(document.createTextNode(team.name));
+    li.appendChild(link);
+    dropdown.appendChild(li);
+
 		firebase.child("teams/").on("child_removed", function(removed_data) {
 			if (removed_data.key() == data.key()){
 				table.removeChild(row);
@@ -109,7 +108,7 @@
 		});
 	});
 
-	
+
 	</script>
     <!-- Bootstrap core JavaScript
     ================================================== -->
