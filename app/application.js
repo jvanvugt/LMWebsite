@@ -23,11 +23,11 @@ angular.module("navbarapp", ["controllers"])
 var controllers = angular.module("controllers", ["firebase"]);
 
 controllers.controller("OverzichtCtrl", function OverzichtCtrl($scope, $firebase) {
-  $scope.pageName = "Overzicht";
+  $scope.pageName = "Spel overzicht";
+  $scope.pageDesc = "Overzicht van alle teams";
   
   var ref = new Firebase("https://cognac-monopoly.firebaseio.com/teams");
   var sync = $firebase(ref);
-  // create a synchronized array for use in our HTML code
   $scope.teams = sync.$asArray();
 });
 
