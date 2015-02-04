@@ -1,18 +1,19 @@
-<div class="navbar navbar-inverse">
-        <div class="container">
-            <a class="navbar-brand" href="#">Levend Monopoly</a>
-
-            <div class="nav-collapse">
-                <ul class="nav navbar-nav" id="navigation-tabs">
-                    <li><a href="../overzicht.html">Overzicht</a></li>
-                    <li class="dropdown">
-                      <a href="#" class="dropdown-toggle" data-toggle="dropdown">Team<span class="caret"></span></a>
-                      <ul class=dropdown-menu">
-                        <li><a href="">test</a></li>
-                      </ul>
-                    </li>
-                    <li><a href="../admin.html">Admin</a></li>
-                </ul>
-            </div>
-        </div>
+<div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Levend Monopoly</a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav" id="navigation-tabs">
+        <li><a href="../overzicht.html">Overzicht</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Team<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li ng-repeat="team in teams"><a href="team.html?team={{team.name}}">{{team.name}}</a></li>
+          </ul>
+        </li>
+        <li><a href="../admin.html">Admin</a></li>
+      </ul>
+    </div>
+  </div>
 </div>

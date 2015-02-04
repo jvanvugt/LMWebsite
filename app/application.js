@@ -1,7 +1,10 @@
 "use strict";
 
-angular.module("navbarapp", ["controllers"])
-  .directive("bootstrapNavbar", function() {
+var module = angular.module("cognac-monopoly", ["firebase"]);
+
+module.constant('FIREBASE_URL','https://cognac-monopoly.firebaseio.com/');
+
+module.directive("bootstrapNavbar", function() {
   return {
     restrict: "E",
     replace: true,
@@ -20,21 +23,28 @@ angular.module("navbarapp", ["controllers"])
   }});
 ;
 
-var controllers = angular.module("controllers", ["firebase"]);
+module.factory("teamlist", function($firebase, FIREBASE_URL) {
 
-controllers.controller("OverzichtCtrl", function OverzichtCtrl($scope, $firebase) {
-  $scope.pageName = "Spel overzicht";
-  $scope.pageDesc = "Overzicht van alle teams";
+  var sync = $firebase(new Firebase(FIREBASE_URL+"teams"));
+  return sync.$asArray();
   
-  var ref = new Firebase("https://cognac-monopoly.firebaseio.com/teams");
-  var sync = $firebase(ref);
-  $scope.teams = sync.$asArray();
 });
 
-controllers.controller("TeamCtrl", function TeamCtrl($scope) {
+module.controller("OverzichtCtrl", function OverzichtCtrl($scope, $firebase, FIREBASE_URL, teamlist) {
+  $scope.teams = teamlist;
+
+  $scope.pageName = "Spel overzicht";
+  $scope.pageDesc = "Overzicht van alle teams";
+});
+
+module.controller("TeamCtrl", function TeamCtrl($scope, $firebase, FIREBASE_URL, teamlist) {
+  $scope.teams = teamlist;
+
   $scope.pageName = "Team";
 });
 
-controllers.controller("AdminCtrl", function AdminCtrl($scope) {
+module.controller("AdminCtrl", function AdminCtrl($scope, $firebase, FIREBASE_URL, teamlist) {
+  $scope.teams = teamlist;
+
   $scope.pageName = "Admin";
 });
