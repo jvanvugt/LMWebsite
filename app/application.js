@@ -41,6 +41,11 @@ module.controller("TeamCtrl", function TeamCtrl($scope, $firebase, FIREBASE_URL,
   $scope.teams = teamlist;
 
   $scope.pageName = "Team";
+  $scope.pageDesc = "Overzicht van een team";
+  
+  var teamname = "-JfDtrADkuSmewWNGOB-";
+  var sync = $firebase(new Firebase(FIREBASE_URL+"teams/"+teamname));
+  $scope.team = sync.$asObject();
 });
 
 module.controller("AdminCtrl", function AdminCtrl($scope, $firebase, FIREBASE_URL, teamlist) {
