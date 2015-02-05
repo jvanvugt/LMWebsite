@@ -2,8 +2,8 @@
 
 var monopoly = angular.module("monopoly", ["ngRoute", "monopolyControllers", "firebase"]);
 
-monopoly.config(['$routeProvider',
-  function($routeProvider) {
+monopoly.config(function($locationProvider, $routeProvider) {
+    $locationProvider.html5Mode(true);
     $routeProvider.
       when('/team/:teamId', {
         templateUrl: 'partials/team.html',
@@ -17,8 +17,7 @@ monopoly.config(['$routeProvider',
         templateURL: 'partials/overzicht.html',
         controller: 'OverzichtCtrl'
       });
-    $locationProvider.html5Mode(true);
-  }]);
+  });
 
 monopoly.directive("bootstrapNavbar", function() {
   return {
