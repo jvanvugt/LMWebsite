@@ -147,12 +147,12 @@
 
     var dropDownItem = document.createElement("li");
     team.link = document.createElement("a");
-    team.link.href = "/team#" + data.key();
+    team.link.href = "/team?" + data.key();
     team.link.appendChild(document.createTextNode(team.name));
     dropDownItem.appendChild(team.link.cloneNode(true));
     dropdown.appendChild(dropDownItem);
 
-    if(data.key() === window.location.hash.substring(1,window.location.hash.length)) {
+    if(data.key() === window.location.search.substring(1,window.location.search.length - 1)) {
       header.innerHTML = team.name;
       balancePanel.innerHTML += team.balance;
       judgePanel.innerHTML += team.judge;

@@ -103,7 +103,7 @@
 
     var dropDownItem = document.createElement("li");
     team.link = document.createElement("a");
-    team.link.href = "/team#" + data.key();
+    team.link.href = "/team?" + data.key();
     team.link.appendChild(document.createTextNode(team.name));
     dropDownItem.appendChild(team.link.cloneNode(true));
     dropdown.appendChild(dropDownItem);
