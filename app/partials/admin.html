@@ -1,0 +1,16 @@
+<h2>Nieuwe gebruiker toevoegen</h2>
+<form>
+  <div class='form-group'>
+    <label for='userName'>Naam</label>
+    <input type='text' class='form-control' id='userName' placeholder='Voer naam in' ng-model='user.name'>
+  </div>
+  <div class='form-group'>
+    <label for='userEmail'>Emailadres</label>
+    <input type='text' class='form-control' id='userEmail' placeholder='Voer emailadres in' ng-model='user.mail'>
+  </div>
+  <div class='form-group'>
+    <label for='userPhone'>Telefoonnummer</label>
+    <input type='text' class='form-control' id='userPhone' placeholder='Voer telefoonnummer in' ng-model='user.phone'>
+  </div>
+  <button type='submit' class='btn btn-primary' ng-click='addUser(user)'>Toevoegen</button>
+</form>

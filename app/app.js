@@ -3,7 +3,7 @@
 var monopoly = angular.module("monopoly", ["ngRoute", "monopolyControllers", "firebase"]);
 
 monopoly.config(function($locationProvider, $routeProvider) {
-    $locationProvider.html5Mode(true);
+    //$locationProvider.html5Mode(true);
     $routeProvider.
       when('/team/:teamId', {
         templateUrl: 'partials/team.html',
@@ -13,9 +13,15 @@ monopoly.config(function($locationProvider, $routeProvider) {
         templateUrl: 'partials/overzicht.html',
         controller: 'OverzichtCtrl'
       }).
-      otherwise({
-        templateURL: 'partials/overzicht.html',
-        controller: 'OverzichtCtrl'
+      when('/admin', {
+        templateUrl: 'partials/admin.html',
+        controller: 'AdminCtrl'
+      }).
+      when('/error', {
+        templateURl: 'partials/error.html',
+      }).
+      otherwise( {
+        redirectTo: '/error'
       });
   });
 
