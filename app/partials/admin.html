@@ -24,7 +24,7 @@
 <form>
   <div class='form-group'>
     <label for='userDelete'>Gebruiker:</label>
-    <select class='form-control' id='userDelete' ng-model='userForDelete'> 
+    <select class='form-control' id='userDelete' ng-model='userForDelete'>
       <option ng-repeat='user in users' value='{{user.$id}}'>{{user.name}}</option>
     </select>
   </div>
@@ -39,7 +39,7 @@
   </div>
   <div class='form-group'>
     <label for='judge'>Jurylid:</label>
-    <select class='form-control' id='judge' ng-model='team.judge'> 
+    <select class='form-control' id='judge' ng-model='team.judge'>
       <option ng-repeat='user in users | filter: judgeFilter' value='{{user.$id}}'>{{user.name}}</option>
     </select>
   </div>
@@ -56,9 +56,29 @@
 <form>
   <div class='form-group'>
     <label for='teamDelete'>Team:</label>
-    <select class='form-control' id='teamDelete' ng-model='teamForDelete'> 
+    <select class='form-control' id='teamDelete' ng-model='teamForDelete'>
       <option ng-repeat='team in teams' value='{{team.$id}}'>{{team.name}}</option>
     </select>
   </div>
   <button type='submit' class='btn btn-primary' ng-click='deleteTeam(teamForDelete); teamForDelete=""'>Verwijderen</button>
+</form>
+
+<h2>Stad toevoegen</h2>
+<form>
+  <div class='form-group'>
+  <label for='cityAdd'>Stad:</label>
+  <input type='text' class='form-control' id='cityName' placeholder='Voer stadsnaam in' ng-model='cityToAdd.name'>
+  </div>
+  <button type='submit' class='btn btn-primary' ng-click='addCity(cityToAdd); cityToAdd={}'>Toevoegen</button>
+</form>
+
+<h2>Stad verwijderen</h2>
+<form>
+  <div class='form-group'>
+  <label for='cityDelete'>Stad:</label>
+  <select class='form-control' id='cityDelete' ng-model='cityForDelete'>
+    <option ng-repeat='city in cities' value='{{city.$id}}'>{{city.name}}</option>
+  </select>
+  </div>
+  <button type='submit' class='btn btn-primary' ng-click='deleteCity(cityForDelete); cityForDelete=""'>Verwijderen</button>
 </form>
