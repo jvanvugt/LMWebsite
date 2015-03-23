@@ -1,102 +1,105 @@
+<div class='col-md-6'>
+  <div class="panel panel-info">
+    <div class="panel-heading">
+      <h3 class="panel-title">Informatie</h3>
+    </div>
 
-<div class="panel panel-info">
-      <div class="panel-heading">
-	<h3 class="panel-title">Leden</h3>
-      </div>
-      <div id="members-panel" class="panel-body">
-        <table class="table">
-          <thead>
-            <th>Naam</th>
-            <th>Telefoon</th>
-            <th>Email</th>
-            <th>Vereniging</th>
-          </thead>
-          <tr ng-repeat="member in members">
-            <td>{{member.name}}</td>
-            <td>{{member.phone}} <span ng-hide="member.smartphone">(niet smart)</span></td>
-            <td>{{member.mail}}</td>
-            <td>{{member.society}}</td>
-          </tr>
-        </table>
-      </div>
+    <div id="info-panel" class="panel-body">
+
+    <p><strong>Bedrag:</strong> {{team.balance}}</p>
+    <p><strong>Jurylid:</strong> {{teamjudge.name}}</p>
+
+    </div>
+  </div>
 </div>
 
+<div class="col-md-6">
+  <div class="panel panel-info">
+    <div class="panel-heading">
+    <h3 class="panel-title">Leden</h3>
+    </div>
 
-<div class="panel panel-info">
-      <div class="panel-heading">
-	<h3 class="panel-title">Bedrag</h3>
-      </div>
-      <div id="balance-panel" class="panel-body">
-	{{team.balance}}
-      </div>
+    <div id="members-panel" class="panel-body">
+
+      <table class="table">
+        <thead>
+          <th>Naam</th>
+          <th>Telefoon</th>
+          <th>Email</th>
+          <th>Vereniging</th>
+        </thead>
+        <tr ng-repeat="member in members">
+          <td>{{member.name}}</td>
+          <td>{{member.phone}} <span ng-hide="member.smartphone">(niet smart)</span></td>
+          <td>{{member.mail}}</td>
+          <td>{{member.society}}</td>
+        </tr>
+      </table>
+
+    </div>
+  </div>
 </div>
 
-<div class="panel panel-info">
-      <div class="panel-heading">
-	<h3 class="panel-title">Jurylid</h3>
-      </div>
-      <div id="judge-panel" class="panel-body">
-        {{teamjudge.name}}
-      </div>
+<div class='clearfix'></div>
+<hr>
+
+<div class="col-md-12">
+  <div class="panel panel-info">
+        <div class="panel-heading">
+  	<h3 class="panel-title">Bezochte straten</h3>
+        </div>
+        <div id="streets-panel" class="panel-body">
+          <table class="table">
+            <thead>
+              <th>Naam</th>
+              <th>Stad</th>
+              <th>Hotel</th>
+            </thead>
+            <tr ng-repeat="street in streets | filter:visitedStreetFilter">
+              <th>{{street.name}}</th>
+              <th ng-repeat="city in cities | filter:{$id: street.city_id}">{{city.name}}</th>
+              <th><span ng-show="street.hotel_team_id" class="glyphicon glyphicon-home"></span></th>
+            </tr>
+          </table>
+        </div>
+  </div>
 </div>
 
-<div class="panel panel-info">
-      <div class="panel-heading">
-	<h3 class="panel-title">Bezochte straten</h3>
-      </div>
-      <div id="streets-panel" class="panel-body">
-        <table class="table">
-          <thead>
-            <th>Naam</th>
-            <th>Stad</th>
-            <th>Hotel</th>
-          </thead>
-          <tr ng-repeat="street in streets | filter:visitedStreetFilter">
-            <th>{{street.name}}</th>
-            <th ng-repeat="city in cities | filter:{$id: street.city_id}">{{city.name}}</th>
-            <th><span ng-show="street.hotel_team_id" class="glyphicon glyphicon-home"></span></th>
-          </tr>
-        </table>
-      </div>
+<div class='clearfix'></div>
+<hr>
+
+<div class="col-md-6">
+  <h3>Bezochte straat toevoegen</h3>
+  <form>
+    <div class='form-group'>
+      <select class='form-control' id='street' ng-model='streetForVisitCityId'>
+        <option ng-repeat='city in cities' value='{{city.$id}}'>{{city.name}}</option>
+      </select>
+      <select ng-show='streetForVisitCityId' class='form-control' id='street' ng-model='streetForVisit'>
+        <option ng-repeat='street in streets | filter:{city_id: streetForVisitCityId}' value='{{street.$id}}'>{{street.name}}</option>
+      </select>
+    </div>
+    <div class='form-group'>
+      <button type='submit' class='btn btn-primary' ng-click='visitStreet(streetForVisit); streetForVisit={}'>Toevoegen</button>
+    </div>
+  </form>
 </div>
 
-<div class="container">
-  <div class="col-md-6">
-
-<h2>Bezochte straat toevoegen</h2>
-<form>
-  <div class='form-group'>
-    <select class='form-control' id='street' ng-model='streetForVisitCityId'>
-      <option ng-repeat='city in cities' value='{{city.$id}}'>{{city.name}}</option>
-    </select>
-    <select ng-show='streetForVisitCityId' class='form-control' id='street' ng-model='streetForVisit'> 
-      <option ng-repeat='street in streets | filter:{city_id: streetForVisitCityId}' value='{{street.$id}}'>{{street.name}}</option>
-    </select>
-  </div>
-  <div class='form-group'>
-    <button type='submit' class='btn btn-primary' ng-click='visitStreet(streetForVisit); streetForVisit={}'>Toevoegen</button>
-  </div>
-</form>
-
-  </div>
-  <div class="col-md-6">
-
-<h2>Hotel toevoegen</h2>
-<form>
-  <div class='form-group'>
-    <select class='form-control' id='street' ng-model='streetForHotelCityId'>
-      <option ng-repeat='city in cities' value='{{city.$id}}'>{{city.name}}</option>
-    </select>
-    <select ng-show='streetForHotelCityId' class='form-control' id='street' ng-model='streetForHotel'> 
-      <option ng-repeat='street in streets | filter:{city_id: streetForHotelCityId}' value='{{street.$id}}'>{{street.name}}</option>
-    </select>
-  </div>
-  <div class='form-group'>
-    <button type='submit' class='btn btn-primary' ng-click='hotelStreet(streetForHotel); streetForHotel={}'>Toevoegen</button>
-  </div>
-</form>
-
-  </div>
+<div class="col-md-6">
+  <h3>Hotel toevoegen</h3>
+  <form>
+    <div class='form-group'>
+      <select class='form-control' id='street' ng-model='streetForHotelCityId'>
+        <option ng-repeat='city in cities' value='{{city.$id}}'>{{city.name}}</option>
+      </select>
+      <select ng-show='streetForHotelCityId' class='form-control' id='street' ng-model='streetForHotel'>
+        <option ng-repeat='street in streets | filter:{city_id: streetForHotelCityId}' value='{{street.$id}}'>{{street.name}}</option>
+      </select>
+    </div>
+    <div class='form-group'>
+      <button type='submit' class='btn btn-primary' ng-click='hotelStreet(streetForHotel); streetForHotel={}'>Toevoegen</button>
+    </div>
+  </form>
 </div>
 
 <div class="panel panel-info">
@@ -114,10 +117,15 @@
           <tr ng-repeat="task in tasks | filter:completedTaskFilter">
             <th>{{task.name}}</th>
             <th ng-repeat="team in task.completed | filter: {$id: teamId}">
-               {{team.repeats}}/{{task.repeatable}}
-               <button type="button" class="btn btn-success btn-xs" ng-click="incrementTask(task.$id)"><span class="glyphicon glyphicon-plus"></span></button>
+               <button type="button" class="btn btn-danger btn-xs" ng-click="decrementTask(task.$id)"><span class="glyphicon glyphicon-minus"></span></button>
+               {{team.repeats}}
+               /
+               <span ng-hide="task.rankable">{{task.repeatable}}</span>
+               <span ng-show="task.rankable">1</span>
+               <span ng-hide="task.rankable"><button type="button" class="btn btn-success btn-xs" ng-click="incrementTask(task.$id)"><span class="glyphicon glyphicon-plus"></span></button></span>
             </th>
-            <th>{{task.reward}}</th>
+            <th ng-hide="task.rankable">{{task.reward}}</th>
+            <th ng-show="task.rankable">{{task.rank1_reward}}, {{task.rank2_reward}}, {{task.rank3_reward}}</th>
             <th ng-repeat="team in task.completed | filter: {$id: teamId}">
               {{team.rank_value}}
             </th>
@@ -127,14 +135,14 @@
 </div>
 
 
-<h2>Gehaalde opdracht toevoegen</h2>
+<h3>Gehaalde opdracht toevoegen</h3>
 <form>
   <div class='form-group'>
     <select class='form-control' id='task' ng-model='taskForCompletion'>
       <option ng-repeat='task in tasks' value='{{task.$id}}'>{{task.name}}</option>
     </select>
   </div>
-  <div class='form-group' ng-show='taskForCompletion.rankable'>
+  <div class='form-group' ng-show='isRankable(taskForCompletion)'>
     <input type='text' class='form_control' placeholder='Waarde voor rangorde' ng-model='taskValue'>
   </div>
   <div class='form-group'>

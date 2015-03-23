@@ -79,8 +79,19 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
     });
   };
 
+  $scope.decrementTask = function(taskId) {
+    var ref = new Firebase(FIREBASE_URL+'tasks/'+taskId+'/completed/'+teamId+'/repeats')
+    ref.transaction(function(current) {
+      return current-1;
+    });
+  };
+  
   $scope.completedTaskFilter = function(task) {
     return task.completed && task.completed[teamId] && task.completed[teamId].repeats > 0;
+  };
+
+  $scope.isRankable = function(task) {
+    return $scope.tasks.$getRecord(task) && $scope.tasks.$getRecord(task).rankable;
   };
 });
 
