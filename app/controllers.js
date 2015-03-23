@@ -8,6 +8,16 @@ monopolyControllers.controller('NavBarCtrl', function($scope, $firebase, FIREBAS
   $scope.teams = sync.$asArray();
 });
 
+monopolyControllers.factory('WithFilterableId', function($FirebaseArray, $firebaseUtils) {
+   return $FirebaseArray.$extendFactory({
+       $$added:  function(snap) {
+           var rec = $FirebaseArray.prototype.$$added.call(this, snap);
+           rec._id = rec.$id;
+           return rec;
+       }
+   });
+});
+
 monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, $firebase, FIREBASE_URL) {
 
   var sync = $firebase(new Firebase(FIREBASE_URL+'teams'));
@@ -17,21 +27,61 @@ monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, $
   $scope.pageDesc = 'Overzicht van alle teams';
 });
 
-monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParams, $firebase, FIREBASE_URL) {
+monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParams, $firebase, FIREBASE_URL, WithFilterableId) {
   $scope.pageName = 'Team';
   $scope.pageDesc = 'Overzicht van een team';
 
   teamId = $routeParams.teamId;
   var ref = new Firebase(FIREBASE_URL+'teams/'+teamId);
   $scope.team = $firebase(ref).$asObject();
+  $scope.team.$loaded().then(function() {
+   $scope.teamjudge = $firebase(new Firebase(FIREBASE_URL+'users/'+$scope.team.judge)).$asObject();
+  });
+
   $scope.members = [];
   ref.child('members').on('value', function(snap) {
     for (var member in snap.val()) {
-      console.log(member);
       $scope.members.push($firebase(new Firebase(FIREBASE_URL+'users/'+member)).$asObject());
     };
   });
+
+  $scope.cities = $firebase(new Firebase(FIREBASE_URL+'cities'), {arrayFactory: WithFilterableId}).$asArray();
+
+  $scope.streets = $firebase(new Firebase(FIREBASE_URL+'streets'), {arrayFactory: WithFilterableId}).$asArray();
   
+  var tasksync = $firebase(new Firebase(FIREBASE_URL+'tasks'));
+  $scope.tasks = tasksync.$asArray();
+  
+  $scope.visitStreet = function(street) {
+    ref.child('locations').child(street).child('visited').set(true);
+    new Firebase(FIREBASE_URL+'streets').child(street).child('visitors').child(teamId).set(true);
+  };
+
+  $scope.hotelStreet = function(street) {
+    ref.child('locations').child(street).child('hotel').set(true);
+    new Firebase(FIREBASE_URL+'streets/'+street+'/hotel_team_id').set(teamId);
+  };
+
+  $scope.visitedStreetFilter = function(street) {
+    return street.visitors && street.visitors[teamId]; 
+  };
+
+  $scope.completeTask = function(taskId,taskValue) {
+    if (taskValue)
+      new Firebase(FIREBASE_URL+'tasks/'+taskId+'/completed/'+teamId+'/rank_value').set(taskValue);
+    new Firebase(FIREBASE_URL+'tasks/'+taskId+'/completed/'+teamId+'/repeats').set(1);
+  };
+
+  $scope.incrementTask = function(taskId) {
+    var ref = new Firebase(FIREBASE_URL+'tasks/'+taskId+'/completed/'+teamId+'/repeats')
+    ref.transaction(function(current) {
+      return current+1;
+    });
+  };
+
+  $scope.completedTaskFilter = function(task) {
+    return task.completed && task.completed[teamId] && task.completed[teamId].repeats > 0;
+  };
 });
 
 monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase, FIREBASE_URL) {
@@ -58,7 +108,6 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
   };
 
   $scope.eligibleMemberFilter = function (user ) {
-
     return !$scope.judgeFilter(user) && !user.team;
   };
 
@@ -115,7 +164,8 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
   }
 
   $scope.addStreet = function(street) {
-    new Firebase(FIREBASE_URL+'streets').push(street);
+    var street_id = new Firebase(FIREBASE_URL+'streets').push(street).key();
+    new Firebase(FIREBASE_URL+'cities/'+street.city_id+'/streets/'+street_id).set(true);
   }
 
   $scope.deleteStreet = function(streetId) {
