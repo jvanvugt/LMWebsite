@@ -191,7 +191,24 @@
 
 <div class='clearfix'></div>
 <hr>
-
+<div class='col-md-6'>
+  <h3>Straat onbezoeken</h3>
+  <form>
+    <div class='form-group'>
+      <label for='teamUnvisit'>Team:</label>
+      <select class='form-control' id='teamUnvisit' ng-model='teamIdUnvisit'>
+        <option ng-repeat='team in teams' value='{{team.$id}}'>{{team.name}}</option>
+      </select>
+    </div>
+    <div class='form-group' ng-show='teamIdUnvisit'>
+      <label for='streetUnvisit'>Straat:</label>
+      <select class='form-control' id='streetUnvisit' ng-model='streetIdUnvisit'>
+        <option ng-repeat='street in streets | filter: visitedByTeamFilter' value='{{street.$id}}'>{{street.name}}, <span ng-repeat='city in cities | filter: {$id: street.city_id}'>{{city.name}}</span></option>
+      </select>
+    </div>
+      <button type='submit' class='btn btn-primary' ng-click='unvisitStreet(streetIdUnvisit, teamIdUnvisit); teamIdUnvisit=""; streetIdUnvisit=""'>Onbezoeken</button>
+  </form>
+</div>
 <div class=col-md-12>
 <h2>Opdrachten & kanskaarten</h2>
 </div>

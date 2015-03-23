@@ -109,6 +109,10 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
   var cardsync = $firebase(new Firebase(FIREBASE_URL+'cards'));
   $scope.cards = cardsync.$asArray();
 
+  $scope.visitedByTeamFilter = function(street) {
+    return street && street.visitors && street.visitors[$scope.teamIdUnvisit];
+  };
+
   $scope.judgeFilter = function (user) {
     return user.roles && user.roles.judge;
   };
