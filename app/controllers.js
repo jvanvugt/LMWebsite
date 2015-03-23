@@ -123,9 +123,6 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
   }
 
   $scope.addTask = function(task) {
-    task.reward = parseInt(task.reward);
-    task.prerequisites = "";
-    console.log(task);
     new Firebase(FIREBASE_URL+'tasks').push(task);
   }
 

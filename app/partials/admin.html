@@ -17,6 +17,13 @@
       <input type='checkbox' id='userJudge' ng-model='user.roles.judge'> Jurylid?
     </label>
   </div>
+
+  <div class='checkbox'>
+    <label>
+      <input type='checkbox' id='userSmarthphone' ng-model='user.smartphone'> Smartphone?
+    </label>
+  </div>
+
   <button type='submit' class='btn btn-primary' ng-click='addUser(user); user={}'>Toevoegen</button>
 </form>
 
@@ -46,7 +53,7 @@
   <div class='form-group'>
     <label for='teamMembers'>Leden:</label>
     <select id='teamMembers' multiple='multiple' height='500px' ng-model='teamMembers'>
-      <option ng-repeat='user in users | filter: eligibleMemberFilter' value="{{user.$id}}">{{user.name}}</option>
+      <option ng-repeat='user in users | filter: eligibleMemberFilter' value='{{user.$id}}'>{{user.name}}</option>
     </select>
   </div>
   <button type='submit' class='btn btn-primary' ng-click='addTeam(team, teamMembers); team={}'>Toevoegen</button>
@@ -92,8 +99,8 @@
     <select class='form-control' id='streetLocation' ng-model='streetForAdd.city_id'>
       <option ng-repeat='city in cities' value='{{city.$id}}'>{{city.name}}</option>
     </select>
-    </div>
-    <button type='submit' class='btn btn-primary' ng-click='addStreet(streetForAdd); streetForAdd={}'>Toevoegen</button>
+  </div>
+  <button type='submit' class='btn btn-primary' ng-click='addStreet(streetForAdd); streetForAdd={}'>Toevoegen</button>
 </form>
 
 <h2>Straat verwijderen</h2>
@@ -103,8 +110,8 @@
     <select class='form-control' id='streetNameRemove' ng-model='streetForDelete'>
       <option ng-repeat='street in streets' value='{{street.$id}}'>{{street.name}}</option>
     </select>
-    <button type='submit' class='btn btn-primary' ng-click='deleteStreet(streetForDelete); streetForDelete=""'>Verwijderen</button>
   </div>
+    <button type='submit' class='btn btn-primary' ng-click='deleteStreet(streetForDelete); streetForDelete=""'>Verwijderen</button>
 </form>
 
 <h2>Opdracht toevoegen</h2>
@@ -112,23 +119,30 @@
   <div class='form-group'>
     <label for='taskNameAdd'>Naam:</label>
     <input type='text' class='form-control' id='taskNameAdd' placeholder='Voer de naam van de opdracht in' ng-model='task.name'>
-
-    <label for='taskRewardAdd'>Beloning (in €):</label>
-    <input type='text' class='form-control' id='taskRewardAdd' placeholder='Voer de beloning voor de opdracht in' ng-model='task.reward'>
-
-
-    <div class='checkbox'>
+  </div>
+  <div class='checkbox'>
       <label>
-        <input type='checkbox' id='taskRepeatableAdd' ng-model='task.repeatable'> Herhaalbaar?
+        <input type='checkbox' id='taskRankableAdd' ng-model='task.rankable'> Rangorde?
       </label>
+  </div>
+
+    <div ng-show='task.rankable' class='form-group'>
+      <label for='taskReward1Add'>1e prijs:</label>
+      <input type='number' class='form-control' min='1' id='taskReward1Add' ng-model='task.rank1_reward'>
+      <label for='taskReward2Add'>2e prijs:</label>
+      <input type='number' class='form-control' min='1' id='taskReward2Add' ng-model='task.rank2_reward'>
+      <label for='taskReward3Add'>3e prijs:</label>
+      <input type='number' class='form-control' min='1' id='taskReward3Add' ng-model='task.rank3_reward'>
     </div>
 
-    <div class='checkbox'>
-      <label>
-        <input type='checkbox' id='taskImmediateAdd' ng-model='task.immediate'> Meteen uitbetaald?
-      </label>
+    <div ng-hide='task.rankable' class='form-group'>
+      <label for='taskRewardAdd'>Beloning (in €):</label>
+      <input type='number' class='form-control' id='taskRewardAdd' ng-model='task.reward'>
+      <label for='taskRepeatableAdd'>Hoevaak herhaalbaar?</label>
+      <input type='number' class='form-control' min='1' id='taskRepeatableAdd' ng-model='task.repeatable'>
     </div>
 
+  <div class='form-group'>
     <button type='submit' class='btn btn-primary' ng-click='addTask(task); task={}'>Toevoegen</button>
   </div>
 </form>
@@ -140,6 +154,6 @@
       <select class='form-control' id='taskRemove' ng-model='taskForDelete'>
         <option ng-repeat='task in tasks' value='{{task.$id}}'>{{task.name}}</option>
       </select>
-      <button type='submit' class='btn btn-primary' ng-click='deleteTask(taskForDelete); taskForDelete=""'>Verwijderen</button>
     </div>
+      <button type='submit' class='btn btn-primary' ng-click='deleteTask(taskForDelete); taskForDelete=""'>Verwijderen</button>
   </form>
