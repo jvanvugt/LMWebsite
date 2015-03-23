@@ -1,16 +1,26 @@
-<h2>Nieuwe gebruiker toevoegen</h2>
+<div class=col-md-12>
+<h2>Teams & Gebruikers</h2>
+</div>
+<div class='col-md-6'>
+<h3>Nieuwe gebruiker toevoegen</h3>
 <form>
   <div class='form-group'>
-    <label for='userName'>Naam</label>
+    <label for='userName'>Naam:</label>
     <input type='text' class='form-control' id='userName' placeholder='Voer naam in' ng-model='user.name'>
   </div>
   <div class='form-group'>
-    <label for='userEmail'>Emailadres</label>
+    <label for='userEmail'>Emailadres:</label>
     <input type='text' class='form-control' id='userEmail' placeholder='Voer emailadres in' ng-model='user.mail'>
   </div>
   <div class='form-group'>
-    <label for='userPhone'>Telefoonnummer</label>
+    <label for='userPhone'>Telefoonnummer:</label>
     <input type='text' class='form-control' id='userPhone' placeholder='Voer telefoonnummer in' ng-model='user.phone'>
+  </div>
+  <div class='form-group'>
+    <label for='userSociety'>Vereniging:</label>
+    <select class='form-control' id='userSociety' ng-model='user.society'>
+      <option ng-repeat='society in societies'>{{society.$id}}</option>
+    </select>
   </div>
   <div class='checkbox'>
     <label>
@@ -26,8 +36,10 @@
 
   <button type='submit' class='btn btn-primary' ng-click='addUser(user); user={}'>Toevoegen</button>
 </form>
+</div>
 
-<h2>Gebruiker verwijderen</h2>
+<div class='col-md-6'>
+<h3>Gebruiker verwijderen</h3>
 <form>
   <div class='form-group'>
     <label for='userDelete'>Gebruiker:</label>
@@ -37,8 +49,13 @@
   </div>
   <button type='submit' class='btn btn-primary' ng-click='deleteUser(userForDelete); userForDelete=""'>Verwijderen</button>
 </form>
+</div>
 
-<h2>Nieuw team toevoegen</h2>
+<div class='clearfix'></div>
+<hr>
+
+<div class='col-md-6'>
+<h3>Nieuw team toevoegen</h3>
 <form>
   <div class='form-group'>
     <label for='teamName'>Naam:</label>
@@ -58,8 +75,10 @@
   </div>
   <button type='submit' class='btn btn-primary' ng-click='addTeam(team, teamMembers); team={}'>Toevoegen</button>
 </form>
+</div>
 
-<h2>Team verwijderen</h2>
+<div class='col-md-6'>
+<h3>Team verwijderen</h3>
 <form>
   <div class='form-group'>
     <label for='teamDelete'>Team:</label>
@@ -69,8 +88,55 @@
   </div>
   <button type='submit' class='btn btn-primary' ng-click='deleteTeam(teamForDelete); teamForDelete=""'>Verwijderen</button>
 </form>
+</div>
 
-<h2>Stad toevoegen</h2>
+<div class='clearfix'></div>
+<hr>
+
+<div class='col-md-6'>
+<h3>Gebruiker aan team toevoegen</h3>
+<form>
+  <div class='form-group'>
+    <label for='memberTeamAdd'>Team:</label>
+    <select class='form-control' id='memberTeamAdd' ng-model='teamMemberForAdd'>
+      <option ng-repeat='team in teams' value='{{team.$id}}'>{{team.name}}</option>
+    </select>
+  </div>
+  <div class='form-group'>
+    <label for='memberAdd'>Gebruiker:</label>
+    <select class='form-control' id='memberAdd' ng-model='memberForAdd'>
+      <option ng-repeat='user in users | filter: eligibleMemberFilter' value='{{user.$id}}'>{{user.name}}</option>
+    </select>
+  </div>
+  <button type='submit' class='btn btn-primary' ng-click='addMember(memberForAdd, teamMemberForAdd); memberForAdd=""'>Toevoegen</button>
+</form>
+</div>
+
+<div class='col-md-6'>
+<h3>Gebruiker uit team verwijderen</h3>
+<form>
+  <div class='form-group'>
+    <label for='teamMemberTeamDelete'>Team:</label>
+    <select class='form-control' id='teamMemberTeamDelete' ng-model='teamId'>
+      <option ng-repeat='team in teams' value='{{team.$id}}'>{{team.name}}</option>
+    </select>
+  </div>
+  <div ng-show='teamId' class='form-group'>
+      <label for='teamMemberDelete'>Lid:</label>
+      <select class='form-control' id='teamMemberDelete' ng-model='memberId'>
+        <option ng-repeat='user in users | filter:{team: teamId}' value='{{user.$id}}'>{{user.name}}</option>
+      </select>
+  </div>
+  <button type='submit' class='btn btn-primary' ng-click='deleteTeamMember(memberId, teamId); teamId=""; memberId=""'>Verwijderen</button>
+</form>
+</div>
+<div class='clearfix'></div>
+<hr>
+<div class=col-md-12>
+<h2>Steden & Straten</h2>
+</div>
+<div class='col-md-6'>
+<h3>Stad toevoegen</h3>
 <form>
   <div class='form-group'>
   <label for='cityAdd'>Stad:</label>
@@ -78,8 +144,10 @@
   </div>
   <button type='submit' class='btn btn-primary' ng-click='addCity(cityToAdd); cityToAdd={}'>Toevoegen</button>
 </form>
+</div>
 
-<h2>Stad verwijderen</h2>
+<div class='col-md-6'>
+<h3>Stad verwijderen</h3>
 <form>
   <div class='form-group'>
   <label for='cityDelete'>Stad:</label>
@@ -89,8 +157,12 @@
   </div>
   <button type='submit' class='btn btn-primary' ng-click='deleteCity(cityForDelete); cityForDelete=""'>Verwijderen</button>
 </form>
+</div>
+<div class='clearfix'></div>
+<hr>
 
-<h2>Straat toevoegen</h2>
+<div class='col-md-6'>
+<h3>Straat toevoegen</h3>
 <form>
   <div class='form-group'>
     <label for='streetName'>Straatnaam:</label>
@@ -102,8 +174,10 @@
   </div>
   <button type='submit' class='btn btn-primary' ng-click='addStreet(streetForAdd); streetForAdd={}'>Toevoegen</button>
 </form>
+</div>
 
-<h2>Straat verwijderen</h2>
+<div class='col-md-6'>
+<h3>Straat verwijderen</h3>
 <form>
   <div class='form-group'>
     <label for='streetNameRemove'>Straat:</label>
@@ -113,8 +187,16 @@
   </div>
     <button type='submit' class='btn btn-primary' ng-click='deleteStreet(streetForDelete); streetForDelete=""'>Verwijderen</button>
 </form>
+</div>
 
-<h2>Opdracht toevoegen</h2>
+<div class='clearfix'></div>
+<hr>
+
+<div class=col-md-12>
+<h2>Opdrachten & kanskaarten</h2>
+</div>
+<div class='col-md-6'>
+<h3>Opdracht toevoegen</h3>
 <form>
   <div class='form-group'>
     <label for='taskNameAdd'>Naam:</label>
@@ -146,14 +228,48 @@
     <button type='submit' class='btn btn-primary' ng-click='addTask(task); task={}'>Toevoegen</button>
   </div>
 </form>
+</div>
 
-<h2>Opdracht verwijderen</h2>
-  <form>
-    <div class='form-group'>
-      <label for='taskRemove'>Task:</label>
-      <select class='form-control' id='taskRemove' ng-model='taskForDelete'>
-        <option ng-repeat='task in tasks' value='{{task.$id}}'>{{task.name}}</option>
-      </select>
-    </div>
-      <button type='submit' class='btn btn-primary' ng-click='deleteTask(taskForDelete); taskForDelete=""'>Verwijderen</button>
-  </form>
+<div class='col-md-6'>
+<h3>Opdracht verwijderen</h3>
+<form>
+  <div class='form-group'>
+    <label for='taskRemove'>Opdracht:</label>
+    <select class='form-control' id='taskRemove' ng-model='taskForDelete'>
+      <option ng-repeat='task in tasks' value='{{task.$id}}'>{{task.name}}</option>
+    </select>
+  </div>
+    <button type='submit' class='btn btn-primary' ng-click='deleteTask(taskForDelete); taskForDelete=""'>Verwijderen</button>
+</form>
+</div>
+
+<div class='clearfix'></div>
+<hr>
+
+<div class='col-md-6'>
+<h3>Kanskaart toevoegen</h3>
+<form>
+  <div class='form-group'>
+    <label for='cardNameAdd'>Naam:</label>
+    <input type='text' id='cardNameAdd' class='form-control' placeholder='Voer de naam van de kanskaart in' ng-model='card.name'>
+  </div>
+  <div class='form-group'>
+    <label for='cardAmountAdd'>Bedrag:</label>
+    <input type='number' min='1' id='cardAmountAdd' class='form-control' ng-model='card.amount'>
+  </div>
+  <button type='submit' class='btn btn-primary' ng-click='addCard(card); card={}'>Toevoegen</button>
+</form>
+</div>
+
+<div class='col-md-6'>
+<h3>Kanskaart verwijderen</h3>
+<form>
+  <div class='form-group'>
+    <label for='cardRemove'>Kanskaart:</label>
+    <select class='form-control' id='cardRemove' ng-model='cardForDelete'>
+      <option ng-repeat='card in cards' value='{{card.$id}}'>{{card.name}}</option>
+    </select>
+  </div>
+    <button type='submit' class='btn btn-primary' ng-click='deleteCard(cardForDelete); cardForDelete=""'>Verwijderen</button>
+</form>
+</div>
