@@ -84,9 +84,7 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
     sync.$add(team).then(function(r){
      members = new Firebase(FIREBASE_URL+'teams/'+r.key()+'/members');
       teamMembers.forEach(function(userId) {
-        members.child(userId).set(true);
-        user = new Firebase(FIREBASE_URL+'users/'+userId);
-        user.child('team').set(r.key());
+        $scope.addMember(userId, r.key());
       });
    });
   };
