@@ -91,6 +91,11 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
    });
   };
 
+  $scope.addMember = function(userId, teamId) {
+    new Firebase(FIREBASE_URL+'teams/'+ teamId + '/members').child(userId).set(true);
+    new Firebase(FIREBASE_URL+'users/'+userId+'/team').set(teamId);
+  }
+
   $scope.deleteTeam = function(teamId) {
     var teamMembers = new Firebase(FIREBASE_URL+'teams/'+teamId+'/members');
     teamMembers.on('child_added', function(snap) {

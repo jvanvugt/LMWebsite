@@ -76,6 +76,23 @@
   <button type='submit' class='btn btn-primary' ng-click='deleteTeam(teamForDelete); teamForDelete=""'>Verwijderen</button>
 </form>
 
+<h2>Gebruiker aan team toevoegen</h2>
+<form>
+  <div class='form-group'>
+    <label for='memberTeamAdd'>Team:</label>
+    <select class='form-control' id='memberTeamAdd' ng-model='teamMemberForAdd'>
+      <option ng-repeat='team in teams' value='{{team.$id}}'>{{team.name}}</option>
+    </select>
+  </div>
+  <div class='form-group'>
+    <label for='memberAdd'>Gebruiker:</label>
+    <select class='form-control' id='memberAdd' ng-model='memberForAdd'>
+      <option ng-repeat='user in users | filter: eligibleMemberFilter' value='{{user.$id}}'>{{user.name}}</option>
+    </select>
+  </div>
+  <button type='submit' class='btn btn-primary' ng-click='addMember(memberForAdd, teamMemberForAdd); memberForAdd=""'>Toevoegen</button>
+</form>
+
 <h2>Gebruiker uit team verwijderen</h2>
 <form>
   <div class='form-group'>
