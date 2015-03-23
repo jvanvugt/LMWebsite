@@ -31,7 +31,7 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
       $scope.members.push($firebase(new Firebase(FIREBASE_URL+'users/'+member)).$asObject());
     };
   });
-  
+
 });
 
 monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase, FIREBASE_URL) {
@@ -60,8 +60,7 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
     return user.roles && user.roles.judge;
   };
 
-  $scope.eligibleMemberFilter = function (user ) {
-
+  $scope.eligibleMemberFilter = function (user) {
     return !$scope.judgeFilter(user) && !user.team;
   };
 
@@ -102,6 +101,11 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
           teamMembers.parent().remove();
       });
     });
+  };
+
+  $scope.deleteTeamMember = function(memberId, teamId) {
+    new Firebase(FIREBASE_URL+'users/'+memberId+'/team').remove();
+    new Firebase(FIREBASE_URL+'teams/' + teamId + '/members/' + memberId).remove();
   };
 
   $scope.addCity = function(city) {
