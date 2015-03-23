@@ -99,11 +99,16 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
 
   $scope.deleteTeam = function(teamId) {
     var teamMembers = new Firebase(FIREBASE_URL+'teams/'+teamId+'/members');
+    teamMembers.on('value', function(snap) {
+      if (snap.numChildren() === 0)
+        teamMembers.parent().remove();
+    });
+
     teamMembers.on('child_added', function(snap) {
       new Firebase(FIREBASE_URL+'users/'+snap.key()+'/team').remove();
       snap.ref().remove();
       teamMembers.on('value', function(snap) {
-        if (snap.numChildren() == 0)
+        if (snap.numChildren() === 0)
           teamMembers.parent().remove();
       });
     });
