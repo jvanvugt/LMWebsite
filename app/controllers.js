@@ -56,6 +56,9 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
   var tasksync = $firebase(new Firebase(FIREBASE_URL+'tasks'));
   $scope.tasks = tasksync.$asArray();
 
+  var cardsync = $firebase(new Firebase(FIREBASE_URL+'cards'));
+  $scope.cards = cardsync.$asArray();
+
   $scope.judgeFilter = function (user) {
     return user.roles && user.roles.judge;
   };
@@ -138,5 +141,13 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
 
   $scope.deleteTask = function(taskId) {
     new Firebase(FIREBASE_URL+'tasks/'+taskId).remove();
+  }
+
+  $scope.addCard = function(card) {
+    new Firebase(FIREBASE_URL+'cards').push(card);
+  }
+
+  $scope.deleteCard = function(cardId) {
+    new Firebase(FIREBASE_URL+'cards/'+cardId).remove();
   }
 });

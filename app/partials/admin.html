@@ -188,12 +188,36 @@
 </form>
 
 <h2>Opdracht verwijderen</h2>
-  <form>
-    <div class='form-group'>
-      <label for='taskRemove'>Task:</label>
-      <select class='form-control' id='taskRemove' ng-model='taskForDelete'>
-        <option ng-repeat='task in tasks' value='{{task.$id}}'>{{task.name}}</option>
-      </select>
-    </div>
-      <button type='submit' class='btn btn-primary' ng-click='deleteTask(taskForDelete); taskForDelete=""'>Verwijderen</button>
-  </form>
+<form>
+  <div class='form-group'>
+    <label for='taskRemove'>Opdracht:</label>
+    <select class='form-control' id='taskRemove' ng-model='taskForDelete'>
+      <option ng-repeat='task in tasks' value='{{task.$id}}'>{{task.name}}</option>
+    </select>
+  </div>
+    <button type='submit' class='btn btn-primary' ng-click='deleteTask(taskForDelete); taskForDelete=""'>Verwijderen</button>
+</form>
+
+<h2>Kanskaart toevoegen</h2>
+<form>
+  <div class='form-group'>
+    <label for='cardNameAdd'>Naam:</label>
+    <input type='text' id='cardNameAdd' class='form-control' placeholder='Voer de naam van de kanskaart in' ng-model='card.name'>
+  </div>
+  <div class='form-group'>
+    <label for='cardAmountAdd'>Bedrag:</label>
+    <input type='number' min='1' id='cardAmountAdd' class='form-control' ng-model='card.amount'>
+  </div>
+  <button type='submit' class='btn btn-primary' ng-click='addCard(card); card={}'>Toevoegen</button>
+</form>
+
+<h2>Kanskaart verwijderen</h2>
+<form>
+  <div class='form-group'>
+    <label for='cardRemove'>Kanskaart:</label>
+    <select class='form-control' id='cardRemove' ng-model='cardForDelete'>
+      <option ng-repeat='card in cards' value='{{card.$id}}'>{{card.name}}</option>
+    </select>
+  </div>
+    <button type='submit' class='btn btn-primary' ng-click='deleteCard(cardForDelete); cardForDelete=""'>Verwijderen</button>
+</form>
