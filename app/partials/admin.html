@@ -1,4 +1,8 @@
-<h2>Nieuwe gebruiker toevoegen</h2>
+<div class=col-md-12>
+<h2>Teams & Gebruikers</h2>
+</div>
+<div class='col-md-6'>
+<h3>Nieuwe gebruiker toevoegen</h3>
 <form>
   <div class='form-group'>
     <label for='userName'>Naam:</label>
@@ -32,8 +36,10 @@
 
   <button type='submit' class='btn btn-primary' ng-click='addUser(user); user={}'>Toevoegen</button>
 </form>
+</div>
 
-<h2>Gebruiker verwijderen</h2>
+<div class='col-md-6'>
+<h3>Gebruiker verwijderen</h3>
 <form>
   <div class='form-group'>
     <label for='userDelete'>Gebruiker:</label>
@@ -43,8 +49,13 @@
   </div>
   <button type='submit' class='btn btn-primary' ng-click='deleteUser(userForDelete); userForDelete=""'>Verwijderen</button>
 </form>
+</div>
 
-<h2>Nieuw team toevoegen</h2>
+<div class='clearfix'></div>
+<hr>
+
+<div class='col-md-6'>
+<h3>Nieuw team toevoegen</h3>
 <form>
   <div class='form-group'>
     <label for='teamName'>Naam:</label>
@@ -64,8 +75,10 @@
   </div>
   <button type='submit' class='btn btn-primary' ng-click='addTeam(team, teamMembers); team={}'>Toevoegen</button>
 </form>
+</div>
 
-<h2>Team verwijderen</h2>
+<div class='col-md-6'>
+<h3>Team verwijderen</h3>
 <form>
   <div class='form-group'>
     <label for='teamDelete'>Team:</label>
@@ -75,8 +88,13 @@
   </div>
   <button type='submit' class='btn btn-primary' ng-click='deleteTeam(teamForDelete); teamForDelete=""'>Verwijderen</button>
 </form>
+</div>
 
-<h2>Gebruiker aan team toevoegen</h2>
+<div class='clearfix'></div>
+<hr>
+
+<div class='col-md-6'>
+<h3>Gebruiker aan team toevoegen</h3>
 <form>
   <div class='form-group'>
     <label for='memberTeamAdd'>Team:</label>
@@ -92,8 +110,10 @@
   </div>
   <button type='submit' class='btn btn-primary' ng-click='addMember(memberForAdd, teamMemberForAdd); memberForAdd=""'>Toevoegen</button>
 </form>
+</div>
 
-<h2>Gebruiker uit team verwijderen</h2>
+<div class='col-md-6'>
+<h3>Gebruiker uit team verwijderen</h3>
 <form>
   <div class='form-group'>
     <label for='teamMemberTeamDelete'>Team:</label>
@@ -109,8 +129,14 @@
   </div>
   <button type='submit' class='btn btn-primary' ng-click='deleteTeamMember(memberId, teamId); teamId=""; memberId=""'>Verwijderen</button>
 </form>
-
-<h2>Stad toevoegen</h2>
+</div>
+<div class='clearfix'></div>
+<hr>
+<div class=col-md-12>
+<h2>Steden & Straten</h2>
+</div>
+<div class='col-md-6'>
+<h3>Stad toevoegen</h3>
 <form>
   <div class='form-group'>
   <label for='cityAdd'>Stad:</label>
@@ -118,8 +144,10 @@
   </div>
   <button type='submit' class='btn btn-primary' ng-click='addCity(cityToAdd); cityToAdd={}'>Toevoegen</button>
 </form>
+</div>
 
-<h2>Stad verwijderen</h2>
+<div class='col-md-6'>
+<h3>Stad verwijderen</h3>
 <form>
   <div class='form-group'>
   <label for='cityDelete'>Stad:</label>
@@ -129,8 +157,12 @@
   </div>
   <button type='submit' class='btn btn-primary' ng-click='deleteCity(cityForDelete); cityForDelete=""'>Verwijderen</button>
 </form>
+</div>
+<div class='clearfix'></div>
+<hr>
 
-<h2>Straat toevoegen</h2>
+<div class='col-md-6'>
+<h3>Straat toevoegen</h3>
 <form>
   <div class='form-group'>
     <label for='streetName'>Straatnaam:</label>
@@ -142,8 +174,10 @@
   </div>
   <button type='submit' class='btn btn-primary' ng-click='addStreet(streetForAdd); streetForAdd={}'>Toevoegen</button>
 </form>
+</div>
 
-<h2>Straat verwijderen</h2>
+<div class='col-md-6'>
+<h3>Straat verwijderen</h3>
 <form>
   <div class='form-group'>
     <label for='streetNameRemove'>Straat:</label>
@@ -153,8 +187,16 @@
   </div>
     <button type='submit' class='btn btn-primary' ng-click='deleteStreet(streetForDelete); streetForDelete=""'>Verwijderen</button>
 </form>
+</div>
 
-<h2>Opdracht toevoegen</h2>
+<div class='clearfix'></div>
+<hr>
+
+<div class=col-md-12>
+<h2>Opdrachten & kanskaarten</h2>
+</div>
+<div class='col-md-6'>
+<h3>Opdracht toevoegen</h3>
 <form>
   <div class='form-group'>
     <label for='taskNameAdd'>Naam:</label>
@@ -186,8 +228,10 @@
     <button type='submit' class='btn btn-primary' ng-click='addTask(task); task={}'>Toevoegen</button>
   </div>
 </form>
+</div>
 
-<h2>Opdracht verwijderen</h2>
+<div class='col-md-6'>
+<h3>Opdracht verwijderen</h3>
 <form>
   <div class='form-group'>
     <label for='taskRemove'>Opdracht:</label>
@@ -197,8 +241,13 @@
   </div>
     <button type='submit' class='btn btn-primary' ng-click='deleteTask(taskForDelete); taskForDelete=""'>Verwijderen</button>
 </form>
+</div>
 
-<h2>Kanskaart toevoegen</h2>
+<div class='clearfix'></div>
+<hr>
+
+<div class='col-md-6'>
+<h3>Kanskaart toevoegen</h3>
 <form>
   <div class='form-group'>
     <label for='cardNameAdd'>Naam:</label>
@@ -210,8 +259,10 @@
   </div>
   <button type='submit' class='btn btn-primary' ng-click='addCard(card); card={}'>Toevoegen</button>
 </form>
+</div>
 
-<h2>Kanskaart verwijderen</h2>
+<div class='col-md-6'>
+<h3>Kanskaart verwijderen</h3>
 <form>
   <div class='form-group'>
     <label for='cardRemove'>Kanskaart:</label>
@@ -221,3 +272,4 @@
   </div>
     <button type='submit' class='btn btn-primary' ng-click='deleteCard(cardForDelete); cardForDelete=""'>Verwijderen</button>
 </form>
+</div>
