@@ -1,6 +1,6 @@
 "use strict";
 
-var monopoly = angular.module("monopoly", ["ngRoute", "monopolyControllers", "firebase"]);
+var monopoly = angular.module("monopoly", ["ngRoute", "monopolyControllers", "firebase", "angularjs-dropdown-multiselect"]);
 
 monopoly.config(function($locationProvider, $routeProvider) {
     //$locationProvider.html5Mode(true);
@@ -43,5 +43,3 @@ monopoly.directive("bootstrapNavbar", function() {
     }
   }});
 ;
-
-

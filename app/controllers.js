@@ -32,6 +32,7 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
   $scope.pageDesc = 'Overzicht van een team';
 
   teamId = $routeParams.teamId;
+  $scope.teamId = teamId;
   var ref = new Firebase(FIREBASE_URL+'teams/'+teamId);
   $scope.team = $firebase(ref).$asObject();
   $scope.team.$loaded().then(function() {
@@ -48,13 +49,23 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
   $scope.cities = $firebase(new Firebase(FIREBASE_URL+'cities'), {arrayFactory: WithFilterableId}).$asArray();
 
   $scope.streets = $firebase(new Firebase(FIREBASE_URL+'streets'), {arrayFactory: WithFilterableId}).$asArray();
-  
+
   var tasksync = $firebase(new Firebase(FIREBASE_URL+'tasks'));
   $scope.tasks = tasksync.$asArray();
-  
+
   $scope.visitStreet = function(street) {
     ref.child('locations').child(street).child('visited').set(true);
     new Firebase(FIREBASE_URL+'streets').child(street).child('visitors').child(teamId).set(true);
+    new Firebase(FIREBASE_URL+'streets').child(street).child('hotel_team_id').once('value', function(snap) {
+      if (snap === null) return;
+      ref.child('balance').transaction(function(current) {
+        return current-20;
+      });
+      ref = new Firebase(FIREBASE_URL+'teams/'+snap.val());
+      ref.child('balance').transaction(function(current) {
+        return current+20;
+      });
+    });
   };
 
   $scope.hotelStreet = function(street) {
@@ -63,7 +74,7 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
   };
 
   $scope.visitedStreetFilter = function(street) {
-    return street.visitors && street.visitors[teamId]; 
+    return street.visitors && street.visitors[teamId];
   };
 
   $scope.completeTask = function(taskId,taskValue) {
@@ -85,7 +96,7 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
       return current-1;
     });
   };
-  
+
   $scope.completedTaskFilter = function(task) {
     return task.completed && task.completed[teamId] && task.completed[teamId].repeats > 0;
   };
