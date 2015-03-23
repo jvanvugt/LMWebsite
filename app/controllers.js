@@ -22,9 +22,16 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
   $scope.pageDesc = 'Overzicht van een team';
 
   teamId = $routeParams.teamId;
-  console.log(teamId);
-  var sync = $firebase(new Firebase(FIREBASE_URL+'teams/'+teamId));
-  $scope.team = sync.$asObject();
+  var ref = new Firebase(FIREBASE_URL+'teams/'+teamId);
+  $scope.team = $firebase(ref).$asObject();
+  $scope.members = [];
+  ref.child('members').on('value', function(snap) {
+    for (var member in snap.val()) {
+      console.log(member);
+      $scope.members.push($firebase(new Firebase(FIREBASE_URL+'users/'+member)).$asObject());
+    };
+  });
+  
 });
 
 monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase, FIREBASE_URL) {
