@@ -1,6 +1,6 @@
 "use strict";
 
-var monopoly = angular.module("monopoly", ["ngRoute", "monopolyControllers", "firebase", "angularjs-dropdown-multiselect"]);
+var monopoly = angular.module("monopoly", ["ngRoute", "monopolyControllers", "firebase"]);
 
 monopoly.config(function($locationProvider, $routeProvider) {
     //$locationProvider.html5Mode(true);

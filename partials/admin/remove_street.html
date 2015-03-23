@@ -1,0 +1,10 @@
+<h3>Straat verwijderen</h3>
+<form>
+  <div class='form-group'>
+    <label for='streetNameRemove'>Straat:</label>
+    <select class='form-control' id='streetNameRemove' ng-model='streetForDelete'>
+      <option ng-repeat='street in streets' value='{{street.$id}}'>{{street.name}}</option>
+    </select>
+  </div>
+    <button type='submit' class='btn btn-primary' ng-click='deleteStreet(streetForDelete); streetForDelete=""'>Verwijderen</button>
+</form>

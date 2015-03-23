@@ -1,0 +1,8 @@
+<h3>Stad toevoegen</h3>
+<form>
+  <div class='form-group'>
+  <label for='cityAdd'>Stad:</label>
+  <input type='text' class='form-control' id='cityName' placeholder='Voer stadsnaam in' ng-model='cityToAdd.name'>
+  </div>
+  <button type='submit' class='btn btn-primary' ng-click='addCity(cityToAdd); cityToAdd={}'>Toevoegen</button>
+</form>

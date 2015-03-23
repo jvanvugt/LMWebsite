@@ -1,0 +1,101 @@
+<div class='panel panel-info'>
+
+  <div class='panel-heading' data-toggle='collapse' href='#constants'>
+    <h2>Constanten</h2>
+  </div>
+
+  <div id="constants" class="panel-collapse collapse">
+    <div class="panel-body">
+
+      <!-- cost of building a hotel, etc -->
+
+    </div>
+  </div>
+</div>
+
+<div class='panel panel-info'>
+
+  <div class='panel-heading' data-toggle='collapse' href='#game_management'>
+    <h2>Spelbeheer</h2>
+  </div>
+
+  <div id="game_management" class="panel-collapse collapse">
+    <div class="panel-body">
+
+      <div ng-include="'partials/admin/unvisit_street.html'" class='col-md-6'/>
+
+    </div>
+  </div>
+</div>
+
+<div class='panel panel-info'>
+
+  <div class='panel-heading' data-toggle='collapse' href='#users_and_teams'>
+    <h2>Gebruikers &amp; Teamindeling</h2>
+  </div>
+
+  <div id="users_and_teams" class="panel-collapse collapse">
+    <div class="panel-body">
+
+      <div ng-include="'partials/admin/add_user.html'" class='col-md-6'/>
+      <div ng-include="'partials/admin/remove_user.html'" class='col-md-6'/>
+
+      <div class='clearfix'></div>
+      <hr>
+
+      <div ng-include="'partials/admin/add_team.html'" class='col-md-6'/>
+      <div ng-include="'partials/admin/remove_team.html'" class='col-md-6'/>
+
+      <div class='clearfix'></div>
+      <hr>
+
+      <div ng-include="'partials/admin/add_user_to_team.html'" class='col-md-6'/>
+      <div ng-include="'partials/admin/remove_user_from_team.html'" class='col-md-6'/>
+
+    </div>
+  </div>
+</div>
+
+<div class='panel panel-info'>
+
+  <div class='panel-heading' data-toggle='collapse' href='#cities_and_streets'>
+    <h2>Steden &amp; Straten</h2>
+  </div>
+
+  <div id="cities_and_streets" class="panel-collapse collapse">
+    <div class="panel-body">
+
+      <div ng-include="'partials/admin/add_city.html'" class='col-md-6'/>
+      <div ng-include="'partials/admin/remove_city.html'" class='col-md-6'/>
+
+      <div class='clearfix'></div>
+      <hr>
+
+      <div ng-include="'partials/admin/add_street.html'" class='col-md-6'/>
+      <div ng-include="'partials/admin/remove_street.html'" class='col-md-6'/>
+
+    </div>
+  </div>
+</div>
+
+<div class='panel panel-info'>
+
+  <div class='panel-heading' data-toggle='collapse' href='#tasks_and_cards'>
+    <h2>Opdrachten &amp; Kanskaarten</h2>
+  </div>
+
+  <div id="tasks_and_cards" class="panel-collapse collapse">
+    <div class="panel-body">
+
+      <div ng-include="'partials/admin/add_task.html'" class='col-md-6'/>
+      <div ng-include="'partials/admin/remove_task.html'" class='col-md-6'/>
+
+      <div class='clearfix'></div>
+      <hr>
+
+      <div ng-include="'partials/admin/add_card.html'" class='col-md-6'/>
+      <div ng-include="'partials/admin/remove_card.html'" class='col-md-6'/>
+
+    </div>
+  </div>
+</div>

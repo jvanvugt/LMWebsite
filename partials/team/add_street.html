@@ -1,0 +1,23 @@
+<div class="panel panel-info">
+  <div class="panel-heading">
+     <h3 class="panel-title">Bezochte straat toevoegen</h3>
+  </div>
+
+  <div id="add-street-panel" class="panel-body">
+    <form>
+      <div class='form-group'>
+        <select class='form-control' id='street' ng-model='streetForVisitCityId' placeholder="kasd">
+          <option value="" disabled selected>Selecteer een stad</option>
+          <option ng-repeat='city in cities' value='{{city.$id}}'>{{city.name}}</option>
+        </select>
+        <select ng-show='streetForVisitCityId' class='form-control' id='street' ng-model='streetForVisit'>
+          <option value="" disabled selected>Selecteer een straat</option>
+          <option ng-repeat='street in streets | filter:{city_id: streetForVisitCityId}' value='{{street.$id}}'>{{street.name}}</option>
+        </select>
+      </div>
+      <div class='form-group'>
+        <button type='submit' class='btn btn-primary' ng-click='visitStreet(streetForVisit); streetForVisit={}'>Toevoegen</button>
+      </div>
+    </form>
+  </div>
+</div>

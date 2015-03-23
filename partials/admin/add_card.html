@@ -1,0 +1,12 @@
+<h3>Kanskaart toevoegen</h3>
+<form>
+  <div class='form-group'>
+    <label for='cardNameAdd'>Naam:</label>
+    <input type='text' id='cardNameAdd' class='form-control' placeholder='Voer de naam van de kanskaart in' ng-model='card.name'>
+  </div>
+  <div class='form-group'>
+    <label for='cardAmountAdd'>Bedrag:</label>
+    <input type='number' min='1' id='cardAmountAdd' class='form-control' ng-model='card.amount'>
+  </div>
+  <button type='submit' class='btn btn-primary' ng-click='addCard(card); card={}'>Toevoegen</button>
+</form>

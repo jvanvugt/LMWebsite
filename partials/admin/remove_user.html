@@ -1,0 +1,10 @@
+<h3>Gebruiker verwijderen</h3>
+<form>
+  <div class='form-group'>
+    <label for='userDelete'>Gebruiker:</label>
+    <select class='form-control' id='userDelete' ng-model='userForDelete'>
+      <option ng-repeat='user in users' value='{{user.$id}}'>{{user.name}}</option>
+    </select>
+  </div>
+  <button type='submit' class='btn btn-primary' ng-click='deleteUser(userForDelete); userForDelete=""'>Verwijderen</button>
+</form>

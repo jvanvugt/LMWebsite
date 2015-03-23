@@ -1,0 +1,10 @@
+<h3>Kanskaart verwijderen</h3>
+<form>
+  <div class='form-group'>
+    <label for='cardRemove'>Kanskaart:</label>
+    <select class='form-control' id='cardRemove' ng-model='cardForDelete'>
+      <option ng-repeat='card in cards' value='{{card.$id}}'>{{card.name}}</option>
+    </select>
+  </div>
+    <button type='submit' class='btn btn-primary' ng-click='deleteCard(cardForDelete); cardForDelete=""'>Verwijderen</button>
+</form>

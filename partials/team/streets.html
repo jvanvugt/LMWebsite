@@ -1,0 +1,21 @@
+<div class="panel panel-info">
+  <div class="panel-heading">
+     <h3 class="panel-title">Bezochte straten</h3>
+  </div>
+
+  <div id="streets-panel" class="panel-body">
+    <table class="table">
+      <thead>
+        <th>Naam</th>
+        <th>Stad</th>
+        <th>Hotel</th>
+      </thead>
+      <tr ng-repeat="street in streets | filter:visitedStreetFilter">
+        <th>{{street.name}}</th>
+        <th ng-repeat="city in cities | filter:{$id: street.city_id}">{{city.name}}</th>
+        <th><span ng-show="street.hotel_team_id == teamId" class="glyphicon glyphicon-home"></span></th>
+      </tr>
+    </table>
+  </div>
+
+</div>

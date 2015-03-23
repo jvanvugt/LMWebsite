@@ -1,0 +1,10 @@
+<h3>Opdracht verwijderen</h3>
+<form>
+  <div class='form-group'>
+    <label for='taskRemove'>Opdracht:</label>
+    <select class='form-control' id='taskRemove' ng-model='taskForDelete'>
+      <option ng-repeat='task in tasks' value='{{task.$id}}'>{{task.name}}</option>
+    </select>
+  </div>
+    <button type='submit' class='btn btn-primary' ng-click='deleteTask(taskForDelete); taskForDelete=""'>Verwijderen</button>
+</form>

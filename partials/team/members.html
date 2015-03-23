@@ -1,0 +1,24 @@
+<div class="panel panel-info">
+  <div class="panel-heading">
+    <h3 class="panel-title">Leden</h3>
+  </div>
+
+  <div id="members-panel" class="panel-body">
+
+    <table class="table">
+      <thead>
+        <th>Naam</th>
+        <th>Telefoon</th>
+        <th>Email</th>
+        <th>Vereniging</th>
+      </thead>
+      <tr ng-repeat="member in members">
+        <td>{{member.name}}</td>
+        <td>{{member.phone}} <span ng-hide="member.smartphone">(niet smart)</span></td>
+        <td>{{member.mail}}</td>
+        <td>{{member.society}}</td>
+      </tr>
+    </table>
+
+  </div>
+</div>

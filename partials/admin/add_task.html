@@ -1,0 +1,32 @@
+<h3>Opdracht toevoegen</h3>
+<form>
+  <div class='form-group'>
+    <label for='taskNameAdd'>Naam:</label>
+    <input type='text' class='form-control' id='taskNameAdd' placeholder='Voer de naam van de opdracht in' ng-model='task.name'>
+  </div>
+  <div class='checkbox'>
+      <label>
+        <input type='checkbox' id='taskRankableAdd' ng-model='task.rankable'> Rangorde?
+      </label>
+  </div>
+
+  <div ng-show='task.rankable' class='form-group'>
+    <label for='taskReward1Add'>1e prijs:</label>
+    <input type='number' class='form-control' min='1' id='taskReward1Add' ng-model='task.rank1_reward'>
+    <label for='taskReward2Add'>2e prijs:</label>
+    <input type='number' class='form-control' min='1' id='taskReward2Add' ng-model='task.rank2_reward'>
+    <label for='taskReward3Add'>3e prijs:</label>
+    <input type='number' class='form-control' min='1' id='taskReward3Add' ng-model='task.rank3_reward'>
+  </div>
+
+  <div ng-hide='task.rankable' class='form-group'>
+    <label for='taskRewardAdd'>Beloning (in €):</label>
+    <input type='number' class='form-control' id='taskRewardAdd' ng-model='task.reward'>
+    <label for='taskRepeatableAdd'>Hoevaak herhaalbaar?</label>
+    <input type='number' class='form-control' min='1' id='taskRepeatableAdd' ng-model='task.repeatable'>
+  </div>
+
+  <div class='form-group'>
+    <button type='submit' class='btn btn-primary' ng-click='addTask(task); task={}'>Toevoegen</button>
+  </div>
+</form>

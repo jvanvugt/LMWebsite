@@ -1,0 +1,22 @@
+<div class="panel panel-info">
+  <div class="panel-heading">
+     <h3 class="panel-title">Hotel toevoegen</h3>
+  </div>
+  <div id="add-hotel-panel" class="panel-body">
+    <form>
+      <div class='form-group'>
+        <select class='form-control' id='street' ng-model='streetForHotelCityId'>
+          <option value="" disabled selected>Selecteer een stad</option>
+          <option ng-repeat='city in cities' value='{{city.$id}}'>{{city.name}}</option>
+        </select>
+        <select ng-show='streetForHotelCityId' class='form-control' id='street' ng-model='streetForHotel'>
+          <option value="" disabled selected>Selecteer een straat</option>
+          <option ng-repeat='street in streets | filter:{city_id: streetForHotelCityId}' value='{{street.$id}}'>{{street.name}}</option>
+        </select>
+      </div>
+      <div class='form-group'>
+        <button type='submit' class='btn btn-primary' ng-click='hotelStreet(streetForHotel); streetForHotel={}'>Toevoegen</button>
+      </div>
+    </form>
+  </div>
+</div>
