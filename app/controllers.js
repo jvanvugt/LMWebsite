@@ -38,6 +38,9 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
   $scope.pageName = 'Admin';
   $scope.pageDesc = 'Voer admin functies uit';
 
+  var societysync = $firebase(new Firebase(FIREBASE_URL+'static/societies'));
+  $scope.societies = societysync.$asArray();
+
   var teamsync = $firebase(new Firebase(FIREBASE_URL+'teams'));
   $scope.teams = teamsync.$asArray();
 
