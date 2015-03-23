@@ -40,6 +40,9 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
   var citysync = $firebase(new Firebase(FIREBASE_URL+'cities'));
   $scope.cities = citysync.$asArray();
 
+  var streetsync = $firebase(new Firebase(FIREBASE_URL+'streets'));
+  $scope.streets = streetsync.$asArray();
+
   $scope.judgeFilter = function (user) {
     return user.roles && user.roles.judge;
   };
@@ -93,9 +96,19 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
   }
 
   $scope.deleteCity = function(cityId) {
-    var city = new Firebase(FIREBASE_URL+'cities/'+cityId);
-    city.child('team').once('value', function(snap) {
-      new Firebase(FIREBASE_URL+'cities/'+cityId).remove();
+    new Firebase(FIREBASE_URL+'cities/'+cityId).remove();
+    var streets = new Firebase(FIREBASE_URL+'streets');
+    streets.on('child_added', function(snap) {
+      if(snap.val().city_id === cityId)
+          snap.ref().remove();
     });
+  }
+
+  $scope.addStreet = function(street) {
+    new Firebase(FIREBASE_URL+'streets').push(street);
+  }
+
+  $scope.deleteStreet = function(streetId) {
+    new Firebase(FIREBASE_URL+'streets/'+streetId).remove();
   }
 });
