@@ -106,3 +106,40 @@
     <button type='submit' class='btn btn-primary' ng-click='deleteStreet(streetForDelete); streetForDelete=""'>Verwijderen</button>
   </div>
 </form>
+
+<h2>Opdracht toevoegen</h2>
+<form>
+  <div class='form-group'>
+    <label for='taskNameAdd'>Naam:</label>
+    <input type='text' class='form-control' id='taskNameAdd' placeholder='Voer de naam van de opdracht in' ng-model='task.name'>
+
+    <label for='taskRewardAdd'>Beloning (in €):</label>
+    <input type='text' class='form-control' id='taskRewardAdd' placeholder='Voer de beloning voor de opdracht in' ng-model='task.reward'>
+
+
+    <div class='checkbox'>
+      <label>
+        <input type='checkbox' id='taskRepeatableAdd' ng-model='task.repeatable'> Herhaalbaar?
+      </label>
+    </div>
+
+    <div class='checkbox'>
+      <label>
+        <input type='checkbox' id='taskImmediateAdd' ng-model='task.immediate'> Meteen uitbetaald?
+      </label>
+    </div>
+
+    <button type='submit' class='btn btn-primary' ng-click='addTask(task); task={}'>Toevoegen</button>
+  </div>
+</form>
+
+<h2>Opdracht verwijderen</h2>
+  <form>
+    <div class='form-group'>
+      <label for='taskRemove'>Task:</label>
+      <select class='form-control' id='taskRemove' ng-model='taskForDelete'>
+        <option ng-repeat='task in tasks' value='{{task.$id}}'>{{task.name}}</option>
+      </select>
+      <button type='submit' class='btn btn-primary' ng-click='deleteTask(taskForDelete); taskForDelete=""'>Verwijderen</button>
+    </div>
+  </form>

@@ -43,6 +43,9 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
   var streetsync = $firebase(new Firebase(FIREBASE_URL+'streets'));
   $scope.streets = streetsync.$asArray();
 
+  var tasksync = $firebase(new Firebase(FIREBASE_URL+'tasks'));
+  $scope.tasks = tasksync.$asArray();
+
   $scope.judgeFilter = function (user) {
     return user.roles && user.roles.judge;
   };
@@ -110,5 +113,16 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
 
   $scope.deleteStreet = function(streetId) {
     new Firebase(FIREBASE_URL+'streets/'+streetId).remove();
+  }
+
+  $scope.addTask = function(task) {
+    task.reward = parseInt(task.reward);
+    task.prerequisites = "";
+    console.log(task);
+    new Firebase(FIREBASE_URL+'tasks').push(task);
+  }
+
+  $scope.deleteTask = function(taskId) {
+    new Firebase(FIREBASE_URL+'tasks/'+taskId).remove();
   }
 });
