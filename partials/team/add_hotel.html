@@ -1,7 +1,9 @@
 <div class="panel panel-info">
+
   <div class="panel-heading">
      <h3 class="panel-title">Hotel toevoegen</h3>
   </div>
+
   <div id="add-hotel-panel" class="panel-body">
     <form>
       <div class='form-group'>
@@ -15,8 +17,9 @@
         </select>
       </div>
       <div class='form-group'>
-        <button type='submit' class='btn btn-primary' ng-click='hotelStreet(streetForHotel); streetForHotel={}'>Toevoegen</button>
+        <button ng-disabled="!(streetForHotelCityId && streetForHotel)" type='submit' class='btn btn-info' ng-click='hotelStreet(streetForHotel); streetForHotel=""'>Toevoegen</button>
       </div>
     </form>
   </div>
+  
 </div>

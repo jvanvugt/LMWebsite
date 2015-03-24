@@ -3,8 +3,9 @@
   <div class='form-group'>
   <label for='cityDelete'>Stad:</label>
   <select class='form-control' id='cityDelete' ng-model='cityForDelete'>
+    <option value="" disabled selected>Selecteer een stad</option>
     <option ng-repeat='city in cities' value='{{city.$id}}'>{{city.name}}</option>
   </select>
   </div>
-  <button type='submit' class='btn btn-primary' ng-click='deleteCity(cityForDelete); cityForDelete=""'>Verwijderen</button>
+  <button type='submit' class='btn btn-info' ng-click='deleteCity(cityForDelete); cityForDelete=""'>Verwijderen</button>
 </form>

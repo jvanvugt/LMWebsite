@@ -27,6 +27,6 @@
   </div>
 
   <div class='form-group'>
-    <button type='submit' class='btn btn-primary' ng-click='addTask(task); task={}'>Toevoegen</button>
+    <button ng-disabled="!(task.name && (task.rankable && task.rank1_reward && task.rank2_reward && task.rank3_reward || !task.rankable && task.reward && task.repeatable))" type='submit' class='btn btn-info' ng-click='addTask(task); task=""'>Toevoegen</button>
   </div>
 </form>

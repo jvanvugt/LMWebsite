@@ -4,5 +4,5 @@
   <label for='cityAdd'>Stad:</label>
   <input type='text' class='form-control' id='cityName' placeholder='Voer stadsnaam in' ng-model='cityToAdd.name'>
   </div>
-  <button type='submit' class='btn btn-primary' ng-click='addCity(cityToAdd); cityToAdd={}'>Toevoegen</button>
+  <button ng-disabled="!cityToAdd.name" type='submit' class='btn btn-info' ng-click='addCity(cityToAdd); cityToAdd=""'>Toevoegen</button>
 </form>

@@ -3,8 +3,9 @@
   <div class='form-group'>
     <label for='userDelete'>Gebruiker:</label>
     <select class='form-control' id='userDelete' ng-model='userForDelete'>
+      <option value="" disabled selected>Selecteer een gebruiker</option>
       <option ng-repeat='user in users' value='{{user.$id}}'>{{user.name}}</option>
     </select>
   </div>
-  <button type='submit' class='btn btn-primary' ng-click='deleteUser(userForDelete); userForDelete=""'>Verwijderen</button>
+  <button type='submit' class='btn btn-info' ng-click='deleteUser(userForDelete); userForDelete=""'>Verwijderen</button>
 </form>

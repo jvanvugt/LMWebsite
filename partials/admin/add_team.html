@@ -8,6 +8,7 @@
     <div class='form-group'>
       <label for='judge'>Jurylid:</label>
       <select class='form-control' id='judge' ng-model='team.judge'>
+        <option value="" disabled selected>Selecteer een jurylid</option>
         <option ng-repeat='user in users | filter: judgeFilter' value='{{user.$id}}'>{{user.name}}</option>
       </select>
     </div>
@@ -21,5 +22,5 @@
     </div>
   </div>
   <div class='clearfix'></div>
-  <button type='submit' class='btn btn-primary' ng-click='addTeam(team, teamMembers); team={}'>Toevoegen</button>
+  <button ng-disabled="!(team.name && team.judge && teamMembers)" type='submit' class='btn btn-info' ng-click='addTeam(team, teamMembers); team=""'>Toevoegen</button>
 </form>
