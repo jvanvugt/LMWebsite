@@ -94,6 +94,8 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
 
   $scope.streets = $firebase(new Firebase(FIREBASE_URL+'streets'), {arrayFactory: WithFilterableId}).$asArray();
 
+  $scope.societies = $firebase(new Firebase(FIREBASE_URL+'static/societies'), {arrayFactory: WithFilterableId}).$asArray();
+
   $scope.transactions = TransactionsFactory(ref.child('transactions'));
 
   var tasksync = $firebase(new Firebase(FIREBASE_URL+'tasks'));

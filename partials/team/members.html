@@ -16,7 +16,7 @@
         <td>{{member.name}}</td>
         <td>{{member.phone}} <span ng-hide="member.smartphone">(niet smart)</span></td>
         <td>{{member.mail}}</td>
-        <td>{{member.society}}</td>
+        <td ng-repeat='society in societies | filter: {$id: member.society}'>{{society.name}}</td>
       </tr>
     </table>
 
