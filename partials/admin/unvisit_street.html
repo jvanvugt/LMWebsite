@@ -8,11 +8,18 @@
     </select>
   </div>
   <div class='form-group' ng-show='teamIdUnvisit'>
+    <label for='cityUnvisit'>Stad:</label>
+    <select class='form-control' id='cityUnvisit' ng-model='cityIdUnvisit'>
+      <option value="" disabled selected>Selecteer een stad</option>
+      <option ng-repeat='city in cities' value='{{city.$id}}'>{{city.name}}</option>
+    </select>
+  </div>
+  <div class='form-group' ng-show='cityIdUnvisit'>
     <label for='streetUnvisit'>Straat:</label>
     <select class='form-control' id='streetUnvisit' ng-model='streetIdUnvisit'>
       <option value="" disabled selected>Selecteer een straat</option>
-      <option ng-repeat='street in streets | filter: visitedByTeamFilter' value='{{street.$id}}'>{{street.name}}, <span ng-repeat='city in cities | filter: {$id: street.city_id}'>{{city.name}}</span></option>
+      <option ng-repeat='street in streets | filter: visitedByTeamFilter' value='{{street.$id}}'>{{street.name}}</option>
     </select>
   </div>
-    <button type='submit' class='btn btn-info' ng-click='unvisitStreet(streetIdUnvisit, teamIdUnvisit); teamIdUnvisit=""; streetIdUnvisit=""'>Onbezoeken</button>
+    <button ng-disabled='!(teamIdUnvisit && cityIdUnvisit && streetIdUnvisit)' type='submit' class='btn btn-info' ng-click='unvisitStreet(streetIdUnvisit, teamIdUnvisit); teamIdUnvisit=""; streetIdUnvisit=""; cityIdUnvisit=""'>Onbezoeken</button>
 </form>
