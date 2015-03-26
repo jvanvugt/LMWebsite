@@ -18,6 +18,50 @@ monopolyControllers.factory('WithFilterableId', function($FirebaseArray, $fireba
    });
 });
 
+monopolyControllers.factory('Data', ["$firebase", "FIREBASE_URL", "WithFilterableId", function ($firebase, FIREBASE_URL, WithFilterableId) {
+  data = {};
+  data.streets = $firebase(new Firebase(FIREBASE_URL+'streets')).$asObject();
+  return data;
+}]);
+
+monopolyControllers.factory("TransactionsFactory", ["$FirebaseArray", "$firebase", "Data", function($FirebaseArray, $firebase, Data) {
+  var TransactionsFactory = $FirebaseArray.$extendFactory({
+    getBalance: function() {
+      var balance = 0;
+      angular.forEach(this.$list, function(transaction) {
+        switch (transaction.type) {
+          case 'visit_street':
+            if (Data.streets[transaction.street] &&
+                Data.streets[transaction.street].hotel_timestamp &&
+                Data.streets[transaction.street].hotel_timestamp <= transaction.timestamp) {
+              balance -= 20;
+            }
+            break;
+          case 'buy_hotel':
+            balance -= 50;
+            if (Data.streets[transaction.street] &&
+                Data.streets[transaction.street].visitors) {
+              angular.forEach(Data.streets[transaction.street].visitors, function (visit, visitor) {
+                if (visit.timestamp &&
+                    visit.timestamp >= transaction.timestamp)
+                  balance += 20;
+              });
+            }
+            break;
+          default:
+            break;
+        }
+      });
+      return balance;
+    }
+  });
+
+  return function(ref) {
+    var sync = $firebase(ref, {arrayFactory: TransactionsFactory});
+    return sync.$asArray();
+  }
+}]);
+
 monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, $firebase, FIREBASE_URL) {
 
   var sync = $firebase(new Firebase(FIREBASE_URL+'teams'));
@@ -27,7 +71,7 @@ monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, $
   $scope.pageDesc = 'Overzicht van alle teams';
 });
 
-monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParams, $firebase, FIREBASE_URL, WithFilterableId) {
+monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParams, $firebase, FIREBASE_URL, WithFilterableId, TransactionsFactory) {
   $scope.pageName = 'Team';
   $scope.pageDesc = 'Overzicht van een team';
 
@@ -50,27 +94,30 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
 
   $scope.streets = $firebase(new Firebase(FIREBASE_URL+'streets'), {arrayFactory: WithFilterableId}).$asArray();
 
+  $scope.transactions = TransactionsFactory(ref.child('transactions'));
+
   var tasksync = $firebase(new Firebase(FIREBASE_URL+'tasks'));
   $scope.tasks = tasksync.$asArray();
 
   $scope.visitStreet = function(street) {
-    ref.child('locations').child(street).child('visited').set(true);
-    new Firebase(FIREBASE_URL+'streets').child(street).child('visitors').child(teamId).set(true);
-    new Firebase(FIREBASE_URL+'streets').child(street).child('hotel_team_id').once('value', function(snap) {
-      if (snap === null) return;
-      ref.child('balance').transaction(function(current) {
-        return current-20;
-      });
-      ref = new Firebase(FIREBASE_URL+'teams/'+snap.val());
-      ref.child('balance').transaction(function(current) {
-        return current+20;
-      });
+    var timestamp = Firebase.ServerValue.TIMESTAMP;
+    new Firebase(FIREBASE_URL+'streets').child(street).child('visitors').child(teamId).set(timestamp);
+    ref.child('transactions').push({
+      type: 'visit_street',
+      timestamp: timestamp,
+      street: street
     });
   };
 
   $scope.hotelStreet = function(street) {
-    ref.child('locations').child(street).child('hotel').set(true);
+    var timestamp = Firebase.ServerValue.TIMESTAMP;
     new Firebase(FIREBASE_URL+'streets/'+street+'/hotel_team_id').set(teamId);
+    new Firebase(FIREBASE_URL+'streets/'+street+'/hotel_timestamp').set(timestamp);
+    ref.child('transactions').push({
+      type: 'buy_hotel',
+      timestamp: timestamp,
+      street: street
+    });
   };
 
   $scope.visitedStreetFilter = function(street) {
