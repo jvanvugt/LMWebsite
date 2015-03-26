@@ -312,10 +312,6 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
     street.child('hotel_team_id').remove();
   }
 
-  $scope.adjustConstants = function(constants) {
-    new Firebase(FIREBASE_URL+'static/constants').set(constants);
-  }
-
   $scope.addSociety = function(society) {
     new Firebase(FIREBASE_URL+'static/societies').push(society);
   }
