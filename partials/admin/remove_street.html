@@ -1,12 +1,18 @@
 <h3>Straat verwijderen</h3>
 <form>
   <div class='form-group'>
+    <label for='cityStreetRemove'>Stad:</label>
+    <select class='form-control' id='cityStreetRemove' ng-model='cityStreetRemove'>
+      <option value='' disabled selected>Selecteer een stad</option>
+      <option ng-repeat='city in cities' value='{{city.$id}}'>{{city.name}}</option>
+    </select>
+    
     <label for='streetNameRemove'>Straat:</label>
     <select class='form-control' id='streetNameRemove' ng-model='streetForDelete'>
       <option value="" disabled selected>Selecteer een straat</option>
-      <option ng-repeat='street in streets' value='{{street.$id}}'>{{street.name}}</option>
+      <option ng-repeat='street in streets | filter: streetInCityFilter' value='{{street.$id}}'>{{street.name}}</option>
     </select>
   </div>
-    <button ng-disabled="!streetForDelete" type='submit' class='btn btn-info' ng-click='deleteStreet(streetForDelete); streetForDelete=""'>Verwijderen</button>
+  <button ng-disabled="!streetForDelete" type='submit' class='btn btn-info' ng-click='deleteStreet(streetForDelete); streetForDelete=""'>Verwijderen</button>
 
 </form>

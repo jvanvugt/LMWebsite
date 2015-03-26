@@ -178,6 +178,11 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
   var cardsync = $firebase(new Firebase(FIREBASE_URL+'cards'));
   $scope.cards = cardsync.$asArray();
 
+  $scope.streetInCityFilter = function(street) {
+    var cityId = document.getElementById('cityStreetRemove').value;
+    return street && street.city_id === cityId;
+  }
+
   $scope.visitedByTeamFilter = function(street) {
     var teamId = document.getElementById('teamUnvisit').value;
     var cityId = document.getElementById('cityUnvisit').value;
