@@ -1,0 +1,16 @@
+<h3>Constanten aanpassen</h3>
+<form>
+  <div class='form-group'>
+    <label for='visitStreetProfits'>Opbrengsten voor het bezoeken van een straat:</label>
+    <input type='number' ng-model='consts.visit_street_profits' class='form-control' min='0' id='visitStreetProfits'>
+    <label for='buyHotelCosts'>Kosten van het kopen van een hotel:</label>
+    <input type='number' ng-model='consts.buy_hotel_costs' class='form-control' min='0' id='buyHotelCosts'>
+    <label for='visitHotelCosts'>Kosten voor het bezoeken van een straat met een hotel:</label>
+    <input type='number' ng-model='consts.visit_hotel_costs' class='form-control' min='0' id='visitHotelCosts'>
+    <label for='visitHotelProfits'>Opbrengsten als iemand je hotel bezoekt:</label>
+    <input type='number' ng-model='consts.visit_hotel_profits' class='form-control' min='0' id='visitHotelProfits'>
+    <label for='maxNumberHotels'>Maximaal aantal hotels per team:</label>
+    <input type='number' ng-model='consts.max_hotels' ng-init='constants.max_hotels = static.constants.max_hotels' class='form-control' min='0' id='maxNumberHotels'>
+  </div>
+  <button ng-disabled='!constants' type='submit' class='btn btn-info' ng-click='adjustConstants(constants); constants={}'>Aanpassen</button>
+</form>

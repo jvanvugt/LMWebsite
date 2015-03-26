@@ -182,6 +182,9 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
   var cardsync = $firebase(new Firebase(FIREBASE_URL+'cards'));
   $scope.cards = cardsync.$asArray();
 
+  var constsync = $firebase(new Firebase(FIREBASE_URL+'static/constants')).$asObject();
+  constsync.$bindTo($scope, "consts");
+
   $scope.streetInCityFilter = function(street) {
     var cityId = document.getElementById('cityStreetRemove').value;
     return street && street.city_id === cityId;
@@ -303,6 +306,10 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
     var street = new Firebase(FIREBASE_URL+'streets/'+streetId);
     street.child('hotel_timestamp').remove();
     street.child('hotel_team_id').remove();
+  }
+
+  $scope.adjustConstants = function(constants) {
+    new Firebase(FIREBASE_URL+'static/constants').set(constants);
   }
 
 });
