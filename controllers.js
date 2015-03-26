@@ -294,6 +294,10 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
     new Firebase(FIREBASE_URL+'cards').push(card);
   }
 
+  $scope.addCard = function(card) {
+    new Firebase(FIREBASE_URL+'cards').push(card);
+  }
+
   $scope.deleteCard = function(cardId) {
     new Firebase(FIREBASE_URL+'cards/'+cardId).remove();
   }
@@ -310,6 +314,14 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
 
   $scope.adjustConstants = function(constants) {
     new Firebase(FIREBASE_URL+'static/constants').set(constants);
+  }
+
+  $scope.addSociety = function(society) {
+    new Firebase(FIREBASE_URL+'static/societies').push(society);
+  }
+
+  $scope.deleteSociety = function(societyId) {
+    new Firebase(FIREBASE_URL+'static/societies/'+societyId).remove();
   }
 
 });
