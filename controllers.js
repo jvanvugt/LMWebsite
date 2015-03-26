@@ -90,6 +90,8 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
     };
   });
 
+  var consts = $firebase(new Firebase(FIREBASE_URL+'static/constants')).$asObject();
+
   $scope.cities = $firebase(new Firebase(FIREBASE_URL+'cities'), {arrayFactory: WithFilterableId}).$asArray();
 
   $scope.streets = $firebase(new Firebase(FIREBASE_URL+'streets'), {arrayFactory: WithFilterableId}).$asArray();
@@ -101,6 +103,12 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
   var tasksync = $firebase(new Firebase(FIREBASE_URL+'tasks'));
   $scope.tasks = tasksync.$asArray();
 
+  $scope.cards = $firebase(new Firebase(FIREBASE_URL+'cards'), {arrayFactory: WithFilterableId}).$asArray();
+
+  $scope.teamCards = $firebase(ref.child('cards'), {arrayFactory: WithFilterableId}).$asArray();
+
+  $scope.cardsObj = $firebase(new Firebase(FIREBASE_URL+'cards')).$asObject();
+
   $scope.visitStreet = function(street) {
     var timestamp = Firebase.ServerValue.TIMESTAMP;
     if (street.timestamp)
@@ -111,6 +119,32 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
       timestamp: timestamp,
       street: street.id
     });
+
+    var card;
+    if(!$scope.cards.length) {
+      console.error("No cards");
+      console.log($scope.cards);
+    } else {
+      if(Math.random() * 100 < consts.probability_card_per_street) {
+        while (true) {
+          card = $scope.cards[Math.floor(Math.random()*$scope.cards.length)];
+          var found = false;
+          $scope.teamCards.forEach(function (tcard) {
+            if(tcard.card_id === card.$id) {
+              found = true;
+            }
+          });
+          if(!found)
+            break;
+        }
+        var endTime = (new Date().getTime()) + (consts.card_max_time * 60); // TODO: doesn't work.
+        var teamCard = {
+          card_id: card.$id,
+          end_time: endTime
+        };
+        ref.child('cards').push(teamCard);
+      }
+    }
   };
 
   $scope.hotelStreet = function(street) {
@@ -157,6 +191,16 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
   $scope.isRankable = function(task) {
     return $scope.tasks.$getRecord(task) && $scope.tasks.$getRecord(task).rankable;
   };
+
+  $scope.getResult = function(card, teamCard) {
+    if(!card) return;
+    if(card.is_positive && teamCard.success)
+      return card.amount;
+    else if(card.is_negative && !teamCard.success)
+      return -card.amount;
+    else
+      return 0;
+  }
 });
 
 monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase, FIREBASE_URL) {
