@@ -21,9 +21,9 @@
 
   <div ng-hide='task.rankable' class='form-group'>
     <label for='taskRewardAdd'>Beloning (in €):</label>
-    <input type='number' class='form-control' id='taskRewardAdd' ng-model='task.reward'>
+    <input type='number' class='form-control' id='taskRewardAdd' min='0' ng-model='task.reward' ng-init='task.reward = 0'>
     <label for='taskRepeatableAdd'>Hoevaak herhaalbaar?</label>
-    <input type='number' class='form-control' min='1' id='taskRepeatableAdd' ng-model='task.repeatable'>
+    <input type='number' class='form-control' min='1' id='taskRepeatableAdd' ng-model='task.repeatable' ng-init='task.repeatable = 1'>
   </div>
 
   <div class='form-group'>
