@@ -7,5 +7,5 @@
     <option ng-repeat='city in cities' value='{{city.$id}}'>{{city.name}}</option>
   </select>
   </div>
-  <button type='submit' class='btn btn-info' ng-click='deleteCity(cityForDelete); cityForDelete=""'>Verwijderen</button>
+  <button ng-disabled='!cityForDelete' type='submit' class='btn btn-info' ng-click='deleteCity(cityForDelete); cityForDelete=""'>Verwijderen</button>
 </form>

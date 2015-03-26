@@ -14,5 +14,5 @@
         <option ng-repeat='street in streets | filter: hasHotelFilter' value='{{street.$id}}'>{{street.name}}</option>
       </select>
     </div>
-    <button type='submit' class='btn btn-info' ng-click='removeHotel(streetHotelRemove); cityHotelRemove=""; streetHotelRemove="";'>Verwijderen</button>
+    <button ng-disabled='!(cityHotelRemove && streetHotelRemove)' type='submit' class='btn btn-info' ng-click='removeHotel(streetHotelRemove); cityHotelRemove=""; streetHotelRemove="";'>Verwijderen</button>
 </form>
