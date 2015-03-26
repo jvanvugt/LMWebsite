@@ -132,7 +132,9 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
   $scope.cards = cardsync.$asArray();
 
   $scope.visitedByTeamFilter = function(street) {
-    return street && street.visitors && street.visitors[$scope.teamIdUnvisit];
+    var teamId = document.getElementById('teamUnvisit').value;
+    var cityId = document.getElementById('cityUnvisit').value;
+    return street && street.city_id === cityId && street.visitors && street.visitors[teamId];
   };
 
   $scope.judgeFilter = function (user) {
@@ -231,5 +233,9 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
 
   $scope.deleteCard = function(cardId) {
     new Firebase(FIREBASE_URL+'cards/'+cardId).remove();
+  }
+
+  $scope.unvisitStreet = function(streetId, teamId) {
+    new Firebase(FIREBASE_URL+'streets/'+streetId+'/visitors/'+teamId).remove();
   }
 });
