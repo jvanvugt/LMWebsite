@@ -137,6 +137,10 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
     return street && street.city_id === cityId && street.visitors && street.visitors[teamId];
   };
 
+  $scope.hasHotelFilter = function(street) {
+    return street.hotel_team_id && street.hotel_timestamp;
+  }
+
   $scope.judgeFilter = function (user) {
     return user.roles && user.roles.judge;
   };
@@ -238,4 +242,11 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
   $scope.unvisitStreet = function(streetId, teamId) {
     new Firebase(FIREBASE_URL+'streets/'+streetId+'/visitors/'+teamId).remove();
   }
+
+  $scope.removeHotel = function(streetId) {
+    var street = new Firebase(FIREBASE_URL+'streets/'+streetId);
+    street.child('hotel_timestamp').remove();
+    street.child('hotel_team_id').remove();
+  }
+
 });
