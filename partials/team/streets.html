@@ -8,12 +8,14 @@
       <thead>
         <th>Naam</th>
         <th>Stad</th>
+        <th>Tijd</th>
         <th>Hotel</th>
       </thead>
       <tr ng-repeat="street in streets | filter:visitedStreetFilter">
         <th>{{street.name}}</th>
         <th ng-repeat="city in cities | filter:{$id: street.city_id}">{{city.name}}</th>
-        <th><span ng-show="street.hotel_team_id == teamId" class="glyphicon glyphicon-home"></span></th>
+        <th>{{street.visitors[teamId].timestamp | date:'HH:mm:ss'}}</th>
+        <th ng-show="street.hotel_team_id == teamId"><span class="glyphicon glyphicon-home"></span> {{street.hotel_timestamp | date:'HH:mm:ss'}}</th>
       </tr>
     </table>
   </div>

@@ -11,15 +11,22 @@
           <option value="" disabled selected>Selecteer een stad</option>
           <option ng-repeat='city in cities' value='{{city.$id}}'>{{city.name}}</option>
         </select>
-        <select ng-show='streetForHotelCityId' class='form-control' id='street' ng-model='streetForHotel'>
+        <select ng-show='streetForHotelCityId' class='form-control' id='street' ng-model='streetForHotel.id'>
           <option value="" disabled selected>Selecteer een straat</option>
           <option ng-repeat='street in streets | filter:{city_id: streetForHotelCityId}' value='{{street.$id}}'>{{street.name}}</option>
         </select>
+      </div>
+      <div ng-hide='!(streetForVisit)' class='form-group'>
+        Tijd:
+        <label>
+          <input type='checkbox' id='add_hotel_now' ng-model='add_hotel_now' ng-init="add_hotel_now = true"> Nu
+        </label>
+        <timepicker ng-hide="add_hotel_now" ng-model="streetForHotel.timestamp" show-meridian="false"></timepicker>
       </div>
       <div class='form-group'>
         <button ng-disabled="!(streetForHotelCityId && streetForHotel)" type='submit' class='btn btn-info' ng-click='hotelStreet(streetForHotel); streetForHotel=""'>Toevoegen</button>
       </div>
     </form>
   </div>
-  
+
 </div>

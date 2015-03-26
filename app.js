@@ -1,6 +1,6 @@
 "use strict";
 
-var monopoly = angular.module("monopoly", ["ngRoute", "monopolyControllers", "firebase"]);
+var monopoly = angular.module("monopoly", ["ngRoute", "monopolyControllers", "firebase", "ui.bootstrap"]);
 
 monopoly.config(function($locationProvider, $routeProvider) {
     //$locationProvider.html5Mode(true);

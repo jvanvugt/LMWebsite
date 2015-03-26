@@ -101,22 +101,26 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
 
   $scope.visitStreet = function(street) {
     var timestamp = Firebase.ServerValue.TIMESTAMP;
-    new Firebase(FIREBASE_URL+'streets').child(street).child('visitors').child(teamId).set(timestamp);
+    if (street.timestamp)
+      timestamp = street.timestamp.getTime();
+    new Firebase(FIREBASE_URL+'streets').child(street.id).child('visitors').child(teamId).child('timestamp').set(timestamp);
     ref.child('transactions').push({
       type: 'visit_street',
       timestamp: timestamp,
-      street: street
+      street: street.id
     });
   };
 
   $scope.hotelStreet = function(street) {
     var timestamp = Firebase.ServerValue.TIMESTAMP;
-    new Firebase(FIREBASE_URL+'streets/'+street+'/hotel_team_id').set(teamId);
-    new Firebase(FIREBASE_URL+'streets/'+street+'/hotel_timestamp').set(timestamp);
+    if (street.timestamp)
+      timestamp = street.timestamp.getTime();
+    new Firebase(FIREBASE_URL+'streets/'+street.id+'/hotel_team_id').set(teamId);
+    new Firebase(FIREBASE_URL+'streets/'+street.id+'/hotel_timestamp').set(timestamp);
     ref.child('transactions').push({
       type: 'buy_hotel',
       timestamp: timestamp,
-      street: street
+      street: street.id
     });
   };
 
