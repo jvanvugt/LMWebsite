@@ -9,14 +9,14 @@
       <div class='form-group'>
         <select class='form-control' id='task' ng-model='taskForCompletion'>
           <option value="" disabled selected>Selecteer een opdracht</option>
-          <option ng-repeat='task in tasks' value='{{task.$id}}'>{{task.name}}</option>
+          <option ng-repeat='(id, task) in tasks' value='{{id}}'>{{task.name}}</option>
         </select>
       </div>
-      <div class='form-group' ng-show='isRankable(taskForCompletion)'>
+      <div class='form-group' ng-show='tasks[taskForCompletion].rankable'>
         <input type='text' class='form_control' placeholder='Waarde voor rangorde' ng-model='taskValue'>
       </div>
       <div class='form-group'>
-        <button ng-disabled="!(taskForCompletion && taskValue)" type='submit' class='btn btn-info' ng-click='completeTask(taskForCompletion,taskValue); taskForCompletion="";taskValue=""'>Toevoegen</button>
+        <button ng-disabled="!(taskForCompletion && (!tasks[taskForCompletion].rankable || taskValue))" type='submit' class='btn btn-info' ng-click='completeTask(taskForCompletion,taskValue); taskForCompletion="";taskValue=""'>Toevoegen</button>
       </div>
     </form>
   </div>

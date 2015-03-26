@@ -11,9 +11,9 @@
         <th>Tijd</th>
         <th>Hotel</th>
       </thead>
-      <tr ng-repeat="street in streets | filter:visitedStreetFilter">
+      <tr ng-repeat="(id, street) in streets" ng-show="street.visitors[teamId]">
         <th>{{street.name}}</th>
-        <th ng-repeat="city in cities | filter:{$id: street.city_id}">{{city.name}}</th>
+        <th>{{cities[street.city_id].name}}</th>
         <th>{{street.visitors[teamId].timestamp | date:'HH:mm:ss'}}</th>
         <th ng-show="street.hotel_team_id == teamId"><span class="glyphicon glyphicon-home"></span> {{street.hotel_timestamp | date:'HH:mm:ss'}}</th>
       </tr>

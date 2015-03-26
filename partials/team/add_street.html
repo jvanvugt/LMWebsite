@@ -9,11 +9,11 @@
       <div class='form-group'>
         <select class='form-control' id='street' ng-model='streetForVisitCityId'>
           <option value="" disabled selected>Selecteer een stad</option>
-          <option ng-repeat='city in cities' value='{{city.$id}}'>{{city.name}}</option>
+          <option ng-repeat='(id, city) in cities' value='{{id}}'>{{city.name}}</option>
         </select>
         <select ng-show='streetForVisitCityId' class='form-control' id='street' ng-model='streetForVisit.id'>
           <option value="" disabled selected>Selecteer een straat</option>
-          <option ng-repeat='street in streets | filter:{city_id: streetForVisitCityId}' value='{{street.$id}}'>{{street.name}}</option>
+          <option ng-repeat='(id, street) in streets' ng-show="street.city_id == streetForVisitCityId" value='{{id}}'>{{street.name}}</option>
         </select>
       </div>
       <div ng-hide='!(streetForVisit)' class='form-group'>

@@ -12,11 +12,13 @@
         <th>Email</th>
         <th>Vereniging</th>
       </thead>
-      <tr ng-repeat="member in members">
-        <td>{{member.name}}</td>
-        <td>{{member.phone}} <span ng-hide="member.smartphone">(niet smart)</span></td>
-        <td>{{member.mail}}</td>
-        <td>{{member.society}}</td>
+      <tr ng-repeat="(id, user) in users"
+          ng-show="user.team == teamId && id != teams[teamId].judge">
+
+        <td>{{user.name}}</td>
+        <td>{{user.phone}} <span ng-hide="user.smartphone">(niet smart)</span></td>
+        <td>{{user.mail}}</td>
+        <td>{{user.society}}</td>
       </tr>
     </table>
 
