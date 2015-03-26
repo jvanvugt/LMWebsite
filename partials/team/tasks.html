@@ -12,7 +12,7 @@
         <th>Rangorde waarde</th>
       </thead>
       <tr ng-repeat="task in tasks | filter:completedTaskFilter">
-        <td>{{task.name}}</th>
+        <td>{{task.name}}</td>
         <td ng-repeat="team in task.completed | filter: {$id: teamId}">
            <button type="button" class="btn btn-danger btn-xs" ng-click="decrementTask(task.$id)"><span class="glyphicon glyphicon-minus"></span></button>
            {{team.repeats}}
