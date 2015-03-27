@@ -1,0 +1,32 @@
+<h3>Transacties</h3>
+<form>
+  <div class='form-group'>
+  <select class='form-control' id='transactions-team' ng-model='transactions.team'>
+    <option value="" disabled selected>Selecteer een team</option>
+    <option ng-repeat='(id, team) in data.teams' value='{{id}}'>{{team.name}}</option>
+  </select>
+  </div>
+  <div class="panel-body" ng-show="transactions.team">
+    <table class="table">
+      <thead>
+        <th>Type</th>
+        <th>Tijd</th>
+        <th>Data</th>
+        <th>Inactief</th>
+      </thead>
+      <tr ng-repeat="(id, transaction) in data.teams[transactions.team].transactions">
+        <td>{{transaction.type}} <span ng-show="transaction.undo" class="glyphicon glyphicon-share-alt"></span></td>
+        <td>{{transaction.timestamp | date:'H:mm:ss'}}</td>
+        <td>
+          <div ng-repeat="(key, value) in transaction" ng-show="key != 'type' && key != 'timestamp' && key != 'inactive'">
+            <div>{{key}}: {{value}}</div>
+          </div>
+        </td>
+        <td>
+            <button ng-hide="transaction.inactive" type="button" class="btn btn-info btn-xs" ng-click="data.toggleTransaction(transactions.team,id)"><span class="glyphicon glyphicon-ok-circle"></span></button>
+            <button ng-show="transaction.inactive" type="button" class="btn btn-warning btn-xs" ng-click="data.toggleTransaction(transactions.team,id)"><span class="glyphicon glyphicon-ban-circle"></span></button>
+        </td>
+      </tr>
+    </table>
+  </div>
+</form>

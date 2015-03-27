@@ -14,23 +14,12 @@ monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, $
 });
 
 monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParams, Data, WithFilterableId, TransactionsFactory) {
+  
   $scope.pageName = 'Team';
   $scope.pageDesc = 'Overzicht van een team';
 
   $scope.teamId = $routeParams.teamId;
-
   $scope.data = Data;
-
-  $scope.users = Data.users;
-  $scope.cities = Data.cities;
-  $scope.streets = Data.streets;
-  $scope.tasks = Data.tasks;
-  $scope.societies = Data.societies;
-  $scope.constants = Data.constants;
-  $scope.cards = Data.cards;
-
-  $scope.consts = $scope.constants;
-
   $scope.transactions = TransactionsFactory($scope.teamId);
 
   $scope.submitAddStreet = function(data) {
@@ -41,41 +30,35 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
     Data.teamBuyHotel($scope.teamId, data.streetId, Data.timestampOf(data))
   };
 
-  $scope.submitCompleteTask = function(data) {
-    Data.teamCompleteTask($scope.teamId, data.taskId, data.taskValue)
-    if (taskValue)
-      Data.taskref(taskId).child('completed').child($scope.teamId).child('rank_value').set(taskValue);
-    Data.taskref(taskId).child('completed').child($scope.teamId).child('repeats').set(1);
+  $scope.submitAddTask = function(data) {
+    console.log(data);
+    Data.teamCompleteTask($scope.teamId, data.taskId, data.taskValue, Data.timestampOf(data));
   };
 
   $scope.incrementTask = function(taskId) {
-    var ref = Data.taskref(taskId).child('completed').child($scope.teamId).child('repeats');
-    ref.transaction(function(current) {
-      return current+1;
-    });
+    Data.teamCompleteTask($scope.teamId, taskId, null, Data.now());
   };
 
   $scope.decrementTask = function(taskId) {
-    var ref = Data.taskref(taskId).child('completed').child($scope.teamId).child('repeats');
-    ref.transaction(function(current) {
-      return current-1;
-    });
+    Data.teamUncompleteTask($scope.teamId, taskId, Data.now());
   };
 
-  $scope.getResult = function(card, teamCard) {
-    if(!card) return;
-    if(card.is_positive && teamCard.success)
-      return card.amount;
-    else if(card.is_negative && !teamCard.success)
-      return -card.amount;
-    else
-      return 0;
-  }
+  $scope.completeCard = function(cardId) {
+    Data.teamCompleteCard($scope.teamId, cardId, Data.now());
+  };
+
+  $scope.submitStraight = function(data) {
+    Data.teamStraightMoney($scope.teamId, data.amount, Data.now());
+  };
+
 });
 
-monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase, FIREBASE_URL) {
+monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $firebase, FIREBASE_URL) {
+  
   $scope.pageName = 'Admin';
   $scope.pageDesc = 'Voer admin functies uit';
+
+  $scope.data = Data;
 
   var societysync = $firebase(new Firebase(FIREBASE_URL+'static/societies'));
   $scope.societies = societysync.$asArray();
@@ -204,10 +187,6 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
 
   $scope.deleteTask = function(taskId) {
     new Firebase(FIREBASE_URL+'tasks/'+taskId).remove();
-  }
-
-  $scope.addCard = function(card) {
-    new Firebase(FIREBASE_URL+'cards').push(card);
   }
 
   $scope.addCard = function(card) {

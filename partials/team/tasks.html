@@ -3,7 +3,7 @@
      <h3 class="panel-title">Gehaalde opdrachten</h3>
   </div>
 
-  <div id="tasks-panel" class="panel-body">
+  <div class="panel-body">
     <table class="table">
       <thead>
         <th>Naam</th>
@@ -11,7 +11,7 @@
         <th>Beloning (per keer)</th>
         <th>Rangorde waarde</th>
       </thead>
-      <tr ng-repeat="(taskId, task) in tasks"
+      <tr ng-repeat="(taskId, task) in data.tasks"
           ng-show="task.completed[teamId].repeats > 0">
         <td>{{task.name}}</td>
         <td ng-repeat="(id, team) in task.completed" ng-show="id == teamId">

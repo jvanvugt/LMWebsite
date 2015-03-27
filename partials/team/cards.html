@@ -3,20 +3,34 @@
      <h3 class="panel-title">Kanskaarten</h3>
   </div>
 
-  <div id="tasks-panel" class="panel-body">
+  <div class="panel-body">
     <table class="table">
       <thead>
         <th>Naam</th>
+        <th>Type</th>
         <th>Gehaald?</th>
         <th>Eindtijd</th>
-        <th>Resultaat</th>
+        <th>Waarde</th>
       </thead>
-      <tr ng-repeat="teamCard in teamCards">
-        <span ng-repeat='card in cards | filter: {$id: teamCard.card_id}'>
-        <td>{{cardsObj[teamCard.card_id].name}}</td>
-        <td>{{teamCard.success}}</td>
-        <td>{{teamCard.end_time | date:'HH:mm:ss'}}</td>
-        <td>{{getResult(cardsObj[teamCard.card_id], teamCard)}}</td>
+      <tr ng-repeat="(id, card) in data.cards" ng-show="card.received[teamId]">
+        <!--span ng-repeat='card in cards | filter: {$id: teamCard.card_id}'-->
+        <td>{{card.name}}</td>
+        <td>
+          <div ng-show="card.is_positive"><span class="glyphicon glyphicon-thumbs-up"></span></div>
+          <div ng-show="card.is_negative"><span class="glyphicon glyphicon-thumbs-down"></span></div>
+        </td>
+        <td>
+          <div ng-show="data.now() <= card.received[teamId].timestamp + 60*60*1000">
+            <button ng-hide="card.received[teamId].completed" type="button" class="btn btn-success btn-xs" ng-click="completeCard(id)"><span class="glyphicon glyphicon-ok"></span></button>
+            <div ng-show="card.received[teamId].completed"><span class="glyphicon glyphicon-ok"></span> {{card.received[teamId].completed | date:'H:mm:ss'}}</div>
+          </div>
+          <div ng-show="data.now() > card.received[teamId].timestamp + 60*60*1000">
+            <div ng-hide="card.received[teamId].completed"><span class="glyphicon glyphicon-remove"></span></button></div>
+            <div ng-show="card.received[teamId].completed"><span class="glyphicon glyphicon-ok"></span> {{card.received[teamId].completed | date:'H:mm:ss'}}</div>
+          </div>
+        </td>
+        <td>{{card.received[teamId].timestamp + 60*60*1000 | date:'H:mm:ss'}}</td> <!-- TODO: calculate end time -->
+        <td>{{(2*card.is_positive-1)*card.amount}}</td>
       </span>
       </tr>
     </table>

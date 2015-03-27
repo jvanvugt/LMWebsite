@@ -1,10 +1,10 @@
 <h3>Straat toevoegen</h3>
 <form>
   <div class='form-group'>
-    <label for='streetName'>Straatnaam:</label>
-    <input type='text' class='form-control' id='streetName' placeholder='Voer straatnaam in' ng-model='streetForAdd.name'>
-    <label for='streetLocation'>Stad:</label>
-    <select class='form-control' id='streetLocation' ng-model='streetForAdd.city_id'>
+    <label for='add-street-name'>Straatnaam:</label>
+    <input type='text' class='form-control' id='add-street-name' placeholder='Voer straatnaam in' ng-model='streetForAdd.name'>
+    <label for='add_street_city'>Stad:</label>
+    <select class='form-control' id='add_street_city' ng-model='streetForAdd.city_id'>
       <option value="" disabled selected>Selecteer een stad</option>
       <option ng-repeat='city in cities' value='{{city.$id}}'>{{city.name}}</option>
     </select>

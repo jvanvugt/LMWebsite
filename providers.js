@@ -26,8 +26,6 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase) {
   this.constants = $firebase(DataRoot.child('static').child('constants')).$asObject();
   this.societies = $firebase(DataRoot.child('static').child('societies')).$asObject();
 
-  this.taskref = function(taskId) { return DataRoot.child('tasks').child(taskId) };
-
   var chance = Chance(this);
 
   this.teamVisitStreet = function(teamId, streetId, timestamp) {
@@ -42,7 +40,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase) {
   this.teamGetCard = function(teamId, timestamp) {
     var card = chance.objectProperty(this.teamAvailableCards(teamId));
     //var endTime = (new Date().getTime()) + (this.constants.card_max_time * 60); // TODO: doesn't work.
-    DataRoot.child('cards').child(card.id).child('visitors').child(teamId).child('timestamp').set(timestamp);
+    DataRoot.child('cards').child(card.id).child('received').child(teamId).child('timestamp').set(timestamp);
     this.addTransaction(teamId, timestamp, {type: 'get_card', card: card.id});
   };
 
@@ -56,13 +54,41 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase) {
   };
 
   this.teamBuyHotel = function(teamId, streetId, timestamp) {
-    DataRoot.child('streets').child(streetId).child('hotel_team_id').set(teamId);
-    DataRoot.child('streets').child(streetId).child('hotel_timestamp').set(timestamp);
+    var streetref = DataRoot.child('streets').child(streetId)
+    streetref.child('hotel_team_id').set(teamId);
+    streetref.child('hotel_timestamp').set(timestamp);
     this.addTransaction(teamId, timestamp, {type: 'buy_hotel', street: streetId});
   };
 
-  this.teamCompleteTask = function(teamId, taskId, taskValue) {
-    
+  this.teamCompleteTask = function(teamId, taskId, taskValue, timestamp) {
+    var taskcompletedteamref = DataRoot.child('tasks').child(taskId).child('completed').child(teamId);
+    if (this.tasks[taskId].completed && this.tasks[taskId].completed[teamId]) {
+      taskcompletedteamref.child('repeats').transaction(function(current) {
+        return current+1;
+      });
+    } else {
+      if (taskValue)
+        taskcompletedteamref.child('rank_value').set(taskValue);
+      taskcompletedteamref.child('repeats').set(1);
+    }
+    this.addTransaction(teamId, timestamp, {type: 'complete_task', task: taskId});
+  };
+
+  this.teamUncompleteTask = function(teamId, taskId, timestamp) {
+    var taskcompletedteamref = DataRoot.child('tasks').child(taskId).child('completed').child(teamId);
+    taskcompletedteamref.child('repeats').transaction(function(current) {
+      return current-1;
+    });
+    this.addTransaction(teamId, timestamp, {type: 'complete_task', undo: true, task: taskId});
+  };
+
+  this.teamCompleteCard = function(teamId, cardId, timestamp) {
+    DataRoot.child('cards').child(cardId).child('received').child(teamId).child('completed').set(timestamp);
+    this.addTransaction(teamId, timestamp, {type: 'complete_card', card: cardId});
+  };
+
+  this.teamStraightMoney = function(teamId, amount, timestamp) {
+    this.addTransaction(teamId, timestamp, {type: 'straight_money', amount: amount});
   };
 
   this.addTransaction = function(teamId, timestamp, transaction) {
@@ -70,11 +96,22 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase) {
     DataRoot.child('teams').child(teamId).child('transactions').push(transaction);
   };
 
+  this.toggleTransaction = function(teamId, transactionId) {
+    var transactionref = DataRoot.child('teams').child(teamId).child('transactions').child(transactionId);
+    transactionref.child('inactive').transaction(function(current) {
+      return !current;
+    });
+  };
+
   this.timestampOf = function(data) {
     if (data.timestamp)
       return data.timestamp.getTime();
     else
       return Firebase.ServerValue.TIMESTAMP;
+  };
+
+  this.now = function() {
+    return new Date().getTime();
   };
 });
 
@@ -100,8 +137,11 @@ monopolyProviders.factory("TransactionsFactory", function($FirebaseArray, $fireb
     getBalance: function() {
       var balance = Data.constants.buy_hotel_costs;
       angular.forEach(this.$list, function(transaction) {
+        if (transaction.inactive)
+          return;
         switch (transaction.type) {
           case 'visit_street':
+            balance += Data.constants.visit_street_profits;
             if (Data.streets[transaction.street] &&
                 Data.streets[transaction.street].hotel_timestamp &&
                 Data.streets[transaction.street].hotel_timestamp <= transaction.timestamp) {
@@ -119,6 +159,8 @@ monopolyProviders.factory("TransactionsFactory", function($FirebaseArray, $fireb
               });
             }
             break;
+          case 'straight_money':
+            balance += transaction.amount;
           default:
             break;
         }

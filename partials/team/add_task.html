@@ -7,16 +7,16 @@
   <div class="panel-body">
     <form>
       <div class='form-group'>
-        <select class='form-control' ng-model='addTask.id'>
+        <select class='form-control' ng-model='addTask.taskId'>
           <option value="" disabled selected>Selecteer een opdracht</option>
-          <option ng-repeat='(id, task) in tasks' value='{{id}}'>{{task.name}}</option>
+          <option ng-repeat='(id, task) in data.tasks' ng-show="!task.completed[teamId]" value='{{id}}'>{{task.name}}</option>
         </select>
       </div>
-      <div class='form-group' ng-show='data.tasks[addTask.id].rankable'>
-        <input type='text' class='form_control' placeholder='Waarde voor rangorde' ng-model='addTask.value'>
+      <div class='form-group' ng-show='data.tasks[addTask.taskId].rankable'>
+        <input type='text' class='form_control' placeholder='Waarde voor rangorde' ng-model='addTask.taskValue'>
       </div>
       <div class='form-group'>
-        <button ng-disabled="!(addTask.id && (!tasks[addTask.id].rankable || addTask.value))" type='submit' class='btn btn-info' ng-click='submitAddTask(addTask); addTask={}'>Toevoegen</button>
+        <button ng-disabled="!(addTask.taskId && (!data.tasks[addTask.taskId].rankable || addTask.taskValue))" type='submit' class='btn btn-info' ng-click='submitAddTask(addTask); addTask={}'>Toevoegen</button>
       </div>
     </form>
   </div>
