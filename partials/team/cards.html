@@ -1,0 +1,24 @@
+<div class="panel panel-info">
+  <div class="panel-heading">
+     <h3 class="panel-title">Kanskaarten</h3>
+  </div>
+
+  <div id="tasks-panel" class="panel-body">
+    <table class="table">
+      <thead>
+        <th>Naam</th>
+        <th>Gehaald?</th>
+        <th>Eindtijd</th>
+        <th>Resultaat</th>
+      </thead>
+      <tr ng-repeat="teamCard in teamCards">
+        <span ng-repeat='card in cards | filter: {$id: teamCard.card_id}'>
+        <td>{{cardsObj[teamCard.card_id].name}}</td>
+        <td>{{teamCard.success}}</td>
+        <td>{{teamCard.end_time | date:'HH:mm:ss'}}</td>
+        <td>{{getResult(cardsObj[teamCard.card_id], teamCard)}}</td>
+      </span>
+      </tr>
+    </table>
+  </div>
+</div>

@@ -1,78 +1,8 @@
 var monopolyControllers = angular.module('monopolyControllers', []);
 
-monopolyControllers.constant('FIREBASE_URL','https://cognac-monopoly.firebaseio.com/');
-
 monopolyControllers.controller('NavBarCtrl', function($scope, $firebase, FIREBASE_URL) {
   var sync = $firebase(new Firebase(FIREBASE_URL+'teams'));
   $scope.teams = sync.$asArray();
-});
-
-monopolyControllers.factory('WithFilterableId', function($FirebaseArray, $firebaseUtils) {
-   return $FirebaseArray.$extendFactory({
-       $$added:  function(snap) {
-           var rec = $FirebaseArray.prototype.$$added.call(this, snap);
-           rec._id = rec.$id;
-           return rec;
-       }
-   });
-});
-
-monopolyControllers.service('DataRoot', function ($firebase, FIREBASE_URL) {
-  return new Firebase(FIREBASE_URL);
-});
-
-monopolyControllers.service('Data', function (DataRoot, $firebase, WithFilterableId) {
-  var that = this;
-
-  this.teams = $firebase(DataRoot.child('teams')).$asObject();
-  this.users = $firebase(DataRoot.child('users')).$asObject();
-  this.cities = $firebase(DataRoot.child('cities')).$asObject();
-  this.streets = $firebase(DataRoot.child('streets')).$asObject();
-  this.tasks = $firebase(DataRoot.child('tasks')).$asObject();
-  this.cards = $firebase(DataRoot.child('cards')).$asObject();
-  this.constants = $firebase(DataRoot.child('static').child('constants')).$asObject();
-
-  this.teamref = function(teamId) { return DataRoot.child('teams').child(teamId) };
-  this.streetref = function(streetId) { return DataRoot.child('streets').child(streetId) };
-  this.taskref = function(taskId) { return DataRoot.child('tasks').child(taskId) };
-});
-
-monopolyControllers.factory("TransactionsFactory", function($FirebaseArray, $firebase, Data) {
-  var TransactionsFactory = $FirebaseArray.$extendFactory({
-    getBalance: function() {
-      var balance = Data.constants.buy_hotel_costs;
-      angular.forEach(this.$list, function(transaction) {
-        switch (transaction.type) {
-          case 'visit_street':
-            if (Data.streets[transaction.street] &&
-                Data.streets[transaction.street].hotel_timestamp &&
-                Data.streets[transaction.street].hotel_timestamp <= transaction.timestamp) {
-              balance -= Data.constants.visit_hotel_costs;
-            }
-            break;
-          case 'buy_hotel':
-            balance -= Data.constants.buy_hotel_costs;
-            if (Data.streets[transaction.street] &&
-                Data.streets[transaction.street].visitors) {
-              angular.forEach(Data.streets[transaction.street].visitors, function (visit, visitor) {
-                if (visit.timestamp &&
-                    visit.timestamp >= transaction.timestamp)
-                  balance += Data.constants.visit_hotel_profits;
-              });
-            }
-            break;
-          default:
-            break;
-        }
-      });
-      return balance;
-    }
-  });
-
-  return function(teamId) {
-    var sync = $firebase(Data.teamref(teamId).child('transactions'), {arrayFactory: TransactionsFactory});
-    return sync.$asArray();
-  }
 });
 
 monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, $firebase, FIREBASE_URL) {
@@ -89,41 +19,30 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
 
   $scope.teamId = $routeParams.teamId;
 
-  $scope.teams = Data.teams;
+  $scope.data = Data;
+
   $scope.users = Data.users;
   $scope.cities = Data.cities;
   $scope.streets = Data.streets;
   $scope.tasks = Data.tasks;
+  $scope.societies = Data.societies;
+  $scope.constants = Data.constants;
+  $scope.cards = Data.cards;
 
-  var teamref = Data.teamref($scope.teamId);
+  $scope.consts = $scope.constants;
+
   $scope.transactions = TransactionsFactory($scope.teamId);
 
-  $scope.visitStreet = function(street) {
-    var timestamp = Firebase.ServerValue.TIMESTAMP;
-    if (street.timestamp)
-      timestamp = street.timestamp.getTime();
-    Data.streetref(street.id).child('visitors').child($scope.teamId).child('timestamp').set(timestamp);
-    teamref.child('transactions').push({
-      type: 'visit_street',
-      timestamp: timestamp,
-      street: street.id
-    });
+  $scope.submitAddStreet = function(data) {
+    Data.teamVisitStreet($scope.teamId, data.streetId, Data.timestampOf(data));
   };
 
-  $scope.hotelStreet = function(street) {
-    var timestamp = Firebase.ServerValue.TIMESTAMP;
-    if (street.timestamp)
-      timestamp = street.timestamp.getTime();
-    Data.streetref(street.id).child('hotel_team_id').set($scope.teamId);
-    Data.streetref(street.id).child('hotel_timestamp').set(timestamp);
-    teamref.child('transactions').push({
-      type: 'buy_hotel',
-      timestamp: timestamp,
-      street: street.id
-    });
+  $scope.submitAddHotel = function(data) {
+    Data.teamBuyHotel($scope.teamId, data.streetId, Data.timestampOf(data))
   };
 
-  $scope.completeTask = function(taskId,taskValue) {
+  $scope.submitCompleteTask = function(data) {
+    Data.teamCompleteTask($scope.teamId, data.taskId, data.taskValue)
     if (taskValue)
       Data.taskref(taskId).child('completed').child($scope.teamId).child('rank_value').set(taskValue);
     Data.taskref(taskId).child('completed').child($scope.teamId).child('repeats').set(1);
@@ -142,6 +61,16 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
       return current-1;
     });
   };
+
+  $scope.getResult = function(card, teamCard) {
+    if(!card) return;
+    if(card.is_positive && teamCard.success)
+      return card.amount;
+    else if(card.is_negative && !teamCard.success)
+      return -card.amount;
+    else
+      return 0;
+  }
 });
 
 monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase, FIREBASE_URL) {
@@ -168,6 +97,9 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
 
   var cardsync = $firebase(new Firebase(FIREBASE_URL+'cards'));
   $scope.cards = cardsync.$asArray();
+
+  var constsync = $firebase(new Firebase(FIREBASE_URL+'static/constants')).$asObject();
+  constsync.$bindTo($scope, "consts");
 
   $scope.streetInCityFilter = function(street) {
     var cityId = document.getElementById('cityStreetRemove').value;
@@ -278,6 +210,10 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
     new Firebase(FIREBASE_URL+'cards').push(card);
   }
 
+  $scope.addCard = function(card) {
+    new Firebase(FIREBASE_URL+'cards').push(card);
+  }
+
   $scope.deleteCard = function(cardId) {
     new Firebase(FIREBASE_URL+'cards/'+cardId).remove();
   }
@@ -290,6 +226,14 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, $firebase
     var street = new Firebase(FIREBASE_URL+'streets/'+streetId);
     street.child('hotel_timestamp').remove();
     street.child('hotel_team_id').remove();
+  }
+
+  $scope.addSociety = function(society) {
+    new Firebase(FIREBASE_URL+'static/societies').push(society);
+  }
+
+  $scope.deleteSociety = function(societyId) {
+    new Firebase(FIREBASE_URL+'static/societies/'+societyId).remove();
   }
 
 });

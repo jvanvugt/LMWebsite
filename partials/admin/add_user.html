@@ -26,7 +26,7 @@
     <label for='userSociety'>Vereniging:</label>
     <select class='form-control' id='userSociety' ng-model='user.society'>
       <option value="" disabled selected>Selecteer een vereniging</option>
-      <option ng-repeat='society in societies'>{{society.$id}}</option>
+      <option ng-repeat='society in societies' value='{{society.$id}}'>{{society.name}}</option>
     </select>
   </div>
 

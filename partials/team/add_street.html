@@ -4,27 +4,27 @@
      <h3 class="panel-title">Bezochte straat toevoegen</h3>
   </div>
 
-  <div id="add-street-panel" class="panel-body">
+  <div class="panel-body">
     <form>
       <div class='form-group'>
-        <select class='form-control' id='street' ng-model='streetForVisitCityId'>
+        <select class='form-control' ng-model='addStreet.cityId'>
           <option value="" disabled selected>Selecteer een stad</option>
-          <option ng-repeat='(id, city) in cities' value='{{id}}'>{{city.name}}</option>
+          <option ng-repeat='(id, city) in data.cities' value='{{id}}'>{{city.name}}</option>
         </select>
-        <select ng-show='streetForVisitCityId' class='form-control' id='street' ng-model='streetForVisit.id'>
+        <select ng-show='addStreet.cityId' class='form-control' ng-model='addStreet.streetId'>
           <option value="" disabled selected>Selecteer een straat</option>
-          <option ng-repeat='(id, street) in streets' ng-show="street.city_id == streetForVisitCityId" value='{{id}}'>{{street.name}}</option>
+          <option ng-repeat='(id, street) in data.streets' ng-show="street.city_id == addStreet.cityId" value='{{id}}'>{{street.name}}</option>
         </select>
       </div>
-      <div ng-hide='!(streetForVisit)' class='form-group'>
+      <div ng-hide='!(addStreet.streetId)' class='form-group'>
         Tijd:
         <label>
-          <input type='checkbox' id='add_street_now' ng-model='add_street_now' ng-init="add_street_now = true"> Nu
+          <input type='checkbox' ng-model='addStreet.now' ng-init="addStreet.now = true"> Nu
         </label>
-        <timepicker ng-hide="add_street_now" ng-model="streetForVisit.timestamp" show-meridian="false"></timepicker>
+        <timepicker ng-hide="addStreet.now" ng-model="addStreet.timestamp" show-meridian="false"></timepicker>
       </div>
       <div class='form-group'>
-        <button ng-disabled="!(streetForVisitCityId && streetForVisit)" type='submit' class='btn btn-info' ng-click='visitStreet(streetForVisit); streetForVisit=""'>Toevoegen</button>
+        <button ng-disabled="!(addStreet.streetId)" type='submit' class='btn btn-info' ng-click='submitAddStreet(addStreet); addStreet={now: true};'>Toevoegen</button>
       </div>
     </form>
   </div>

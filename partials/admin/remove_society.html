@@ -1,0 +1,11 @@
+<h3>Studievereniging verwijderen</h3>
+<form>
+  <div class='form-group'>
+    <label for='societyRemove'>Studievereniging:</label>
+    <select class='form-control' id='societyRemove' ng-model='societyForDelete'>
+      <option value="" disabled selected>Selecteer een studievereniging</option>
+      <option ng-repeat='soc in societies' value='{{soc.$id}}'>{{soc.name}}</option>
+    </select>
+  </div>
+  <button class='btn btn-info' type='submit' ng-click='deleteSociety(societyForDelete); societyForDelete=""' ng-disabled='!societyForDelete'>Verwijderen</button>
+</form>

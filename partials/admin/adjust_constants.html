@@ -1,0 +1,19 @@
+<h3>Constanten aanpassen</h3>
+<form>
+  <div class='form-group'>
+    <label for='maxTimeStreet'>Tijd die een team heeft om een kanskaart te voltooien (in minuten):</label>
+    <input type='number' ng-model='consts.card_max_time' class='form-control' min='0' max='100' id='maxTimeStreet'>
+    <label for='visitStreetProfits'>Opbrengsten voor het bezoeken van een straat:</label>
+    <input type='number' ng-model='consts.visit_street_profits' class='form-control' min='0' id='visitStreetProfits'>
+    <label for='buyHotelCosts'>Kosten van het kopen van een hotel:</label>
+    <input type='number' ng-model='consts.buy_hotel_costs' class='form-control' min='0' id='buyHotelCosts'>
+    <label for='visitHotelCosts'>Kosten voor het bezoeken van een straat met een hotel:</label>
+    <input type='number' ng-model='consts.visit_hotel_costs' class='form-control' min='0' id='visitHotelCosts'>
+    <label for='visitHotelProfits'>Opbrengsten als iemand je hotel bezoekt:</label>
+    <input type='number' ng-model='consts.visit_hotel_profits' class='form-control' min='0' id='visitHotelProfits'>
+    <label for='maxNumberHotels'>Maximaal aantal hotels per team:</label>
+    <input type='number' ng-model='consts.max_hotels' class='form-control' min='0' id='maxNumberHotels'>
+    <label for='probCardStreet'>Kans op een kanskaart per straat (in procenten):</label>
+    <input type='number' ng-model='consts.probability_card_per_street' class='form-control' min='0' max='100' id='probCardStreet'>
+  </div>
+</form>

@@ -12,10 +12,10 @@
         <th>Hotel</th>
       </thead>
       <tr ng-repeat="(id, street) in streets" ng-show="street.visitors[teamId]">
-        <th>{{street.name}}</th>
-        <th>{{cities[street.city_id].name}}</th>
-        <th>{{street.visitors[teamId].timestamp | date:'HH:mm:ss'}}</th>
-        <th ng-show="street.hotel_team_id == teamId"><span class="glyphicon glyphicon-home"></span> {{street.hotel_timestamp | date:'HH:mm:ss'}}</th>
+        <td>{{street.name}}</td>
+        <td>{{cities[street.city_id].name}}</td>
+        <td>{{street.visitors[teamId].timestamp | date:'HH:mm:ss'}}</td>
+        <td><div ng-show="street.hotel_team_id == teamId"><span class="glyphicon glyphicon-home"></span> {{street.hotel_timestamp | date:'HH:mm:ss'}}</div></td>
       </tr>
     </table>
   </div>
