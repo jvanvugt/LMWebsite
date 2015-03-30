@@ -14,7 +14,7 @@ monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, $
 });
 
 monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParams, Data, WithFilterableId, TransactionsFactory) {
-  
+
   $scope.pageName = 'Team';
   $scope.pageDesc = 'Overzicht van een team';
 
@@ -54,7 +54,7 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
 });
 
 monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $firebase, FIREBASE_URL) {
-  
+
   $scope.pageName = 'Admin';
   $scope.pageDesc = 'Voer admin functies uit';
 
@@ -213,6 +213,10 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $fi
 
   $scope.deleteSociety = function(societyId) {
     new Firebase(FIREBASE_URL+'static/societies/'+societyId).remove();
+  }
+
+  $scope.removeCardFromTeam = function(cardId, teamId) {
+    new Firebase(FIREBASE_URL+ 'cards/' + cardId + '/received/'+teamId).remove();
   }
 
 });
