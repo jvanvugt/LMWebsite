@@ -3,9 +3,22 @@ var monopolyControllers = angular.module('monopolyControllers', []);
 monopolyControllers.controller('NavBarCtrl', function($scope, $firebase, FIREBASE_URL) {
   var sync = $firebase(new Firebase(FIREBASE_URL+'teams'));
   $scope.teams = sync.$asArray();
+
+  $scope.logout = function() {
+    new Firebase(FIREBASE_URL).unauth();
+    location.reload(true);
+  };
 });
 
-monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, $firebase, FIREBASE_URL) {
+monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, $firebase, FIREBASE_URL, $firebaseAuth) {
+  var ref = new Firebase(FIREBASE_URL);
+  ref.child('users').child(ref.getAuth().uid).on('value', function(snap) {
+    var user = snap.val();
+    if(!user.roles || !user.roles.admin) {
+      location.assign('/#/error');
+    }
+  });
+  var auth = $firebaseAuth(new Firebase(FIREBASE_URL));
   var sync = $firebase(new Firebase(FIREBASE_URL+'teams'));
   $scope.teams = sync.$asArray();
 
@@ -13,11 +26,19 @@ monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, $
   $scope.pageDesc = 'Overzicht van alle teams';
 });
 
-monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParams, Data, WithFilterableId, TransactionsFactory) {
+monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParams, Data, WithFilterableId, TransactionsFactory, $firebaseAuth, FIREBASE_URL) {
+  var ref = new Firebase(FIREBASE_URL);
+  var auth = $firebaseAuth(ref);
+
+  ref.child('users').child(ref.getAuth().uid).on('value', function(snap) {
+    var user = snap.val();
+    if(!user.roles || !user.roles.judge) {
+      location.assign('/#/error');
+    }
+  });
 
   $scope.pageName = 'Team';
   $scope.pageDesc = 'Overzicht van een team';
-
   $scope.teamId = $routeParams.teamId;
   $scope.data = Data;
   $scope.transactions = TransactionsFactory($scope.teamId);
@@ -53,10 +74,18 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
 
 });
 
-monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $firebase, FIREBASE_URL) {
-
+monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $firebase, FIREBASE_URL, $firebaseAuth) {
+  var ref = new Firebase(FIREBASE_URL);
+  var auth = $firebaseAuth(ref);
   $scope.pageName = 'Admin';
   $scope.pageDesc = 'Voer admin functies uit';
+
+  ref.child('users').child(ref.getAuth().uid).on('value', function(snap) {
+    var user = snap.val();
+    if(!user.roles || !user.roles.admin) {
+      location.assign('/#/error');
+    }
+  });
 
   $scope.data = Data;
 
@@ -219,4 +248,48 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $fi
     new Firebase(FIREBASE_URL+ 'cards/' + cardId + '/received/'+teamId).remove();
   }
 
+  $scope.changeRights = function(userId, isJudge, isAdmin) {
+    var roles = new Firebase(FIREBASE_URL+'users/'+userId+'/roles');
+    roles.child('judge').set(isJudge);
+    roles.child('admin').set(isAdmin);
+  }
+
+});
+
+monopolyControllers.controller('AccountCtrl', function AdminCtrl($scope, Data, $firebase, FIREBASE_URL, $firebaseAuth) {
+  var ref = new Firebase(FIREBASE_URL);
+  var auth = $firebaseAuth(ref);
+  $scope.data = Data;
+
+  $scope.login = function(user) {
+    ref.authWithPassword(user, function(error, authData) {
+      if (error) {
+        console.log("Login Failed!", error);
+      } else {
+        console.log("Authenticated successfully with payload:", authData);
+        location.assign('/#/overzicht');
+      }
+    });
+  }
+
+  $scope.createAccount = function(user) {
+    if(user.password === user.password2) {
+      ref.createUser({
+        email: user.mail,
+        password: user.password
+      }, function(error, userData) {
+        if (error) {
+          console.log("Error creating user:", error);
+        } else {
+          console.log("Successfully created user account with uid:", userData.uid);
+          delete user.password;
+          delete user.password2;
+          new Firebase(FIREBASE_URL+'users').child(userData.uid).set(user);
+        }
+      });
+    } else {
+      alert("Je moet twee keer hetzelfde wachtwoord invullen.");
+    }
+
+  };
 });
