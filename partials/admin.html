@@ -1,3 +1,4 @@
+
 <div class='panel panel-info'>
 
   <div class='panel-heading' data-toggle='collapse' href='#constants'>
@@ -7,9 +8,9 @@
   <div id="constants" class="panel-collapse collapse">
     <div class="panel-body">
 
-      <div ng-include="'partials/admin/adjust_constants.html'" class='col-md-6' />
-      <div ng-include="'partials/admin/add_society.html'" class='col-md-6' />
-      <div ng-include="'partials/admin/remove_society.html'" class='col-md-6' />
+      <div ng-include="'partials/admin/adjust_constants.html'" class='col-md-6' ></div>
+      <div ng-include="'partials/admin/add_society.html'" class='col-md-6' ></div>
+      <div ng-include="'partials/admin/remove_society.html'" class='col-md-6' ></div>
 
     </div>
   </div>
@@ -24,9 +25,9 @@
   <div id="game_management" class="panel-collapse collapse">
     <div class="panel-body">
 
-      <div ng-include="'partials/admin/unvisit_street.html'" class='col-md-6'/>
-      <div ng-include="'partials/admin/remove_hotel.html'" class='col-md-6'/>
-      <div ng-include="'partials/admin/remove_card_from_team.html'" class='col-md-6'/>
+      <div ng-include="'partials/admin/unvisit_street.html'" class='col-md-6'></div>
+      <div ng-include="'partials/admin/remove_hotel.html'" class='col-md-6'></div>
+      <div ng-include="'partials/admin/remove_card_from_team.html'" class='col-md-6'></div>
     </div>
   </div>
 </div>
@@ -40,20 +41,20 @@
   <div id="users_and_teams" class="panel-collapse collapse">
     <div class="panel-body">
 
-      <div ng-include="'partials/admin/add_user.html'" class='col-md-6'/>
-      <div ng-include="'partials/admin/remove_user.html'" class='col-md-6'/>
+      <div ng-include="'partials/admin/add_user.html'" class='col-md-6'></div>
+      <div ng-include="'partials/admin/remove_user.html'" class='col-md-6'></div>
 
       <div class='clearfix'></div>
       <hr>
 
-      <div ng-include="'partials/admin/add_team.html'" class='col-md-6'/>
-      <div ng-include="'partials/admin/remove_team.html'" class='col-md-6'/>
+      <div ng-include="'partials/admin/add_team.html'" class='col-md-6'></div>
+      <div ng-include="'partials/admin/remove_team.html'" class='col-md-6'></div>
 
       <div class='clearfix'></div>
       <hr>
 
-      <div ng-include="'partials/admin/add_user_to_team.html'" class='col-md-6'/>
-      <div ng-include="'partials/admin/remove_user_from_team.html'" class='col-md-6'/>
+      <div ng-include="'partials/admin/add_user_to_team.html'" class='col-md-6'></div>
+      <div ng-include="'partials/admin/remove_user_from_team.html'" class='col-md-6'></div>
 
     </div>
   </div>
@@ -68,14 +69,14 @@
   <div id="cities_and_streets" class="panel-collapse collapse">
     <div class="panel-body">
 
-      <div ng-include="'partials/admin/add_city.html'" class='col-md-6'/>
-      <div ng-include="'partials/admin/remove_city.html'" class='col-md-6'/>
+      <div ng-include="'partials/admin/add_city.html'" class='col-md-6'></div>
+      <div ng-include="'partials/admin/remove_city.html'" class='col-md-6'></div>
 
       <div class='clearfix'></div>
       <hr>
 
-      <div ng-include="'partials/admin/add_street.html'" class='col-md-6'/>
-      <div ng-include="'partials/admin/remove_street.html'" class='col-md-6'/>
+      <div ng-include="'partials/admin/add_street.html'" class='col-md-6'></div>
+      <div ng-include="'partials/admin/remove_street.html'" class='col-md-6'></div>
 
     </div>
   </div>
@@ -90,14 +91,14 @@
   <div id="tasks_and_cards" class="panel-collapse collapse">
     <div class="panel-body">
 
-      <div ng-include="'partials/admin/add_task.html'" class='col-md-6'/>
-      <div ng-include="'partials/admin/remove_task.html'" class='col-md-6'/>
+      <div ng-include="'partials/admin/add_task.html'" class='col-md-6'></div>
+      <div ng-include="'partials/admin/remove_task.html'" class='col-md-6'></div>
 
       <div class='clearfix'></div>
       <hr>
 
-      <div ng-include="'partials/admin/add_card.html'" class='col-md-6'/>
-      <div ng-include="'partials/admin/remove_card.html'" class='col-md-6'/>
+      <div ng-include="'partials/admin/add_card.html'" class='col-md-6'></div>
+      <div ng-include="'partials/admin/remove_card.html'" class='col-md-6'></div>
 
     </div>
   </div>
@@ -112,8 +113,21 @@
   <div id="transactions" class="panel-collapse collapse">
     <div class="panel-body">
 
-      <div ng-include="'partials/admin/transactions.html'" class='col-md-12'/>
+      <div ng-include="'partials/admin/transactions.html'" class='col-md-12'></div>
 
+    </div>
+  </div>
+</div>
+
+
+<div class='panel panel-info'>
+  <div class='panel-heading' data-toggle='collapse' href='#account_rights'>
+    <h2>Gebruikersrechten</h2>
+  </div>
+
+  <div id='account_rights' class='panel-collapse collapse'>
+    <div class='panel-body'>
+      <div ng-include="'partials/admin/give_rights.html'" class='col-md-12'></div>
     </div>
   </div>
 </div>
