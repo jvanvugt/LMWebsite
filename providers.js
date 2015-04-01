@@ -16,14 +16,14 @@ monopolyProviders.service('DataRoot', function($firebase, FIREBASE_URL) {
   return new Firebase(FIREBASE_URL);
 });
 
-monopolyProviders.service('Data', function (DataRoot, Chance, $firebase) {
+monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsFactory) {
   this.teams = $firebase(DataRoot.child('teams')).$asObject();
   this.users = $firebase(DataRoot.child('users')).$asObject();
   this.cities = $firebase(DataRoot.child('cities')).$asObject();
   this.streets = $firebase(DataRoot.child('streets')).$asObject();
   this.tasks = $firebase(DataRoot.child('tasks')).$asObject();
   this.cards = $firebase(DataRoot.child('cards')).$asObject();
-  this.events = $firebase(DataRoot.child('events')).$asObject();
+  this.events = EventsFactory(this);
   this.constants = $firebase(DataRoot.child('static').child('constants')).$asObject();
   this.societies = $firebase(DataRoot.child('static').child('societies')).$asObject();
 
@@ -142,64 +142,73 @@ monopolyProviders.factory('Chance', function () {
   };
 });
 
-monopolyProviders.factory("TransactionsFactory", function($FirebaseArray, $firebase, Data, DataRoot) {
-  var TransactionsFactory = $FirebaseArray.$extendFactory({
-    getBalance: function() {
+monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, DataRoot) {
+
+  var eventValue = function(event) {
+    var value = 0;
+    switch (event.type) {
+      case 'visit_street':
+        if (!(data.streets[event.data.street] && data.streets[event.data.street].visitors && data.streets[event.data.street].visitors[event.team])) break;
+        value += data.constants.visit_street_profits;
+        if (data.streets[event.data.street] &&
+            data.streets[event.data.street].hotel_timestamp &&
+            data.streets[event.data.street].hotel_timestamp <= event.timestamp) {
+          value -= data.constants.visit_hotel_costs;
+        }
+        break;
+      case 'buy_hotel':
+        value -= data.constants.buy_hotel_costs;
+        if (data.streets[event.data.street] &&
+            data.streets[event.data.street].visitors) {
+          angular.forEach(data.streets[event.data.street].visitors, function (visit, visitor) {
+            if (visit.timestamp &&
+                visit.timestamp >= event.timestamp)
+              value += data.constants.visit_hotel_profits;
+          });
+        }
+        break;
+      case 'complete_task':
+        if (!(data.tasks[event.data.task] &&
+                data.tasks[event.data.task].completed[event.data.team] &&
+                data.tasks[event.data.task].completed[event.data.team].repeats > 0)) break;
+        if (data.tasks[event.data.task].rankable) {
+          // TODO: Ranking
+        }  else
+          value += data.tasks[event.data.task].reward;
+        break;
+      case 'receive_card':
+        var card = data.cards[event.data.card];
+        if (!(card && card.received && card.received[event.data.team])) break;
+        if (card.received && card.received[event.data.team] && card.received[event.data.team].completed) {
+          if (card.is_positive)
+            value += card.amount;
+        } else {
+          if (!card.is_positive && data.now() > card.received[event.data.team].timestamp + data.constants.card_max_time*60*1000)
+            value -= card.amount;
+        }
+        break;
+      case 'straight_money':
+        value += event.data.amount;
+      default:
+        break;
+    }
+    return value;
+  };
+
+  var EventsFactory = $FirebaseArray.$extendFactory({
+    balance: function(teamId) {
       var balance = 0;
       angular.forEach(this.$list, function(event) {
-        if (!event.active) return;
-        var undo = event.undo ? -1 : 1;
-        switch (event.type) {
-          case 'visit_street':
-            if (!(Data.streets[event.street] && Data.streets[event.street].visitors && Data.streets[event.street].visitors[event.team])) break;
-            balance += Data.constants.visit_street_profits * undo;
-            if (Data.streets[event.street] &&
-                Data.streets[event.street].hotel_timestamp &&
-                Data.streets[event.street].hotel_timestamp <= event.timestamp) {
-              balance -= Data.constants.visit_hotel_costs * undo;
-            }
-            break;
-          case 'buy_hotel':
-            balance -= Data.constants.buy_hotel_costs * undo;
-            if (Data.streets[event.street] &&
-                Data.streets[event.street].visitors) {
-              angular.forEach(Data.streets[event.street].visitors, function (visit, visitor) {
-                if (visit.timestamp &&
-                    visit.timestamp >= event.timestamp)
-                  balance += Data.constants.visit_hotel_profits * undo;
-              });
-            }
-            break;
-          case 'complete_task':
-            if (!(Data.tasks[event.task] && Data.tasks[event.task].completed[event.team].repeats > 0)) break;
-            if (Data.tasks[event.task].rankable) {
-              // TODO: Ranking
-            }  else
-              balance += Data.tasks[event.task].reward * undo;
-            break;
-          case 'receive_card':
-            var card = Data.cards[event.card];
-            if (!(card && card.received && card.received[event.team])) break;
-            if (card.received && card.received[event.team] && card.received[event.team].completed) {
-              if (card.is_positive)
-                balance += card.amount * undo;
-            } else {
-              if (!card.is_positive && Data.now() > card.received[event.team].timestamp + Data.constants.card_max_time*60*1000)
-                balance -= card.amount * undo;
-            }
-            break;
-          case 'straight_money':
-            balance += event.amount * undo;
-          default:
-            break;
-        }
+        if (!event.active || !event.team == teamId) return;
+        balance += eventValue(event) * (event.undo ? -1 : 1);
       });
       return balance;
     }
   });
 
-  return function(teamId) {
-    var sync = $firebase(DataRoot.child('events').orderByChild('team').equalTo(teamId), {arrayFactory: TransactionsFactory});
+  return function(data) {
+    this.data = data;
+    var sync = $firebase(DataRoot.child('events'), {arrayFactory: EventsFactory});
     return sync.$asArray();
   }
 });

@@ -5,7 +5,7 @@
 
   <div id="info-panel" class="panel-body">
 
-    <p><strong>Balans:</strong> {{transactions.getBalance()}}</p>
+    <p><strong>Balans:</strong> {{data.events.balance(teamId)}}</p>
     <p><strong>Jurylid:</strong> {{data.users[data.teams[teamId].judge].name}}</p>
 
   </div>

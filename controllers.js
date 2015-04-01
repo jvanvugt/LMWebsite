@@ -26,7 +26,7 @@ monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, $
   $scope.pageDesc = 'Overzicht van alle teams';
 });
 
-monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParams, Data, WithFilterableId, TransactionsFactory, $firebaseAuth, FIREBASE_URL) {
+monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParams, Data, $firebaseAuth, FIREBASE_URL) {
   var ref = new Firebase(FIREBASE_URL);
   var auth = $firebaseAuth(ref);
 
@@ -39,9 +39,9 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
 
   $scope.pageName = 'Team';
   $scope.pageDesc = 'Overzicht van een team';
+
   $scope.teamId = $routeParams.teamId;
   $scope.data = Data;
-  $scope.transactions = TransactionsFactory($scope.teamId);
 
   $scope.submitAddStreet = function(data) {
     Data.teamVisitStreet($scope.teamId, data.streetId, Data.timestampOf(data));

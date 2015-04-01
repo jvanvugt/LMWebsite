@@ -22,7 +22,9 @@ monopoly.run(["$rootScope", "$location", "FIREBASE_URL", function($rootScope, $l
 }]);
 
 monopoly.config(function($locationProvider, $routeProvider) {
+
     $locationProvider.html5Mode(true);
+    
     $routeProvider.
       when('/team/:teamId', {
         templateUrl: 'partials/team.html',
@@ -36,7 +38,7 @@ monopoly.config(function($locationProvider, $routeProvider) {
           }]
         }
       }).
-      when('/overzicht', {
+      when('/', {
         templateUrl: 'partials/overzicht.html',
         controller: 'OverzichtCtrl',
         resolve: {
