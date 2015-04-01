@@ -1,12 +1,21 @@
-<h3>Transacties</h3>
+<h3>Gebeurtenissen</h3>
 <form>
-  <div class='form-group'>
-  <select class='form-control' id='transactions-team' ng-model='transactions.team'>
-    <option value="" disabled selected>Selecteer een team</option>
-    <option ng-repeat='(id, team) in data.teams' value='{{id}}'>{{team.name}}</option>
-  </select>
+  <div class='checkbox'>
+    <label>
+      <input type='checkbox' ng-model='events.all'> Alle laten zien
+    </label>
   </div>
-  <div class="panel-body" ng-show="transactions.team">
+  <div class='form-group' ng-hide="events.all">
+    Laatste zoveel laten zien:
+    <input style="width: 100px" type='number' class='form-control' ng-init="events.amount = 15" ng-model='events.amount'>
+  </div>
+  <div class='form-group'>
+    <select class='form-control' id='events-team' ng-model='events.team'>
+      <option value="" disabled selected>Selecteer een team</option>
+      <option ng-repeat='(id, team) in data.teams' value='{{id}}'>{{team.name}}</option>
+    </select>
+  </div>
+  <div class="panel-body" ng-show="events.team">
     <table class="table">
       <thead>
         <th>Type</th>
@@ -14,17 +23,17 @@
         <th>Data</th>
         <th>Inactief</th>
       </thead>
-      <tr ng-repeat="(id, transaction) in data.teams[transactions.team].transactions">
-        <td>{{transaction.type}} <span ng-show="transaction.undo" class="glyphicon glyphicon-share-alt"></span></td>
-        <td>{{transaction.timestamp | date:'H:mm:ss'}}</td>
+      <tr ng-repeat="(id, event) in data.events | filter:{'team': events.team} | orderBy:'timestamp':true | limitTo:15">
+        <td><span ng-show="event.undo" class="glyphicon glyphicon-share-alt"></span> {{event.type}}</td>
+        <td>{{event.timestamp | date:'H:mm:ss'}}</td>
         <td>
-          <div ng-repeat="(key, value) in transaction" ng-show="key != 'type' && key != 'timestamp' && key != 'inactive'">
+          <div ng-repeat="(key, value) in event.data">
             <div>{{key}}: {{value}}</div>
           </div>
         </td>
         <td>
-            <button ng-hide="transaction.inactive" type="button" class="btn btn-info btn-xs" ng-click="data.toggleTransaction(transactions.team,id)"><span class="glyphicon glyphicon-ok-circle"></span></button>
-            <button ng-show="transaction.inactive" type="button" class="btn btn-warning btn-xs" ng-click="data.toggleTransaction(transactions.team,id)"><span class="glyphicon glyphicon-ban-circle"></span></button>
+            <button ng-show="event.active" type="button" class="btn btn-info btn-xs" ng-click="data.toggleEvent(id)"><span class="glyphicon glyphicon-ok-circle"></span></button>
+            <button ng-hide="event.active" type="button" class="btn btn-warning btn-xs" ng-click="data.toggleEvent(id)"><span class="glyphicon glyphicon-ban-circle"></span></button>
         </td>
       </tr>
     </table>

@@ -47,8 +47,12 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
     Data.teamCompleteCard($scope.teamId, cardId, Data.now());
   };
 
+  $scope.uncompleteCard = function(cardId) {
+    Data.teamUncompleteCard($scope.teamId, cardId, Data.now());
+  };
+
   $scope.submitStraight = function(data) {
-    Data.teamStraightMoney($scope.teamId, data.amount, Data.now());
+    Data.teamStraightMoney($scope.teamId, data.amount, data.note, Data.now());
   };
 
 });
@@ -123,7 +127,6 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $fi
   $scope.addTeam = function(team, teamMembers) {
     var sync = $firebase(new Firebase(FIREBASE_URL+'teams')).$asArray();
     team.active = true;
-    team.balance = 0;
     sync.$add(team).then(function(r){
      members = new Firebase(FIREBASE_URL+'teams/'+r.key()+'/members');
       teamMembers.forEach(function(userId) {
@@ -133,7 +136,6 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $fi
   };
 
   $scope.addMember = function(userId, teamId) {
-    new Firebase(FIREBASE_URL+'teams/'+ teamId + '/members').child(userId).set(true);
     new Firebase(FIREBASE_URL+'users/'+userId+'/team').set(teamId);
   }
 

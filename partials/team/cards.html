@@ -17,19 +17,18 @@
         <td>{{card.name}}</td>
         <td>
           <div ng-show="card.is_positive"><span class="glyphicon glyphicon-thumbs-up"></span></div>
-          <div ng-show="card.is_negative"><span class="glyphicon glyphicon-thumbs-down"></span></div>
+          <div ng-hide="card.is_positive"><span class="glyphicon glyphicon-thumbs-down"></span></div>
         </td>
         <td>
-          <div ng-show="data.now() <= card.received[teamId].timestamp + 60*60*1000">
-            <button ng-hide="card.received[teamId].completed" type="button" class="btn btn-success btn-xs" ng-click="completeCard(id)"><span class="glyphicon glyphicon-ok"></span></button>
-            <div ng-show="card.received[teamId].completed"><span class="glyphicon glyphicon-ok"></span> {{card.received[teamId].completed | date:'H:mm:ss'}}</div>
-          </div>
-          <div ng-show="data.now() > card.received[teamId].timestamp + 60*60*1000">
-            <div ng-hide="card.received[teamId].completed"><span class="glyphicon glyphicon-remove"></span></button></div>
-            <div ng-show="card.received[teamId].completed"><span class="glyphicon glyphicon-ok"></span> {{card.received[teamId].completed | date:'H:mm:ss'}}</div>
-          </div>
+          <button ng-hide="card.received[teamId].completed" type="button" class="btn btn-default btn-xs" ng-click="completeCard(id)"><span class="glyphicon glyphicon-ok"></span></button>
+          <button ng-show="card.received[teamId].completed" type="button" disabled class="btn btn-success btn-xs"><span class="glyphicon glyphicon-ok"></span></button>
+          {{card.received[teamId].completed | date:'H:mm:ss'}}
+          <button ng-show="card.received[teamId].completed" type="button" class="btn btn-danger btn-xs" ng-click="uncompleteCard(id)"><span class="glyphicon glyphicon-remove"></span></button>
         </td>
-        <td>{{card.received[teamId].timestamp + 60*60*1000 | date:'H:mm:ss'}}</td> <!-- TODO: calculate end time -->
+        <td>
+          <span ng-show="!card.received[teamId].completed && data.now() > card.received[teamId].timestamp + data.constants.card_max_time*60*1000" class="glyphicon glyphicon-warning-sign"></span>
+          {{card.received[teamId].timestamp + data.constants.card_max_time*60*1000 | date:'H:mm:ss'}}
+        </td> <!-- TODO: calculate end time -->
         <td>{{(2*card.is_positive-1)*card.amount}}</td>
       </span>
       </tr>
