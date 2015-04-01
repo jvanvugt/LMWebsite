@@ -205,7 +205,6 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $fi
 
   $scope.addStreet = function(street) {
     var street_id = new Firebase(FIREBASE_URL+'streets').push(street).key();
-    new Firebase(FIREBASE_URL+'cities/'+street.city_id+'/streets/'+street_id).set(true);
   }
 
   $scope.deleteStreet = function(streetId) {

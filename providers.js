@@ -71,7 +71,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
   this.teamCompleteTask = function(teamId, taskId, taskValue, timestamp) {
     var taskcompletedteamref = DataRoot.child('tasks').child(taskId).child('completed').child(teamId);
     if (this.tasks[taskId].completed && this.tasks[taskId].completed[teamId]) {
-      taskcompletedteamref.child('repeats').event(function(current) {
+      taskcompletedteamref.child('repeats').transaction(function(current) {
         return current+1;
       });
     } else {
@@ -84,10 +84,10 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
 
   this.teamUncompleteTask = function(teamId, taskId, timestamp) {
     var taskcompletedteamref = DataRoot.child('tasks').child(taskId).child('completed').child(teamId);
-    taskcompletedteamref.child('repeats').event(function(current) {
+    taskcompletedteamref.child('repeats').transaction(function(current) {
       return current-1;
     });
-    this.addEvent(teamId, 'complete_task', {task: taskId}, timestampe, true);
+    this.addEvent(teamId, 'complete_task', {task: taskId}, timestamp, true);
   };
 
   this.teamStraightMoney = function(teamId, amount, note, timestamp) {
@@ -169,8 +169,8 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
         break;
       case 'complete_task':
         if (!(data.tasks[event.data.task] &&
-                data.tasks[event.data.task].completed[event.data.team] &&
-                data.tasks[event.data.task].completed[event.data.team].repeats > 0)) break;
+                data.tasks[event.data.task].completed[event.team] &&
+                data.tasks[event.data.task].completed[event.team].repeats > 0)) break;
         if (data.tasks[event.data.task].rankable) {
           // TODO: Ranking
         }  else
@@ -178,12 +178,12 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
         break;
       case 'receive_card':
         var card = data.cards[event.data.card];
-        if (!(card && card.received && card.received[event.data.team])) break;
-        if (card.received && card.received[event.data.team] && card.received[event.data.team].completed) {
+        if (!(card && card.received && card.received[event.team])) break;
+        if (card.received && card.received[event.team] && card.received[event.team].completed) {
           if (card.is_positive)
             value += card.amount;
         } else {
-          if (!card.is_positive && data.now() > card.received[event.data.team].timestamp + data.constants.card_max_time*60*1000)
+          if (!card.is_positive && data.now() > card.received[event.team].timestamp + data.constants.card_max_time*60*1000)
             value -= card.amount;
         }
         break;
