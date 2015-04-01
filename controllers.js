@@ -32,7 +32,7 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
 
   ref.child('users').child(ref.getAuth().uid).on('value', function(snap) {
     var user = snap.val();
-    if(!user.roles || !user.roles.judge || !user.roles.admin) {
+    if(!(user.roles && (user.roles.judge || user.roles.admin))) {
       location.assign('/#/error');
     }
   });
