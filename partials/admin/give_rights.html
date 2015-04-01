@@ -1,0 +1,23 @@
+<h3>Gebruikersrechten</h3>
+<form>
+  <div class='form-group'>
+    <label for='userRights'>Gebruiker:</label>
+    <select class='form-control' id='userRights' ng-model='userRightsId'>
+      <option value="" disabled selected>Selecteer een gebruiker</option>
+      <option ng-repeat='(id, user) in data.users' value='{{id}}'>{{user.name}}</option>
+    </select>
+  </div>
+  <div class='checkbox'>
+    <label>
+      <input type='checkbox' id='userJury' ng-model='isJudge'> Jury?
+    </label>
+  </div>
+  <div class='checkbox'>
+    <label>
+      <input type='checkbox' id='userAdmin' ng-model='isAdmin'> Admin?
+    </label>
+  </div>
+
+
+  <button ng-disabled='!userRightsId' type='submit' class='btn btn-info' ng-click='changeRights(userRightsId, isJudge, isAdmin); userRightsId="";isJudge=false;isAdmin=false'>Veranderen</button>
+</form>
