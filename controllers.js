@@ -269,7 +269,7 @@ monopolyControllers.controller('AccountCtrl', function AdminCtrl($scope, Data, $
         console.log("Login Failed!", error);
       } else {
         console.log("Authenticated successfully with payload:", authData);
-        callback();
+        if (callback) callback();
         location.assign('/');
       }
     });
