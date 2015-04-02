@@ -4,7 +4,7 @@
     <label for='taskRemove'>Opdracht:</label>
     <select class='form-control' id='taskRemove' ng-model='taskForDelete'>
       <option value="" disabled selected>Selecteer een opdracht</option>
-      <option ng-repeat='task in tasks' value='{{task.$id}}'>{{task.name}}</option>
+      <option ng-repeat='(id, task) in data.tasks' value='{{id}}'>{{task.name}}</option>
     </select>
   </div>
     <button ng-disabled='!taskForDelete' type='submit' class='btn btn-info' ng-click='deleteTask(taskForDelete); taskForDelete=""'>Verwijderen</button>

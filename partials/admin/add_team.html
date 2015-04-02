@@ -9,7 +9,7 @@
       <label for='judge'>Jurylid:</label>
       <select class='form-control' id='judge' ng-model='team.judge'>
         <option value="" disabled selected>Selecteer een jurylid</option>
-        <option ng-repeat='user in users | filter: judgeFilter' value='{{user.$id}}'>{{user.name}}</option>
+        <option ng-repeat='(id, user) in data.users' ng-show='user.roles.judge' value='{{id}}'>{{user.name}}</option>
       </select>
     </div>
   </div>
@@ -17,7 +17,7 @@
     <div class='form-group'>
       <label for='teamMembers'>Leden:</label>
       <select id='teamMembers' multiple='multiple' size=10 height='500px' ng-model='teamMembers'>
-        <option ng-repeat='user in users | filter: eligibleMemberFilter' value='{{user.$id}}'>{{user.name}}</option>
+        <option ng-repeat='(id, user) in data.users' ng-show='!user.team && !user.roles.judge' value='{{id}}'>{{user.name}}</option>
       </select>
     </div>
   </div>

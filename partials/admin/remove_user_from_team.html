@@ -4,14 +4,14 @@
     <label for='teamMemberTeamDelete'>Team:</label>
     <select class='form-control' id='teamMemberTeamDelete' ng-model='teamId'>
       <option value="" disabled selected>Selecteer een team</option>
-      <option ng-repeat='team in teams' value='{{team.$id}}'>{{team.name}}</option>
+      <option ng-repeat='(id, team) in data.teams' value='{{id}}'>{{team.name}}</option>
     </select>
   </div>
   <div ng-show='teamId' class='form-group'>
       <label for='teamMemberDelete'>Lid:</label>
       <select class='form-control' id='teamMemberDelete' ng-model='memberId'>
         <option value="" disabled selected>Selecteer een gebruiker</option>
-        <option ng-repeat='user in users | filter:{team: teamId}' value='{{user.$id}}'>{{user.name}}</option>
+        <option ng-repeat='(id, user) in data.users' ng-show='user.team === teamId' value='{{id}}'>{{user.name}}</option>
       </select>
   </div>
   <button ng-disabled='!(teamId && memberId)' type='submit' class='btn btn-info' ng-click='deleteTeamMember(memberId, teamId); teamId=""; memberId=""'>Verwijderen</button>

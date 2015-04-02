@@ -24,6 +24,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
   this.tasks = $firebase(DataRoot.child('tasks')).$asObject();
   this.cards = $firebase(DataRoot.child('cards')).$asObject();
   this.events = EventsFactory(this);
+  this.eventsobj = $firebase(DataRoot.child('events')).$asObject();
   this.constants = $firebase(DataRoot.child('static').child('constants')).$asObject();
   this.societies = $firebase(DataRoot.child('static').child('societies')).$asObject();
 
@@ -213,6 +214,11 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
         balance += eventValue(event) * (event.undo ? -1 : 1);
       });
       return balance;
+    },
+    $$added: function(snap) {
+      var rec = $FirebaseArray.prototype.$$added.call(this, snap);
+      rec._id = rec.$id;
+      return rec;
     }
   });
 

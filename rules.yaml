@@ -18,7 +18,6 @@ functions:
   - del(next): next.exists() === false
 
   # Data Validation
-  - isValidTask(task): task.hasChildren(['reward','repeatable']) || task.hasChildren(['rankable','rank1_reward','rank2_reward','rank3_reward'])
   - validTaskRepeated(repeated): taskOfRepeated(repeated).rankable === true && repeated <= 1 || repeated <= taskOfRepeated(repeated).repeatable 
 
   ### NON-PREDICATES ###
@@ -30,7 +29,7 @@ schema:
   additionalProperties: false
   properties:
     teams:
-      $team_id:
+      ~$team_id:
         type: object
         required: [name, judge, active]
         additionalProperties: false
@@ -39,7 +38,7 @@ schema:
           judge: {constraint: isJudge(next.val())}
           active: {type: boolean}
     users:
-      $user_id:
+      ~$user_id:
         type: object
         required: [name, phone, mail]
         additionalProperties: false
@@ -62,7 +61,7 @@ schema:
               judge: {type: boolean}
               admin: {type: boolean}
     cities:
-      $city_id:
+      ~$city_id:
         type: object
         required: [name]
         additionalProperties: false
@@ -71,7 +70,7 @@ schema:
             type: string
             constraint: isNotEmpty(next.val())
     streets:
-      $street_id:
+      ~$street_id:
         type: object
         required: [name, city_id]
         additionalProperties: false
@@ -85,15 +84,14 @@ schema:
           hotel_team_id: {constraint: del(next) || isTeam(next.val())}
           hotel_timestamp: {type: number}
           visited:
-            $team_id:
+            ~$team_id:
               type: number # timestamp
               constraint: isTeam($team_id)
     tasks:
-      $task_id:
+      ~$task_id:
         type: object
-        required: [name]
-        constraint: isValidTask(next)
-        additionalProperties: false
+        #required: [name, rewards]
+        #additionalProperties: false
         properties:
           name: 
             type: string
@@ -102,15 +100,15 @@ schema:
             type: number
             minimum: 1
           rankable: {type: boolean}
-          rewards: {$rank: {type: number}} # rewards by rank
+          rewards: {~$rank: {type: number}} # rewards by rank
           repeated:
-            $team_id:
+            ~$team_id:
               type: number
               minimum: 0
               constraint: isTeam($team_id) && validTaskRepeated(next)
-          ranked: {$team_id: {constraint: isTeam($team_id)}} # ranking value can be anything
+          ranked: {~$team_id: {constraint: isTeam($team_id)}} # ranking value can be anything
     cards:
-      $card_id:
+      ~$card_id:
         type: object
         required: [name, amount]
         additionalProperties: false
@@ -121,15 +119,15 @@ schema:
           amount: {type: number}
           is_positive: {type: boolean}
           received:
-            $team_id:
+            ~$team_id:
               type: number # timestamp
               constraint: isTeam($team_id)
           completed:
-            $team_id:
+            ~$team_id:
               type: number # timestamp
               constraint: isTeam($team_id)
     events:
-      $event_id:
+      ~$event_id:
         type: object
         required: [team, type, timestamp, active]
         additionalProperties: false
@@ -143,13 +141,13 @@ schema:
     static:
       additionalProperties: false
       properties:
-        constants: {$constant: {type: number}}
+        constants: {~$constant: {type: number}}
         event_types:
-          $event_type:
+          ~$event_type:
             $event_property:
               type: boolean
         societies:
-          $society_id:
+          ~$society_id:
             type: object
             required: [name]
             additionalProperties: false
@@ -164,7 +162,6 @@ access:
     write: isStaff(auth.uid)
   - location: static/
     read: true
-    write: isStaff(auth.uid)
   - location: users/$user_id/
-    read: true
-    write: true
+    read: $user_id === auth.uid
+    write: $user_id === auth.uid

@@ -4,14 +4,14 @@
     <label for='cityHotelRemove'>Stad:</label>
     <select class='form-control' id='cityHotelRemove' ng-model='cityHotelRemove'>
       <option value="" disabled selected>Selecteer een stad</option>
-      <option ng-repeat='city in cities' value='{{city.$id}}'>{{city.name}}</option>
+      <option ng-repeat='city in data.cities' value='{{city.$id}}'>{{city.name}}</option>
     </select>
   </div>
     <div class='form-group' ng-show='cityHotelRemove'>
       <label for='streetHotelRemove'>Straat:</label>
       <select class='form-control' id='streetHotelRemove' ng-model='streetHotelRemove'>
         <option value="" disabled selected>Selecteer een straat</option>
-        <option ng-repeat='street in streets | filter: hasHotelFilter' value='{{street.$id}}'>{{street.name}}</option>
+        <option ng-repeat='street in data.streets | filter: hasHotelFilter' value='{{street.$id}}'>{{street.name}}</option>
       </select>
     </div>
     <button ng-disabled='!(cityHotelRemove && streetHotelRemove)' type='submit' class='btn btn-info' ng-click='removeHotel(streetHotelRemove); cityHotelRemove=""; streetHotelRemove="";'>Verwijderen</button>
