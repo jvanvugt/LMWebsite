@@ -285,6 +285,36 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
   $interval(function(){
       this.setNow();
    }.bind(this), 1000);
+
+  this.clearDatabaseGameplay = function() {
+    var uid = DataRoot.getAuth().uid;
+    if (!this.users[uid].roles.admin) {
+      alert("Je hebt niet voldoende rechten om deze actie uit te voeren.")
+      return;
+    }
+    
+    if (!confirm("Weet je zeker dat je alle gameplay gegevens uit de database wilt verwijderen?")) return;
+    if (!confirm("Weet je echt echt echt zeker dat je dit wilt doen? Dit is je laatste kans!")) return;
+
+    angular.forEach(this.streets, function (street, id) {
+      DataRoot.child('streets').child(id).child('visited').remove()
+      DataRoot.child('streets').child(id).child('hotel_team_id').remove()
+      DataRoot.child('streets').child(id).child('hotel_timestamp').remove()
+    });
+    
+    angular.forEach(this.tasks, function (task, id) {
+      DataRoot.child('tasks').child(id).child('repeated').remove()
+      DataRoot.child('tasks').child(id).child('ranked').remove()
+    });
+    
+    angular.forEach(this.cards, function (card, id) {
+      DataRoot.child('cards').child(id).child('received').remove()
+      DataRoot.child('cards').child(id).child('completed').remove()
+    });
+    
+    DataRoot.child('events').remove();
+
+  };
 });
 
 monopolyProviders.factory('Chance', function () {

@@ -1,0 +1,13 @@
+<h3>Database legen</h3>
+
+<p>Verwijder alle spel-informatie (gebeurtenissen, bezochte straten, gehaalde opdrachten...) uit de database. Structurele informatie (gebruikers, teams, constanten, straten, opdrachten...) blijft behouden.</p>
+
+<form>
+  <div class='form-group' ng-init='goingToClear=false'>
+    <button type='submit' class='btn btn-warning' ng-click='goingToClear=!goingToClear'>Database legen</button>
+  </div class='form-group'>
+  <div ng-show="goingToClear">
+    <button type='submit' class='btn btn-success' ng-click='goingToClear=false'>Annuleren</button>
+    <button type='submit'  class='btn btn-danger' ng-click='data.clearDatabaseGameplay(); goingToClear=false'>Database legen</button>
+  </div>
+</form>
