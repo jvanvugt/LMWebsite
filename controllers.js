@@ -10,7 +10,8 @@ monopolyControllers.controller('NavBarCtrl', function($scope, $firebase, FIREBAS
   };
 });
 
-monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, $firebase, FIREBASE_URL, $firebaseAuth) {
+monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, Data, $firebase, FIREBASE_URL, $firebaseAuth) {
+  $scope.data = Data;
   var ref = new Firebase(FIREBASE_URL);
   ref.child('users').child(ref.getAuth().uid).on('value', function(snap) {
     var user = snap.val();
@@ -18,9 +19,8 @@ monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, $
       location.assign('/#/error');
     }
   });
-  var auth = $firebaseAuth(new Firebase(FIREBASE_URL));
-  var sync = $firebase(new Firebase(FIREBASE_URL+'teams'));
-  $scope.teams = sync.$asArray();
+
+  var auth = $firebaseAuth(ref);
 
   $scope.pageName = 'Spel overzicht';
   $scope.pageDesc = 'Overzicht van alle teams';
