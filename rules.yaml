@@ -18,7 +18,7 @@ functions:
 
   # Data Validation
   - isValidTask(task): task.hasChildren(['reward','repeatable']) || task.hasChildren(['rankable','rank1_reward','rank2_reward','rank3_reward'])
-  - validTaskRepeated(repeated): taskOfRepeated(repeated).rankable === true && repeated <= 1 || repeated <= taskOfRepeats(repeated).repeatable 
+  - validTaskRepeated(repeated): taskOfRepeated(repeated).rankable === true && repeated <= 1 || repeated <= taskOfRepeated(repeated).repeatable 
 
   ### NON-PREDICATES ###
 
