@@ -34,10 +34,13 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
   this.teamVisitStreet = function(teamId, streetId, timestamp) {
     DataRoot.child('streets').child(streetId).child('visited').child(teamId).set(timestamp);
     this.addEvent(teamId, 'visit_street', {street: streetId}, timestamp);
-    //TODO: message if have to pay?
+    if (this.streets[streetId].hotel_team_id)
+      alert("Op deze straat is een hotel!")
 
-    if (chance.cardOnVisitStreet()) //TODO: REMOVE TRUE
+    if (chance.cardOnVisitStreet()) {
       this.teamGetCard(teamId, timestamp); //TODO: message if get card
+      alert("Het team heeft een nieuwe kaart ontvangen!");
+    };
   };
 
   this.teamGetCard = function(teamId, timestamp) {
