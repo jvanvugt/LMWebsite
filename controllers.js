@@ -125,7 +125,7 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $fi
   $scope.visitedByTeamFilter = function(street) {
     var teamId = document.getElementById('teamUnvisit').value;
     var cityId = document.getElementById('cityUnvisit').value;
-    return street && street.city_id === cityId && street.visitors && street.visitors[teamId];
+    return street && street.city_id === cityId && street.visited && street.visited[teamId];
   };
 
   $scope.hasHotelFilter = function(street) {
@@ -265,11 +265,12 @@ monopolyControllers.controller('AccountCtrl', function AdminCtrl($scope, Data, $
   $scope.login = function(user, callback) {
     ref.authWithPassword(user, function(error, authData) {
       if (error) {
+        alert('Login failed: ' + error);
         console.log("Login Failed!", error);
       } else {
         console.log("Authenticated successfully with payload:", authData);
         callback();
-        location.assign('/#/overzicht');
+        location.assign('/');
       }
     });
   }

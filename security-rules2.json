@@ -1,0 +1,165 @@
+{
+  "rules": {
+    ".read": true,
+    "$_": { ".validate": false },
+    
+    "teams": { "$team_id": {
+        
+        ".write": "true", //"root.child('users').child(auth.uid).child('team').val() == $team_id
+            //&& root.child('users').child(auth.uid).child('roles').child('judge').val() == true
+            //|| root.child('users').child(auth.uid).child('roles').child('admin').val() == true",
+        ".validate": "newData.hasChildren(['name','judge','active'])",
+        "$_": { ".validate": false },
+        
+        "name": {".validate": "newData.isString()"},
+        "judge": {".validate": "root.child('users').child(newData.val()).child('roles').child('judge').val() == true"},
+        "active": {".validate": "newData.isBoolean()"}
+        
+      }
+    },
+    
+    "users": { "$user_id": {
+    
+      ".write": "true",//"root.child('users').child(auth.uid).child('roles').child('admin').val() == true",
+      ".validate": "newData.hasChildren(['name','phone','mail'])",
+      "$_": { ".validate": false },
+      
+      "name": {".validate": "newData.isString() && newData.val().length > 0"},
+      "phone": {".validate": "newData.isString() && newData.val().length > 0"},
+      "smartphone": {".validate": "newData.isBoolean()"},
+      "mail": {}, // TODO: mail address regex
+      "society": {".validate": "newData.isString() && newData.val().length > 0"},
+      "team": {".validate": "true"},//"root.child('teams').hasChild(newData.val())"},
+      "roles": {
+        "judge": {".validate": "newData.isBoolean()"},
+        "admin": {".validate": "newData.isBoolean()"}
+      }
+      
+    }},
+    
+    "cities": { "$city_id": {
+          
+      ".write": "true", //"root.child('users').child(auth.uid).child('roles').child('admin').val() == true",
+      ".validate": "newData.hasChildren(['name'])",
+      "$_": { ".validate": false },
+      
+      "name": {".validate": "newData.isString()"},
+      "streets": { "$street_id": {
+        
+      }}
+    
+    }},
+    
+    "streets": { "$street_id": {
+          
+      ".write": "true", // "root.child('users').child(auth.uid).child('roles').child('admin').val() == true",
+      ".validate": "newData.hasChildren(['name','city_id'])",
+      "$_": { ".validate": false },
+      
+      "name": {".validate": "newData.isString()"},
+      "city_id": {".validate": "root.child('cities').hasChild(newData.val())"},
+      "hotel_team_id": {".validate": "newData.isString()"},
+      "hotel_timestamp": {".validate": "newData.isNumber()"},
+      "visitors": { "$team_id": {
+          "timestamp": {".validate": "newData.isNumber()"}
+      }}
+      
+    }},
+    
+    "tasks": { "$task_id": {
+          
+      ".write": "true", //"root.child('users').child(auth.uid).child('roles').child('admin').val() == true",
+      ".validate": "newData.hasChildren(['name']) && 
+          (newData.hasChildren(['reward','repeatable']) || newData.hasChildren(['rankable','rank1_reward','rank2_reward','rank3_reward']))",
+      "$_": { ".validate": false },
+      
+      "name": {".validate": "newData.isString()"},
+      "reward": {".validate": "newData.isNumber()"},
+      "repeatable": {".validate": "newData.isNumber()"},
+      "rankable": {".validate": "newData.isBoolean()"},
+      "rank1_reward": {".validate": "newData.isNumber()"},
+      "rank2_reward": {".validate": "newData.isNumber()"},
+      "rank3_reward": {".validate": "newData.isNumber()"},
+      
+      "completed": { "$team_id": {
+        
+          "repeats": {".validate": "newData.val() >= 0 &&
+              (data.parent().parent().parent().child('rankable').val() == true && newData.val() <= 1 ||
+              newData.isNumber() && newData.val() <= data.parent().parent().parent().child('repeatable').val())"},
+          "rank_value": {".validate": "newData.isString()"}
+        
+      }}
+      
+    }},
+    
+    "cards": { "$card_id": {
+      
+      ".write": "true", //"root.child('users').child(auth.uid).child('roles').child('admin').val() == true",
+      ".validate": "newData.hasChildren(['name', 'amount'])",
+      "$_": { ".validate": false },
+      
+      "name": {".validate": "newData.isString()"},
+      "amount": {".validate": "newData.isNumber()"},
+      "is_positive": {".validate": "newData.isBoolean()"},
+      "received": { "$team_id": {
+        
+      }}
+      
+    }},
+    
+    "events": { "$event_id": {
+      
+      ".write": "true", //"root.child('users').child(auth.uid).child('roles').child('admin').val() == true",
+      ".validate": "newData.hasChildren(['team','type','timestamp'])",
+      
+      "team": {},
+      "type": {}, //TODO: in static.event_types
+      "timestamp": {".validate": "newData.isNumber()"},
+      "undo": {".validate": "newData.isBoolean()"},
+      "inactive": {".validate": "newData.isBoolean()"},
+      "data": {}
+      
+    }},
+    
+    "static": {
+      
+      ".write": false,
+      
+      "constants": {
+        ".write": "true",
+        "$_": { ".validate": false },
+        
+        "buy_hotel_costs": {".validate": "newData.isNumber()"},
+        "visit_hotel_costs": {".validate": "newData.isNumber()"},
+        "visit_hotel_profits": {".validate": "newData.isNumber()"},
+        "visit_street_profits": {".validate": "newData.isNumber()"},
+        "max_hotels": {".validate": "newData.isNumber()"},
+        "probability_card_per_street": {".validate": "newData.isNumber()"},
+        "card_max_time": {".validate": "newData.isNumber()"}
+      },
+      
+      "roles": { "$role": {
+          
+          //"name": {".validate": "newData.isString()"}
+          
+      }},
+      
+      "event_types": { "$type": {
+        "properties": {
+            "$_": {".validate": "newData.isBoolean()"}
+        },
+        "$_": { ".validate": false }
+      }},
+      
+      "societies": {"$society_id": {
+        ".write": true,
+        "$_": { ".validate": false },
+        ".validate": "newData.hasChildren(['name'])",
+        
+        "name" : {".validate": "newData.isString()"}
+        
+      }}
+      
+    }
+  }
+}
