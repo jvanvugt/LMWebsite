@@ -31,6 +31,16 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
 
   var chance = Chance(this);
 
+  this.teamRank = function(teamId) {
+    var rank = 0;
+    var teamBalance = data.events.balance(teamId);
+    angular.forEach(data.teams, function (team, id) {
+      if (data.events.balance(id) > teamBalance)
+        rank += 1;
+    });
+    return rank;
+  }
+
   this.addUser = function(user) {
     DataRoot.child('users').push(user);
   };
@@ -65,7 +75,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
         that.teamRemoveMember(id);
     });
   };
-  
+
   this.teamAddMember = function(teamId, userId) {
     DataRoot.child('users').child(userId).child('team').set(teamId);
   };
