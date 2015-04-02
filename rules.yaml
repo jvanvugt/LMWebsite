@@ -155,6 +155,7 @@ schema:
               name:
                 type: string
                 constraint: isNotEmpty(next.val())
+        game_over: {type: boolean}
 
 access:
   - location: /

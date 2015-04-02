@@ -27,6 +27,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
   this.eventsobj = $firebase(DataRoot.child('events')).$asObject();
   this.constants = $firebase(DataRoot.child('static').child('constants')).$asObject();
   this.societies = $firebase(DataRoot.child('static').child('societies')).$asObject();
+  this.game_over = $firebase(DataRoot.child('static').child('game_over')).$asObject();
 
   var chance = Chance(this);
 
@@ -191,14 +192,14 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
         }
         break;
       case 'complete_task':
-        if (!(data.tasks[event.data.task] &&
+        if (!(data.game_over.$value &&
+              data.tasks[event.data.task] &&
               data.tasks[event.data.task].repeated &&
               data.tasks[event.data.task].repeated[event.team] > 0)) break;
         if (data.tasks[event.data.task].rankable) {
           var rank = data.taskRank(event.team, event.data.task);
           if (rank < data.tasks[event.data.task].rewards.length)
-            value += data.tasks[event.data.task].rewards[rank]
-          console.log(rank);
+            value += data.tasks[event.data.task].rewards[rank];
         }  else
           value += data.tasks[event.data.task].rewards[0];
         break;
