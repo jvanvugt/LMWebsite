@@ -4,7 +4,7 @@
     <label for='societyRemove'>Studievereniging:</label>
     <select class='form-control' id='societyRemove' ng-model='societyForDelete'>
       <option value="" disabled selected>Selecteer een studievereniging</option>
-      <option ng-repeat='soc in societies' value='{{soc.$id}}'>{{soc.name}}</option>
+      <option ng-repeat='(id, soc) in data.societies' value='{{id}}'>{{soc.name}}</option>
     </select>
   </div>
   <button ngDisabled='!societyForDelete' class='btn btn-info' type='submit' ng-click='deleteSociety(societyForDelete); societyForDelete=""' ng-disabled='!societyForDelete'>Verwijderen</button>
