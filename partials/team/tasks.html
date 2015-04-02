@@ -22,8 +22,7 @@
            <span ng-hide="task.rankable">{{task.repeatable}}</span>
            <span ng-hide="task.rankable"><button type="button" class="btn btn-success btn-xs" ng-click="incrementTask(taskId)"><span class="glyphicon glyphicon-plus"></span></button></span>
         </td>
-        <td ng-hide="task.rankable">{{task.reward}}</td>
-        <td ng-show="task.rankable">{{task.rank1_reward}}, {{task.rank2_reward}}, {{task.rank3_reward}}</td>
+        <td>{{task.rewards.join(', ')}}</td>
         <td>{{task.ranked[teamId]}}</td>
       </tr>
     </table>

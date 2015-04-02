@@ -27,6 +27,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
   this.eventsobj = $firebase(DataRoot.child('events')).$asObject();
   this.constants = $firebase(DataRoot.child('static').child('constants')).$asObject();
   this.societies = $firebase(DataRoot.child('static').child('societies')).$asObject();
+  this.game_over = $firebase(DataRoot.child('static').child('game_over')).$asObject();
 
   var chance = Chance(this);
 
@@ -106,6 +107,17 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
       return current-1;
     });
     this.addEvent(teamId, 'complete_task', {task: taskId}, timestamp, true);
+  };
+
+  this.taskRank = function(teamId, taskId) {
+    var task = this.tasks[taskId];
+    var teamRankValue = task.ranked[teamId];
+    var rank = 0;
+    angular.forEach(task.ranked, function (rankValue, id) {
+      if (task.repeated[id] > 0 && rankValue > teamRankValue)
+        rank += 1;
+    });
+    return rank;
   };
 
   this.teamStraightMoney = function(teamId, amount, note, timestamp) {
@@ -191,14 +203,16 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
         }
         break;
       case 'complete_task':
-        if (!(data.tasks[event.data.task] &&
-              data.tasks[event.data.task].completed &&
-              data.tasks[event.data.task].completed[event.team] &&
-              data.tasks[event.data.task].completed[event.team].repeats > 0)) break;
+        if (!(data.game_over.$value &&
+              data.tasks[event.data.task] &&
+              data.tasks[event.data.task].repeated &&
+              data.tasks[event.data.task].repeated[event.team] > 0)) break;
         if (data.tasks[event.data.task].rankable) {
-          // TODO: Ranking
+          var rank = data.taskRank(event.team, event.data.task);
+          if (rank < data.tasks[event.data.task].rewards.length)
+            value += data.tasks[event.data.task].rewards[rank];
         }  else
-          value += data.tasks[event.data.task].reward;
+          value += data.tasks[event.data.task].rewards[0];
         break;
       case 'receive_card':
         var card = data.cards[event.data.card];
@@ -234,39 +248,39 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
       return rec;
     },
     latest: function(teamId) {
-              var ordered = $filter('objectOrderBy')(this.$list, 'timestamp', true);
-              for(var i = 0; i < ordered.length; i++) {
-                var event = ordered[i];
-                if(event.active && event.team === teamId) {
-                  switch(event.type) {
-                    case 'visit_street':
-                      return 'Straat bezocht: ' + data.streets[event.data.street].name;
-                    case 'buy_hotel':
-                      return 'Hotel gebouwd op: ' + data.streets[event.data.street].name;
-                    case 'receive_card':
-                      return 'Kanskaart ontvangen: ' + data.cards[event.data.card].name;
-                    case 'complete_task':
-                      return 'Opdracht voltooid: ' + data.tasks[event.data.task].name;
-                    case 'straight_money':
-                      return 'Direct geld ontvangen: ' + event.data.amount + ' ' + event.data.note;
-                    case 'complete_card':
-                      return 'Kanskaart gehaald: ' + data.cards[event.data.card].name;
-                    default:
-                      return 'Onbekende update';
-                  }
-                }
-              }
-            },
+      var ordered = $filter('objectOrderBy')(this.$list, 'timestamp', true);
+      for(var i = 0; i < ordered.length; i++) {
+        var event = ordered[i];
+        if(event.active && event.team === teamId) {
+          switch(event.type) {
+            case 'visit_street':
+              return 'Straat bezocht: ' + data.streets[event.data.street].name;
+            case 'buy_hotel':
+              return 'Hotel gebouwd op: ' + data.streets[event.data.street].name;
+            case 'receive_card':
+              return 'Kanskaart ontvangen: ' + data.cards[event.data.card].name;
+            case 'complete_task':
+              return 'Opdracht voltooid: ' + data.tasks[event.data.task].name;
+            case 'straight_money':
+              return 'Direct geld ontvangen: ' + event.data.amount + ' ' + event.data.note;
+            case 'complete_card':
+              return 'Kanskaart gehaald: ' + data.cards[event.data.card].name;
+            default:
+              return 'Onbekende update';
+          }
+        }
+      }
+    },
     latestLocation: function(teamId) {
-                      var ordered = $filter('objectOrderBy')(this.$list, 'timestamp', true);
-                      for(var i = 0; i < ordered.length; i++) {
-                        var event = ordered[i];
-                        if(event.active && event.team === teamId && event.type === 'visit_street') {
-                          var street = data.streets[event.data.street];
-                          return street.name + ', ' + data.cities[street.city_id].name;
-                        }
-                      }
-                    }
+      var ordered = $filter('objectOrderBy')(this.$list, 'timestamp', true);
+      for(var i = 0; i < ordered.length; i++) {
+        var event = ordered[i];
+        if(event.active && event.team === teamId && event.type === 'visit_street') {
+          var street = data.streets[event.data.street];
+          return street.name + ', ' + data.cities[street.city_id].name;
+        }
+      }
+    }
   });
 
   return function(data) {

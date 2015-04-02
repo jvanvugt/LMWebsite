@@ -57,7 +57,6 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
   };
 
   $scope.submitAddTask = function(data) {
-    console.log(data);
     Data.teamCompleteTask($scope.teamId, data.taskId, data.taskValue, Data.timestampOf(data));
   };
 
