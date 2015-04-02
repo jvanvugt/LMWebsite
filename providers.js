@@ -166,7 +166,7 @@ monopolyProviders.factory('Chance', function () {
   };
 });
 
-monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, DataRoot) {
+monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, DataRoot, $filter) {
 
   var eventValue = function(event) {
     var value = 0;
@@ -236,20 +236,23 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
       return rec;
     },
     latest: function(teamId) {
-      for(var i = 0; i < this.$list.length; i++) {
-        var event = this.$list[i];
+      var ordered = $filter('objectOrderBy')(this.$list, 'timestamp', true);
+      for(var i = 0; i < ordered.length; i++) {
+        var event = ordered[i];
         if(event.active && event.team === teamId) {
           switch(event.type) {
             case 'visit_street':
               return 'Straat bezocht: ' + data.streets[event.data.street].name;
             case 'buy_hotel':
-             return 'Hotel gebouwd op: ' + data.streets[event.data.street].name;
+              return 'Hotel gebouwd op: ' + data.streets[event.data.street].name;
             case 'receive_card':
               return 'Kanskaart ontvangen: ' + data.cards[event.data.card].name;
             case 'complete_task':
               return 'Opdracht voltooid: ' + data.tasks[event.data.task].name;
             case 'straight_money':
               return 'Direct geld ontvangen: ' + event.data.amount + ' ' + event.data.note;
+            case 'complete_card':
+              return 'Kanskaart gehaald: ' + data.cards[event.data.card].name;
             default:
               return 'Onbekende update';
           }
@@ -257,8 +260,9 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
       }
     },
     latestLocation: function(teamId) {
-      for(var i = 0; i < this.$list.length; i++) {
-        var event = this.$list[i];
+      var ordered = $filter('objectOrderBy')(this.$list, 'timestamp', true);
+      for(var i = 0; i < ordered.length; i++) {
+        var event = ordered[i];
         if(event.active && event.team === teamId && event.type === 'visit_street') {
           var street = data.streets[event.data.street];
           return street.name + ', ' + data.cities[street.city_id].name;
