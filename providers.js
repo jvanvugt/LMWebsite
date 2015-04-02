@@ -31,6 +31,12 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
 
   var chance = Chance(this);
 
+  this.getData = function(dataType, dataId) {
+    if(dataType && dataId) {
+      return this[dataType][dataId];
+    }
+  }
+
   this.addUser = function(user) {
     DataRoot.child('users').push(user);
   };
