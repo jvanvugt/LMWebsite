@@ -123,9 +123,10 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $fi
   }
 
   $scope.visitedByTeamFilter = function(street) {
+    console.log(street);
     var teamId = document.getElementById('teamUnvisit').value;
     var cityId = document.getElementById('cityUnvisit').value;
-    return street && street.city_id === cityId && street.visitors && street.visitors[teamId];
+    return street && street.city_id === cityId && street.visited && street.visited[teamId];
   };
 
   $scope.hasHotelFilter = function(street) {
