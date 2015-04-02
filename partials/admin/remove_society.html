@@ -7,5 +7,5 @@
       <option ng-repeat='(id, soc) in data.societies' value='{{id}}'>{{soc.name}}</option>
     </select>
   </div>
-  <button ngDisabled='!societyForDelete' class='btn btn-info' type='submit' ng-click='deleteSociety(societyForDelete); societyForDelete=""' ng-disabled='!societyForDelete'>Verwijderen</button>
+  <button ngDisabled='!societyForDelete' class='btn btn-info' type='submit' ng-click='submitRemoveSociety(societyForDelete); societyForDelete=""' ng-disabled='!societyForDelete'>Verwijderen</button>
 </form>

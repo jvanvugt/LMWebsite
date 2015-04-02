@@ -161,7 +161,7 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $fi
     Data.addSociety(society);
   }
 
-  $scope.submitRemoveSociety = function(societyId) {
+  $scope.submitRemoveSociety = function(society) {
     Data.removeSociety(society);
   }
 
