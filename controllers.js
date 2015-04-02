@@ -97,33 +97,9 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $fi
 
   $scope.data = Data;
 
-
   var constsync = $firebase(new Firebase(FIREBASE_URL+'static/constants')).$asObject();
   constsync.$bindTo($scope, "consts");
-
-  $scope.streetInCityFilter = function(street) {
-    var cityId = document.getElementById('cityStreetRemove').value;
-    return street && street.city_id === cityId;
-  }
-
-  $scope.visitedByTeamFilter = function(street) {
-    var teamId = document.getElementById('teamUnvisit').value;
-    var cityId = document.getElementById('cityUnvisit').value;
-    return street && street.city_id === cityId && street.visited && street.visited[teamId];
-  };
-
-  $scope.hasHotelFilter = function(street) {
-    return street.hotel_team_id && street.hotel_timestamp;
-  }
-
-  $scope.judgeFilter = function (user) {
-    return user.roles && user.roles.judge;
-  };
-
-  $scope.eligibleMemberFilter = function (user) {
-    return !$scope.judgeFilter(user) && !user.team;
-  };
-
+  
   $scope.addUser = function(user) {
     var sync = new Firebase(FIREBASE_URL+'users');
     sync.push(user);

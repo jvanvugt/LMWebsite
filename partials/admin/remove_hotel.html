@@ -11,7 +11,7 @@
       <label for='streetHotelRemove'>Straat:</label>
       <select class='form-control' id='streetHotelRemove' ng-model='streetHotelRemove'>
         <option value="" disabled selected>Selecteer een straat</option>
-        <option ng-repeat='street in data.streets | filter: hasHotelFilter' value='{{street.$id}}'>{{street.name}}</option>
+        <option ng-repeat='street in data.streets' ng-show='street.hotel_team_id' value='{{street.$id}}'>{{street.name}}</option>
       </select>
     </div>
     <button ng-disabled='!(cityHotelRemove && streetHotelRemove)' type='submit' class='btn btn-info' ng-click='removeHotel(streetHotelRemove); cityHotelRemove=""; streetHotelRemove="";'>Verwijderen</button>
