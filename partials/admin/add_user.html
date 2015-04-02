@@ -36,6 +36,6 @@
     </label>
   </div>
 
-  <button ng-disabled="!(addUser.name && addUser.mail && addUser.phone && addUser.society)" type='submit' class='btn btn-info' ng-click='submitAddUser(addUser); user=""'>Toevoegen</button>
+  <button ng-disabled="!(addUser.name && addUser.mail && addUser.phone && addUser.society)" type='submit' class='btn btn-info' ng-click='submitAddUser(addUser); addUser={}'>Toevoegen</button>
 
 </form>
