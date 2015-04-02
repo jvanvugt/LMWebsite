@@ -1,0 +1,161 @@
+functions:
+  ### PREDICATES ###
+
+  # Authentication
+  - loggedIn(): auth.uid !== null
+  - isJudge(user_id): root.users[user_id].roles.judge === true
+  - isAdmin(user_id): root.users[user_id].roles.admin === true
+  - isStaff(user_id): isJudge(user_id) || isAdmin(user_id)
+
+  # Existence Checks
+  - isSociety(society_id): root.static.societies[society_id].exists()
+  - isTeam(team_id): root.teams[team_id].exists()
+  - isCity(city_id): root.cities[city_id].exists()
+  - isEventType(event_type): root.static.event_types[event_type].exists()
+
+  # Basic Properties
+  - isNotEmpty(string): string.length > 0
+
+  # Data Validation
+  - isValidTask(task): task.hasChildren(['reward','repeatable']) || task.hasChildren(['rankable','rank1_reward','rank2_reward','rank3_reward'])
+  - validTaskRepeats(repeats): taskOfRepeats(repeats).rankable === true && repeats <= 1 || repeats <= taskOfRepeats(repeats).repeatable 
+
+  ### NON-PREDICATES ###
+
+  # Data Retrieval
+  - taskOfRepeats(repeats): repeats.parent().parent().parent()
+
+schema:
+  additionalProperties: false
+  properties:
+    teams:
+      $team_id:
+        type: object
+        required: [name, judge, active]
+        additionalProperties: false
+        properties:
+          name: {type: string}
+          judge: {constraint: isJudge(next.value)}
+          active: {type: boolean}
+    users:
+      $user_id:
+        type: object
+        required: [name, phone, mail]
+        additionalProperties: false
+        properties:
+          name:
+            type: string
+            constraint: isNotEmpty(next.value)
+          phone:
+            type: string
+            constraint: isNotEmpty(next.value)
+          smartphone: {type: boolean}
+          mail:
+            type: string
+            constraint: isNotEmpty(next.value)
+          society: {constraint: isSociety(next.value)}
+          team: {constraint: isTeam(next.value)}
+          roles:
+            additionalProperties: false
+            properties:
+              judge: {type: boolean}
+              admin: {type: boolean}
+    cities:
+      $city_id:
+        type: object
+        required: [name]
+        additionalProperties: false
+        properties:
+          name:
+            type: string
+            constraint: isNotEmpty(next.value)
+    streets:
+      $street_id:
+        type: object
+        required: [name, city_id]
+        additionalProperties: false
+        properties:
+          name: 
+            type: string
+            constraint: isNotEmpty(next.value)
+          city_id:
+            type: string
+            constraint: isCity(next.value)
+          hotel_team_id: {constraint: isTeam(next.value)}
+          visited:
+            $team_id:
+              type: number # timestamp
+              constraint: isTeam($team_id)
+    tasks:
+      $task_id:
+        type: object
+        required: [name]
+        constraint: isValidTask(next)
+        additionalProperties: false
+        properties:
+          name: 
+            type: string
+            constraint: isNotEmpty(next.value)
+          repeatable: 
+            type: number
+            minimum: 1
+          rankable: {type: boolean}
+          rewards: {$rank: {type: number}} # rewards by rank
+          repeated:
+            $team_id:
+              type: number
+              minimum: 0
+              constraint: isTeam($team_id) && validTaskRepeats(next)
+          ranked: {$team_id: {constraint: isTeam($team_id)}} # ranking value can be anything
+    cards:
+      $card_id:
+        type: object
+        required: [name, amount]
+        additionalProperties: false
+        properties:
+          name:
+            type: string
+            constraint: isNotEmpty(next.value)
+          amount: {type: number}
+          is_positive: {type: boolean}
+          received:
+            $team_id:
+              type: number # timestamp
+              constraint: isTeam($team_id)
+          completed:
+            $team_id:
+              type: number # timestamp
+              constraint: isTeam($team_id)
+    events:
+      $event_id:
+        type: object
+        required: [team, type, timestamp]
+        additionalProperties: false
+        properties:
+          team: {constraint: isTeam(next.value)}
+          type: {constraint: isEventType(next.value)}
+          timestamp: {type: number}
+          undo: {type: boolean}
+          inactive: {type: boolean}
+          data: {} # anything
+    static:
+      additionalProperties: false
+      properties:
+        constants: {$constant: {type: number}}
+        event_types: {$event_type: {type: boolean}}
+        societies:
+          $society_id:
+            type: object
+            required: [name]
+            additionalProperties: false
+            properties:
+              name:
+                type: string
+                constraint: isNotEmpty(next.value)
+
+
+
+access:
+  - location: /
+    read: isStaff(auth.uid)
+    write: isStaff(auth.uid)
