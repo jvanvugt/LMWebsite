@@ -16,7 +16,7 @@ monopolyProviders.service('DataRoot', function($firebase, FIREBASE_URL) {
   return new Firebase(FIREBASE_URL);
 });
 
-monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsFactory) {
+monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsFactory, $interval) {
   this.teams = $firebase(DataRoot.child('teams')).$asObject();
   this.users = $firebase(DataRoot.child('users')).$asObject();
   this.cities = $firebase(DataRoot.child('cities')).$asObject();
@@ -124,9 +124,15 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
       return Firebase.ServerValue.TIMESTAMP;
   };
 
-  this.now = function() {
-    return new Date().getTime();
+  this.setNow = function() {
+    this.now = new Date().getTime();
   };
+
+  this.setNow();
+
+  $interval(function(){
+      this.setNow();
+   }.bind(this), 1000); 
 });
 
 monopolyProviders.factory('Chance', function () {
@@ -187,9 +193,8 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
         if (card.completed && card.completed[event.team]) {
           if (card.is_positive)
             value += card.amount;
-          console.log(card.name);
         } else {
-          if (!card.is_positive && data.now() > card.received[event.team] + data.constants.card_max_time*60*1000)
+          if (!card.is_positive && data.now > card.received[event.team] + data.constants.card_max_time*60*1000)
             value -= card.amount;
         }
         break;

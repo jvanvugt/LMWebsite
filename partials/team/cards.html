@@ -26,7 +26,7 @@
           <button ng-show="card.completed[teamId]" type="button" class="btn btn-danger btn-xs" ng-click="uncompleteCard(id)"><span class="glyphicon glyphicon-remove"></span></button>
         </td>
         <td>
-          <span ng-show="!card.completed[teamId] && data.now() > card.received[teamId] + data.constants.card_max_time*60*1000" class="glyphicon glyphicon-warning-sign"></span>
+          <span ng-show="!card.completed[teamId] && data.now > card.received[teamId] + data.constants.card_max_time*60*1000" class="glyphicon glyphicon-warning-sign"></span>
           {{card.received[teamId] + data.constants.card_max_time*60*1000 | date:'H:mm:ss'}}
         </td> <!-- TODO: calculate end time -->
         <td>{{(2*card.is_positive-1)*card.amount}}</td>
