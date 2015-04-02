@@ -47,7 +47,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
   this.teamAvailableCards = function(teamId) {
     var availableCards = {};
     this.cards.forEach(function(card, id) {
-      if(!card.visitors || !card.visitors[teamId])
+      if(!card.visited || !card.visited[teamId])
         availableCards[id] = card;
     });
     return availableCards;
@@ -158,7 +158,7 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
     var value = 0;
     switch (event.type) {
       case 'visit_street':
-        if (!(data.streets[event.data.street] && data.streets[event.data.street].visitors && data.streets[event.data.street].visitors[event.team])) break;
+        if (!(data.streets[event.data.street] && data.streets[event.data.street].visited && data.streets[event.data.street].visited[event.team])) break;
         value += data.constants.visit_street_profits;
         if (data.streets[event.data.street] &&
             data.streets[event.data.street].hotel_timestamp &&
@@ -169,10 +169,9 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
       case 'buy_hotel':
         value -= data.constants.buy_hotel_costs;
         if (data.streets[event.data.street] &&
-            data.streets[event.data.street].visitors) {
-          angular.forEach(data.streets[event.data.street].visitors, function (visit, visitor) {
-            if (visit.timestamp &&
-                visit.timestamp >= event.timestamp)
+            data.streets[event.data.street].visited) {
+          angular.forEach(data.streets[event.data.street].visited, function (visit) {
+            if (visit >= event.timestamp)
               value += data.constants.visit_hotel_profits;
           });
         }
