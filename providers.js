@@ -125,12 +125,13 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
       alert("Op deze straat is een hotel van een ander team!")
 
     if (chance.cardOnVisitStreet()) {
-      this.teamGetCard(teamId, timestamp); //TODO: message if get card
+      this.teamGetCard(teamId, timestamp);
       alert("Het team heeft een nieuwe kaart ontvangen!");
     };
   };
 
   this.teamUnvisitStreet = function(teamId, streetId, timestamp) {
+    this.teamUnbuyHotel(teamId, streetId, timestamp);
     DataRoot.child('streets').child(streetId).child('visited').child(teamId).remove();
     this.addEvent(teamId, 'visit_street', {street: streetId}, timestamp, true);
   };
@@ -159,6 +160,11 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
   this.teamBuyHotel = function(teamId, streetId, timestamp) {
     if (this.events.balance(teamId) < this.constants.buy_hotel_costs) {
       alert("Niet genoeg geld om een hotel te kopen!");
+      return;
+    };
+    console.log(this.teamNumberOfHotels(teamId), this.constants.max_hotels);
+    if (this.teamNumberOfHotels(teamId) >= this.constants.max_hotels) {
+      alert("Dit team bezit al het maximum aantal hotels!");
       return;
     };
     var streetref = DataRoot.child('streets').child(streetId)
@@ -230,6 +236,15 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
         availableCards[id] = card;
     });
     return availableCards;
+  };
+
+  this.teamNumberOfHotels = function(teamId) {
+    var numberOfHotels = 0;
+    this.streets.forEach(function(street, id) {
+      if(street.hotel_team_id === teamId)
+        numberOfHotels += 1;
+    });
+    return numberOfHotels;
   };
 
   this.taskRank = function(teamId, taskId) {
