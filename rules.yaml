@@ -15,6 +15,7 @@ functions:
 
   # Basic Properties
   - isNotEmpty(string): string.length > 0
+  - del(next): next.exists() === false
 
   # Data Validation
   - isValidTask(task): task.hasChildren(['reward','repeatable']) || task.hasChildren(['rankable','rank1_reward','rank2_reward','rank3_reward'])
@@ -54,7 +55,7 @@ schema:
             type: string
             constraint: isNotEmpty(next.val())
           society: {constraint: isSociety(next.val())}
-          team: {constraint: isTeam(next.val())}
+          team: {constraint: del(next) || isTeam(next.val())}
           roles:
             additionalProperties: false
             properties:
@@ -81,7 +82,7 @@ schema:
           city_id:
             type: string
             constraint: isCity(next.val())
-          hotel_team_id: {constraint: isTeam(next.val())}
+          hotel_team_id: {constraint: del(next) || isTeam(next.val())}
           hotel_timestamp: {type: number}
           visited:
             $team_id:
@@ -161,3 +162,9 @@ access:
   - location: /
     read: isStaff(auth.uid)
     write: isStaff(auth.uid)
+  - location: static/
+    read: true
+    write: isStaff(auth.uid)
+  - location: users/$user_id/
+    read: true
+    write: true

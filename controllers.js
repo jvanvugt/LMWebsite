@@ -262,12 +262,13 @@ monopolyControllers.controller('AccountCtrl', function AdminCtrl($scope, Data, $
   var auth = $firebaseAuth(ref);
   $scope.data = Data;
 
-  $scope.login = function(user) {
+  $scope.login = function(user, callback) {
     ref.authWithPassword(user, function(error, authData) {
       if (error) {
         console.log("Login Failed!", error);
       } else {
         console.log("Authenticated successfully with payload:", authData);
+        callback();
         location.assign('/#/overzicht');
       }
     });
@@ -284,9 +285,12 @@ monopolyControllers.controller('AccountCtrl', function AdminCtrl($scope, Data, $
         } else {
           console.log("Successfully created user account with uid:", userData.uid);
           alert('Je account is geregistreerd');
-          delete user.password;
-          delete user.password2;
-          new Firebase(FIREBASE_URL+'users').child(userData.uid).set(user);
+          $scope.login({email: user.mail, password: user.password}, function () {
+            delete user.password;
+            delete user.password2;
+            console.log(user);
+            new Firebase(FIREBASE_URL+'users').child(userData.uid).set(user);
+          });
         }
       });
     } else {
