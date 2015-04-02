@@ -265,10 +265,11 @@ monopolyControllers.controller('AccountCtrl', function AdminCtrl($scope, Data, $
   $scope.login = function(user) {
     ref.authWithPassword(user, function(error, authData) {
       if (error) {
+        alert('Login failed: ' + error);
         console.log("Login Failed!", error);
       } else {
         console.log("Authenticated successfully with payload:", authData);
-        location.assign('/#/overzicht');
+        location.assign('/');
       }
     });
   }
