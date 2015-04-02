@@ -57,7 +57,6 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
   };
 
   this.removeTeam = function(teamId) {
-    console.log(teamId);
     DataRoot.child('teams').child(teamId).remove();
     var that = this;
     angular.forEach(data.users, function (user, id) {
@@ -220,6 +219,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
     evnt['undo'] = undo;
     evnt['data'] = data;
     evnt['active'] = true;
+    console.log("Event added: ", evnt)
     DataRoot.child('events').push(evnt);
   };
 
