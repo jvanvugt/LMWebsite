@@ -34,8 +34,8 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
   this.teamVisitStreet = function(teamId, streetId, timestamp) {
     DataRoot.child('streets').child(streetId).child('visited').child(teamId).set(timestamp);
     this.addEvent(teamId, 'visit_street', {street: streetId}, timestamp);
-    if (this.streets[streetId].hotel_team_id)
-      alert("Op deze straat is een hotel!")
+    if (this.streets[streetId].hotel_team_id !== teamId)
+      alert("Op deze straat is een hotel van een ander team!")
 
     if (chance.cardOnVisitStreet()) {
       this.teamGetCard(teamId, timestamp); //TODO: message if get card
