@@ -90,8 +90,8 @@ schema:
     tasks:
       ~$task_id:
         type: object
-        #required: [name, rewards]
-        #additionalProperties: false
+        required: [name, rewards]
+        additionalProperties: false
         properties:
           name: 
             type: string
