@@ -54,7 +54,7 @@ schema:
             type: string
             constraint: isNotEmpty(next.val())
           society: {constraint: isSociety(next.val())}
-          team: {constraint: del(next) || isTeam(next.val())}
+          team: {constraint: true || del(next) || isTeam(next.val())} # 'true' hack to fix roles...
           roles:
             additionalProperties: false
             properties:
@@ -164,5 +164,5 @@ access:
   - location: static/
     read: true
   - location: users/$user_id/
-    read: isStaff(auth.uid) === true || $user_id === auth.uid
-    write: isStaff(auth.uid) === true || $user_id === auth.uid
+    read: isStaff(auth.uid) || $user_id === auth.uid
+    write: isStaff(auth.uid) || $user_id === auth.uid
