@@ -97,6 +97,17 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
     this.addEvent(teamId, 'complete_task', {task: taskId}, timestamp, true);
   };
 
+  this.taskRank = function(teamId, taskId) {
+    var task = this.tasks[taskId];
+    var teamRankValue = task.ranked[teamId];
+    var rank = 0;
+    angular.forEach(task.ranked, function (rankValue, id) {
+      if (task.repeated[id] > 0 && rankValue > teamRankValue)
+        rank += 1;
+    });
+    return rank;
+  };
+
   this.teamStraightMoney = function(teamId, amount, note, timestamp) {
     this.addEvent(teamId, 'straight_money', {amount: amount, note: note}, timestamp);
   };
@@ -181,13 +192,15 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
         break;
       case 'complete_task':
         if (!(data.tasks[event.data.task] &&
-              data.tasks[event.data.task].completed &&
-              data.tasks[event.data.task].completed[event.team] &&
-              data.tasks[event.data.task].completed[event.team].repeats > 0)) break;
+              data.tasks[event.data.task].repeated &&
+              data.tasks[event.data.task].repeated[event.team] > 0)) break;
         if (data.tasks[event.data.task].rankable) {
-          // TODO: Ranking
+          var rank = data.taskRank(event.team, event.data.task);
+          if (rank < data.tasks[event.data.task].rewards.length)
+            value += data.tasks[event.data.task].rewards[rank]
+          console.log(rank);
         }  else
-          value += data.tasks[event.data.task].reward;
+          value += data.tasks[event.data.task].rewards[0];
         break;
       case 'receive_card':
         var card = data.cards[event.data.card];
@@ -237,8 +250,8 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
               return 'Opdracht voltooid: ' + data.tasks[event.data.task].name;
             case 'straight_money':
               return 'Direct geld ontvangen: ' + event.data.amount + ' ' + event.data.note;
-              default:
-            return 'Onbekende update';
+            default:
+              return 'Onbekende update';
           }
         }
       }
