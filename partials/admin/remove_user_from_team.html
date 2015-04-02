@@ -14,5 +14,5 @@
         <option ng-repeat='(id, user) in data.users' ng-show='user.team === teamId' value='{{id}}'>{{user.name}}</option>
       </select>
   </div>
-  <button ng-disabled='!(teamId && memberId)' type='submit' class='btn btn-info' ng-click='deleteTeamMember(memberId, teamId); teamId=""; memberId=""'>Verwijderen</button>
+  <button ng-disabled='!(teamId && memberId)' type='submit' class='btn btn-info' ng-click='submitRemoveMember(memberId); teamId=""; memberId=""'>Verwijderen</button>
 </form>

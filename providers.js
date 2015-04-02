@@ -31,10 +31,97 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
 
   var chance = Chance(this);
 
+  this.addUser = function(user) {
+    DataRoot.child('users').push(user);
+  };
+
+  this.removeUser = function(userId) {
+    DataRoot.child('users').child(userId).remove();
+  };
+
+  this.setUserRights = function(userId, isJudge, isAdmin) {
+    var roles = DataRoot.child('users').child(userId).child('roles');
+    roles.child('judge').set(isJudge);
+    roles.child('admin').set(isAdmin);
+  };
+
+  this.addTeam = function(team, teamMembers) {
+    team.active = true;
+    var teamIdRef = DataRoot.child('teams').push(team);
+    var data = this;
+    teamIdRef.on('value', function (snapshot) {
+      angular.forEach(teamMembers, function (userId) {
+        data.teamAddMember(snapshot.key(), userId);
+      });
+    });
+  };
+
+  this.removeTeam = function(teamId) {
+    console.log(teamId);
+    DataRoot.child('teams').child(teamId).remove();
+    var that = this;
+    angular.forEach(data.users, function (user, id) {
+      if (user.team === teamId)
+        that.teamRemoveMember(id);
+    });
+  };
+  
+  this.teamAddMember = function(teamId, userId) {
+    DataRoot.child('users').child(userId).child('team').set(teamId);
+  };
+
+  this.teamRemoveMember = function(userId) {
+    DataRoot.child('users').child(userId).child('team').remove();
+  };
+
+  this.addCity = function(city) {
+    DataRoot.child('cities').push(city);
+  };
+
+  this.removeCity = function(cityId) {
+    DataRoot.child('cities').child(cityId).remove();
+    angular.forEach(data.streets, function (street, id) {
+      if (street.city_id === cityId)
+        this.removeStreet(id);
+    });
+  };
+
+  this.addStreet = function(street) {
+    DataRoot.child('streets').push(street);
+  };
+
+  this.removeStreet = function(streetId) {
+    DataRoot.child('streets').child(streetId).remove();
+  };
+
+  this.addTask = function(task) {
+    DataRoot.child('tasks').push(task);
+  };
+
+  this.removeTask = function(taskId) {
+    DataRoot.child('tasks').child(taskId).remove();
+  };
+
+  this.addCard = function(card) {
+    DataRoot.child('cards').push(card);
+  };
+
+  this.removeCard = function(cardId) {
+    DataRoot.child('cards').child(cardId).remove();
+  };
+
+  this.addSociety = function(society) {
+    DataRoot.child('static/societies').push(society);
+  };
+
+  this.removeSociety = function(societyId) {
+    DataRoot.child('static/societies').child(societyId).remove();
+  };
+
   this.teamVisitStreet = function(teamId, streetId, timestamp) {
     DataRoot.child('streets').child(streetId).child('visited').child(teamId).set(timestamp);
     this.addEvent(teamId, 'visit_street', {street: streetId}, timestamp);
-    if (this.streets[streetId].hotel_team_id !== teamId)
+    if (this.streets[streetId].hotel_team_id && this.streets[streetId].hotel_team_id !== teamId)
       alert("Op deze straat is een hotel van een ander team!")
 
     if (chance.cardOnVisitStreet()) {
@@ -43,19 +130,20 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
     };
   };
 
+  this.teamUnvisitStreet = function(teamId, streetId, timestamp) {
+    DataRoot.child('streets').child(streetId).child('visited').child(teamId).remove();
+    this.addEvent(teamId, 'visit_street', {street: streetId}, timestamp, true);
+  };
+
   this.teamGetCard = function(teamId, timestamp) {
     var card = chance.objectProperty(this.teamAvailableCards(teamId));
     DataRoot.child('cards').child(card.id).child('received').child(teamId).set(timestamp);
     this.addEvent(teamId, 'receive_card', {card: card.id}, timestamp);
   };
 
-  this.teamAvailableCards = function(teamId) {
-    var availableCards = {};
-    this.cards.forEach(function(card, id) {
-      if(!card.visited || !card.visited[teamId])
-        availableCards[id] = card;
-    });
-    return availableCards;
+  this.teamUngetCard = function(teamId, cardId, timestamp) {
+    DataRoot.child('cards').child(cardId).child('received').child(teamId).remove();
+    this.addEvent(teamId, 'receive_card', {card: cardId}, timestamp, true);
   };
 
   this.teamCompleteCard = function(teamId, cardId, timestamp) {
@@ -75,6 +163,13 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
     this.addEvent(teamId, 'buy_hotel', {street: streetId}, timestamp);
   };
 
+  this.teamUnbuyHotel = function(teamId, streetId, timestamp) {
+    var streetref = DataRoot.child('streets').child(streetId)
+    streetref.child('hotel_team_id').remove();
+    streetref.child('hotel_timestamp').remove();
+    this.addEvent(teamId, 'buy_hotel', {street: streetId}, timestamp, true);
+
+  };
   this.teamCompleteTask = function(teamId, taskId, taskValue, timestamp) {
     var taskref = DataRoot.child('tasks').child(taskId);
     var taskrepeatedteamref = taskref.child('repeated').child(teamId);
@@ -101,17 +196,6 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
     this.addEvent(teamId, 'complete_task', {task: taskId}, timestamp, true);
   };
 
-  this.taskRank = function(teamId, taskId) {
-    var task = this.tasks[taskId];
-    var teamRankValue = task.ranked[teamId];
-    var rank = 0;
-    angular.forEach(task.ranked, function (rankValue, id) {
-      if (task.repeated[id] > 0 && rankValue > teamRankValue)
-        rank += 1;
-    });
-    return rank;
-  };
-
   this.teamStraightMoney = function(teamId, amount, note, timestamp) {
     this.addEvent(teamId, 'straight_money', {amount: amount, note: note}, timestamp);
   };
@@ -133,6 +217,26 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
     eventref.child('active').transaction(function(current) {
       return !current;
     });
+  };
+
+  this.teamAvailableCards = function(teamId) {
+    var availableCards = {};
+    this.cards.forEach(function(card, id) {
+      if(!card.visited || !card.visited[teamId])
+        availableCards[id] = card;
+    });
+    return availableCards;
+  };
+
+  this.taskRank = function(teamId, taskId) {
+    var task = this.tasks[taskId];
+    var teamRankValue = task.ranked[teamId];
+    var rank = 0;
+    angular.forEach(task.ranked, function (rankValue, id) {
+      if (task.repeated[id] > 0 && rankValue > teamRankValue)
+        rank += 1;
+    });
+    return rank;
   };
 
   this.timestampOf = function(data) {

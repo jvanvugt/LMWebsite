@@ -2,10 +2,10 @@
 <form>
   <div class='form-group'>
     <label for='userDelete'>Gebruiker:</label>
-    <select class='form-control' id='userDelete' ng-model='userForDelete'>
+    <select class='form-control' id='userDelete' ng-model='removeUser.userId'>
       <option value="" disabled selected>Selecteer een gebruiker</option>
       <option ng-repeat='user in users' value='{{user.$id}}'>{{user.name}}</option>
     </select>
   </div>
-  <button ng-disabled='!userForDelete' type='submit' class='btn btn-info' ng-click='deleteUser(userForDelete); userForDelete=""'>Verwijderen</button>
+  <button ng-disabled='!removeUser.userId' type='submit' class='btn btn-info' ng-click='submitRemoveUser(removeUser.userId); removeUser={}'>Verwijderen</button>
 </form>

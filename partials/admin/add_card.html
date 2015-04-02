@@ -15,5 +15,5 @@
       </label>
     </div>
   </div>
-  <button ng-disabled="!(card.name && (card.amount || card.amount === 0))" type='submit' class='btn btn-info' ng-click='addCard(card); card=""; card.is_positive=true'>Toevoegen</button>
+  <button ng-disabled="!(card.name && (card.amount || card.amount === 0))" type='submit' class='btn btn-info' ng-click='submitAddCard(card); card=""; card.is_positive=true'>Toevoegen</button>
 </form>

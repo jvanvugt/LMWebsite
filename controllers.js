@@ -99,113 +99,87 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $fi
 
   var constsync = $firebase(new Firebase(FIREBASE_URL+'static/constants')).$asObject();
   constsync.$bindTo($scope, "consts");
-  
-  $scope.addUser = function(user) {
-    var sync = new Firebase(FIREBASE_URL+'users');
-    sync.push(user);
+
+  $scope.submitAddUser = function(user) {
+    Data.addUser(user);
   };
 
-  $scope.deleteUser = function(userId) {
-   var user = new Firebase(FIREBASE_URL+'users/'+userId);
-   user.child('team').once('value', function(snap) {
-     new Firebase(FIREBASE_URL+'teams/'+snap.val()+'/members/'+userId).remove();
-     user.remove();
-   });
+  $scope.submitRemoveUser = function(userId) {
+    Data.removeUser(userId);
   };
 
-  $scope.addTeam = function(team, teamMembers) {
-    var sync = $firebase(new Firebase(FIREBASE_URL+'teams')).$asArray();
-    team.active = true;
-    sync.$add(team).then(function(r){
-     members = new Firebase(FIREBASE_URL+'teams/'+r.key()+'/members');
-      teamMembers.forEach(function(userId) {
-        $scope.addMember(userId, r.key());
-      });
-   });
+  $scope.submitAddTeam = function(team, teamMembers) {
+    Data.addTeam(team, teamMembers);
   };
 
-  $scope.addMember = function(userId, teamId) {
-    new Firebase(FIREBASE_URL+'users/'+userId+'/team').set(teamId);
-  }
-
-  $scope.deleteTeam = function(teamId) {
-
-    angular.forEach(data.users, function (user, id) {
-      if (user.team === teamId)
-        $scope.deleteTeamMember(id, teamId);
-    });
-
-    new Firebase(FIREBASE_URL+'teams/' + teamId).remove();
+  $scope.submitRemoveTeam = function(teamId) {
+    Data.removeTeam(teamId);
   };
 
-  $scope.deleteTeamMember = function(userId, teamId) {
-    new Firebase(FIREBASE_URL+'users/' + userId + '/team').remove();
+  $scope.submitAddMember = function(userId, teamId) {
+    Data.teamAddMember(teamId, userId)
+  }
+
+  $scope.submitRemoveMember = function(userId, teamId) {
+    Data.teamRemoveMember(userId);
   };
 
-  $scope.addCity = function(city) {
-    new Firebase(FIREBASE_URL+'cities').push(city);
+  $scope.submitAddCity = function(city) {
+    Data.addCity(city);
+  };
+
+  $scope.submitRemoveCity = function(cityId) {
+    Data.removeCity(cityId);
+  };
+
+  $scope.submitAddStreet = function(street) {
+    Data.addStreet(street);
   }
 
-  $scope.deleteCity = function(cityId) {
-    new Firebase(FIREBASE_URL+'cities/'+cityId).remove();
-    var streets = new Firebase(FIREBASE_URL+'streets');
-    streets.on('child_added', function(snap) {
-      if(snap.val().city_id === cityId)
-          snap.ref().remove();
-    });
+  $scope.submitRemoveStreet = function(streetId) {
+    Data.removeStreet(streetId);
   }
 
-  $scope.addStreet = function(street) {
-    var street_id = new Firebase(FIREBASE_URL+'streets').push(street).key();
-  }
-
-  $scope.deleteStreet = function(streetId) {
-    new Firebase(FIREBASE_URL+'streets/'+streetId).remove();
-  }
-
-  $scope.addTask = function(task) {
+  $scope.submitAddTask = function(task) {
     task.rewards = task.rewards.split(' ').map(Number);
-    new Firebase(FIREBASE_URL+'tasks').push(task);
+    Data.addTask(task);
   }
 
-  $scope.deleteTask = function(taskId) {
-    new Firebase(FIREBASE_URL+'tasks/'+taskId).remove();
+  $scope.submitRemoveTask = function(taskId) {
+    Data.removeTask(taskId);
   }
 
-  $scope.addCard = function(card) {
-    new Firebase(FIREBASE_URL+'cards').push(card);
+  $scope.submitAddCard = function(card) {
+    Data.addCard(card);
   }
 
-  $scope.deleteCard = function(cardId) {
-    new Firebase(FIREBASE_URL+'cards/'+cardId).remove();
+  $scope.submitRemoveCard = function(cardId) {
+    Data.removeCard(cardId);
   }
 
-  $scope.unvisitStreet = function(streetId, teamId) {
-    new Firebase(FIREBASE_URL+'streets/'+streetId+'/visited/'+teamId).remove();
+  $scope.submitAddSociety = function(society) {
+    Data.addSociety(society);
   }
 
-  $scope.removeHotel = function(streetId) {
-    var street = new Firebase(FIREBASE_URL+'streets/'+streetId);
-    street.child('hotel_timestamp').remove();
-    street.child('hotel_team_id').remove();
+  $scope.submitRemoveSociety = function(societyId) {
+    Data.removeSociety(society);
   }
 
-  $scope.addSociety = function(society) {
-    new Firebase(FIREBASE_URL+'static/societies').push(society);
+  $scope.submitRemoveHotel = function(streetId) {
+    var teamId = Data.streets[streetId].hotel_team_id;
+    Data.teamUnbuyHotel(teamId, streetId, Data.now);
   }
 
-  $scope.deleteSociety = function(societyId) {
-    new Firebase(FIREBASE_URL+'static/societies/'+societyId).remove();
+  $scope.submitUnvisitStreet = function(streetId, teamId) {
+    Data.teamUnvisitStreet(teamId, streetId, Data.now);
   }
 
-  $scope.removeCardFromTeam = function(cardId, teamId) {
-    new Firebase(FIREBASE_URL+ 'cards/' + cardId + '/received/'+teamId).remove();
+  $scope.submitRemoveCardFromTeam = function(teamId, cardId) {
+    Data.teamUngetCard(teamId, cardId, Data.now);
   }
 
-  $scope.changeRights = function(userId, isJudge, isAdmin) {
-    var roles = new Firebase(FIREBASE_URL+'users/'+userId+'/roles');
-    roles.child('judge').set(isJudge);
-    roles.child('admin').set(isAdmin);
+  $scope.submitGiveRights = function(userId, isJudge, isAdmin) {
+    Data.setUserRights(userId, isJudge, isAdmin);
   }
 
 });

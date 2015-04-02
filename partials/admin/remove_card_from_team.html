@@ -4,7 +4,7 @@
     <label for='removeCardTeam'>Team:</label>
     <select class='form-control' id='removeCardTeam' ng-model='rcTeamId'>
       <option value='' disabled selected>Selecteer een team</option>
-      <option ng-repeat='team in data.teams' value='{{team.$id}}'>{{team.name}}</option>
+      <option ng-repeat='(id,team) in data.teams' value='{{id}}'>{{team.name}}</option>
     </select>
     <label for='cardTeamRemove'>Kanskaart:</label>
     <select class='form-control' id='removeCardTeam' ng-model='rcCardId'>
@@ -12,5 +12,5 @@
       <option ng-repeat="(id, card) in data.cards" ng-show="card.received[rcTeamId]" value={{id}}>{{card.name}}</option>
     </select>
   </div>
-  <button ng-disabled="!(rcTeamId && rcCardId)" type='submit' class='btn btn-info' ng-click='removeCardFromTeam(rcCardId, rcTeamId); rcTeamId=""; rcCardId=""'>Verwijderen</button>
+  <button ng-disabled="!(rcTeamId && rcCardId)" type='submit' class='btn btn-info' ng-click='submitRemoveCardFromTeam(rcTeamId, rcCardId); rcTeamId=""; rcCardId=""'>Verwijderen</button>
 </form>

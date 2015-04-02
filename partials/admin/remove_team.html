@@ -4,8 +4,8 @@
     <label for='teamDelete'>Team:</label>
     <select class='form-control' id='teamDelete' ng-model='teamForDelete'>
       <option value="" disabled selected>Selecteer een team</option>
-      <option ng-repeat='team in teams' value='{{team.$id}}'>{{team.name}}</option>
+      <option ng-repeat='(id,team) in data.teams' value='{{id}}'>{{team.name}}</option>
     </select>
   </div>
-  <button ng-disabled='!teamForDelete' type='submit' class='btn btn-info' ng-click='deleteTeam(teamForDelete); teamForDelete=""'>Verwijderen</button>
+  <button ng-disabled='!teamForDelete' type='submit' class='btn btn-info' ng-click='submitRemoveTeam(teamForDelete); teamForDelete=""'>Verwijderen</button>
 </form>

@@ -9,5 +9,5 @@
       <option ng-repeat='(id, city) in data.cities' value='{{id}}'>{{city.name}}</option>
     </select>
   </div>
-  <button ng-disabled="!(streetForAdd.name && streetForAdd.city_id)" type='submit' class='btn btn-info' ng-click='addStreet(streetForAdd); streetForAdd=""'>Toevoegen</button>
+  <button ng-disabled="!(streetForAdd.name && streetForAdd.city_id)" type='submit' class='btn btn-info' ng-click='submitAddStreet(streetForAdd); streetForAdd=""'>Toevoegen</button>
 </form>

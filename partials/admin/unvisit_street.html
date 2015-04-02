@@ -21,5 +21,5 @@
       <option ng-repeat="(id, street) in data.streets" ng-show="street.visited[teamIdUnvisit]" value='{{id}}'>{{street.name}}</option>
     </select>
   </div>
-    <button ng-disabled='!(teamIdUnvisit && cityIdUnvisit && streetIdUnvisit)' type='submit' class='btn btn-info' ng-click='unvisitStreet(streetIdUnvisit, teamIdUnvisit); teamIdUnvisit=""; streetIdUnvisit=""; cityIdUnvisit=""'>Onbezoeken</button>
+    <button ng-disabled='!(teamIdUnvisit && cityIdUnvisit && streetIdUnvisit)' type='submit' class='btn btn-info' ng-click='submitUnvisitStreet(streetIdUnvisit, teamIdUnvisit); teamIdUnvisit=""; streetIdUnvisit=""; cityIdUnvisit=""'>Onbezoeken</button>
 </form>
