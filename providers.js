@@ -30,7 +30,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
   var chance = Chance(this);
 
   this.teamVisitStreet = function(teamId, streetId, timestamp) {
-    DataRoot.child('streets').child(streetId).child('visitors').child(teamId).child('timestamp').set(timestamp);
+    DataRoot.child('streets').child(streetId).child('visited').child(teamId).set(timestamp);
     this.addEvent(teamId, 'visit_street', {street: streetId}, timestamp);
     //TODO: message if have to pay?
 
@@ -40,7 +40,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
 
   this.teamGetCard = function(teamId, timestamp) {
     var card = chance.objectProperty(this.teamAvailableCards(teamId));
-    DataRoot.child('cards').child(card.id).child('received').child(teamId).child('timestamp').set(timestamp);
+    DataRoot.child('cards').child(card.id).child('received').child(teamId).set(timestamp);
     this.addEvent(teamId, 'receive_card', {card: card.id}, timestamp);
   };
 
@@ -54,11 +54,11 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
   };
 
   this.teamCompleteCard = function(teamId, cardId, timestamp) {
-    DataRoot.child('cards').child(cardId).child('received').child(teamId).child('completed').set(timestamp);
+    DataRoot.child('cards').child(cardId).child('completed').child(teamId).set(timestamp);
   };
 
   this.teamUncompleteCard = function(teamId, cardId, timestamp) {
-    DataRoot.child('cards').child(cardId).child('received').child(teamId).child('completed').remove();
+    DataRoot.child('cards').child(cardId).child('completed').child(teamId).remove();
   };
 
   this.teamBuyHotel = function(teamId, streetId, timestamp) {
@@ -69,22 +69,26 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
   };
 
   this.teamCompleteTask = function(teamId, taskId, taskValue, timestamp) {
-    var taskcompletedteamref = DataRoot.child('tasks').child(taskId).child('completed').child(teamId);
-    if (this.tasks[taskId].completed && this.tasks[taskId].completed[teamId]) {
-      taskcompletedteamref.child('repeats').transaction(function(current) {
+    var taskref = DataRoot.child('tasks').child(taskId);
+    var taskrepeatedteamref = taskref.child('repeated').child(teamId);
+    var taskrankedteamref = taskref.child('ranked').child(teamId);
+    if (this.tasks[taskId].repeated && this.tasks[taskId].repeated[teamId]) {
+      taskrepeatedteamref.transaction(function(current) {
         return current+1;
       });
     } else {
       if (taskValue)
-        taskcompletedteamref.child('rank_value').set(taskValue);
-      taskcompletedteamref.child('repeats').set(1);
+        taskrankedteamref.set(taskValue);
+      taskrepeatedteamref.set(1);
     }
     this.addEvent(teamId, 'complete_task', {task: taskId}, timestamp);
   };
 
   this.teamUncompleteTask = function(teamId, taskId, timestamp) {
-    var taskcompletedteamref = DataRoot.child('tasks').child(taskId).child('completed').child(teamId);
-    taskcompletedteamref.child('repeats').transaction(function(current) {
+    var taskref = DataRoot.child('tasks').child(taskId);
+    var taskrepeatedteamref = taskref.child('repeated').child(teamId);
+    var taskrankedteamref = taskref.child('ranked').child(teamId);
+    taskrepeatedteamref.transaction(function(current) {
       return current-1;
     });
     this.addEvent(teamId, 'complete_task', {task: taskId}, timestamp, true);
@@ -169,8 +173,9 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
         break;
       case 'complete_task':
         if (!(data.tasks[event.data.task] &&
-                data.tasks[event.data.task].completed[event.team] &&
-                data.tasks[event.data.task].completed[event.team].repeats > 0)) break;
+              data.tasks[event.data.task].completed &&
+              data.tasks[event.data.task].completed[event.team] &&
+              data.tasks[event.data.task].completed[event.team].repeats > 0)) break;
         if (data.tasks[event.data.task].rankable) {
           // TODO: Ranking
         }  else
@@ -179,11 +184,12 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
       case 'receive_card':
         var card = data.cards[event.data.card];
         if (!(card && card.received && card.received[event.team])) break;
-        if (card.received && card.received[event.team] && card.received[event.team].completed) {
+        if (card.completed && card.completed[event.team]) {
           if (card.is_positive)
             value += card.amount;
+          console.log(card.name);
         } else {
-          if (!card.is_positive && data.now() > card.received[event.team].timestamp + data.constants.card_max_time*60*1000)
+          if (!card.is_positive && data.now() > card.received[event.team] + data.constants.card_max_time*60*1000)
             value -= card.amount;
         }
         break;

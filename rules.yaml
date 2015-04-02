@@ -18,12 +18,12 @@ functions:
 
   # Data Validation
   - isValidTask(task): task.hasChildren(['reward','repeatable']) || task.hasChildren(['rankable','rank1_reward','rank2_reward','rank3_reward'])
-  - validTaskRepeats(repeats): taskOfRepeats(repeats).rankable === true && repeats <= 1 || repeats <= taskOfRepeats(repeats).repeatable 
+  - validTaskRepeated(repeated): taskOfRepeated(repeated).rankable === true && repeated <= 1 || repeated <= taskOfRepeats(repeated).repeatable 
 
   ### NON-PREDICATES ###
 
   # Data Retrieval
-  - taskOfRepeats(repeats): repeats.parent().parent().parent()
+  - taskOfRepeated(repeated): repeated.parent().parent()
 
 schema:
   additionalProperties: false
@@ -35,7 +35,7 @@ schema:
         additionalProperties: false
         properties:
           name: {type: string}
-          judge: {constraint: isJudge(next.value)}
+          judge: {constraint: isJudge(next.val())}
           active: {type: boolean}
     users:
       $user_id:
@@ -45,16 +45,16 @@ schema:
         properties:
           name:
             type: string
-            constraint: isNotEmpty(next.value)
+            constraint: isNotEmpty(next.val())
           phone:
             type: string
-            constraint: isNotEmpty(next.value)
+            constraint: isNotEmpty(next.val())
           smartphone: {type: boolean}
           mail:
             type: string
-            constraint: isNotEmpty(next.value)
-          society: {constraint: isSociety(next.value)}
-          team: {constraint: isTeam(next.value)}
+            constraint: isNotEmpty(next.val())
+          society: {constraint: isSociety(next.val())}
+          team: {constraint: isTeam(next.val())}
           roles:
             additionalProperties: false
             properties:
@@ -68,7 +68,7 @@ schema:
         properties:
           name:
             type: string
-            constraint: isNotEmpty(next.value)
+            constraint: isNotEmpty(next.val())
     streets:
       $street_id:
         type: object
@@ -77,11 +77,12 @@ schema:
         properties:
           name: 
             type: string
-            constraint: isNotEmpty(next.value)
+            constraint: isNotEmpty(next.val())
           city_id:
             type: string
-            constraint: isCity(next.value)
-          hotel_team_id: {constraint: isTeam(next.value)}
+            constraint: isCity(next.val())
+          hotel_team_id: {constraint: isTeam(next.val())}
+          hotel_timestamp: {type: number}
           visited:
             $team_id:
               type: number # timestamp
@@ -95,7 +96,7 @@ schema:
         properties:
           name: 
             type: string
-            constraint: isNotEmpty(next.value)
+            constraint: isNotEmpty(next.val())
           repeatable: 
             type: number
             minimum: 1
@@ -105,7 +106,7 @@ schema:
             $team_id:
               type: number
               minimum: 0
-              constraint: isTeam($team_id) && validTaskRepeats(next)
+              constraint: isTeam($team_id) && validTaskRepeated(next)
           ranked: {$team_id: {constraint: isTeam($team_id)}} # ranking value can be anything
     cards:
       $card_id:
@@ -115,7 +116,7 @@ schema:
         properties:
           name:
             type: string
-            constraint: isNotEmpty(next.value)
+            constraint: isNotEmpty(next.val())
           amount: {type: number}
           is_positive: {type: boolean}
           received:
@@ -129,20 +130,23 @@ schema:
     events:
       $event_id:
         type: object
-        required: [team, type, timestamp]
+        required: [team, type, timestamp, active]
         additionalProperties: false
         properties:
-          team: {constraint: isTeam(next.value)}
-          type: {constraint: isEventType(next.value)}
+          team: {constraint: isTeam(next.val())}
+          type: {constraint: isEventType(next.val())}
           timestamp: {type: number}
           undo: {type: boolean}
-          inactive: {type: boolean}
-          data: {} # anything
+          active: {type: boolean}
+          data: {} # TODO: exactly the keys from static.event_types
     static:
       additionalProperties: false
       properties:
         constants: {$constant: {type: number}}
-        event_types: {$event_type: {type: boolean}}
+        event_types:
+          $event_type:
+            $event_property:
+              type: boolean
         societies:
           $society_id:
             type: object
@@ -151,9 +155,7 @@ schema:
             properties:
               name:
                 type: string
-                constraint: isNotEmpty(next.value)
-
-
+                constraint: isNotEmpty(next.val())
 
 access:
   - location: /

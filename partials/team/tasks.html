@@ -12,11 +12,11 @@
         <th>Rangorde waarde</th>
       </thead>
       <tr ng-repeat="(taskId, task) in data.tasks"
-          ng-show="task.completed[teamId].repeats > 0">
+          ng-show="task.repeated[teamId] > 0">
         <td>{{task.name}}</td>
-        <td ng-repeat="(id, team) in task.completed" ng-show="id == teamId">
+        <td>
            <button type="button" class="btn btn-danger btn-xs" ng-click="decrementTask(taskId)"><span class="glyphicon glyphicon-minus"></span></button>
-           {{team.repeats}}
+           {{task.repeated[teamId]}}
            /
            <span ng-show="task.rankable">1</span>
            <span ng-hide="task.rankable">{{task.repeatable}}</span>
@@ -24,9 +24,7 @@
         </td>
         <td ng-hide="task.rankable">{{task.reward}}</td>
         <td ng-show="task.rankable">{{task.rank1_reward}}, {{task.rank2_reward}}, {{task.rank3_reward}}</td>
-        <td ng-repeat="(id, team) in task.completed" ng-show="id == teamId">
-          {{team.rank_value}}
-        </td>
+        <td>{{task.ranked[teamId]}}</td>
       </tr>
     </table>
   </div>
