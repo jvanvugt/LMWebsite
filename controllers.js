@@ -98,6 +98,10 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $fi
 
   $scope.data = Data;
 
+
+  var constsync = $firebase(new Firebase(FIREBASE_URL+'static/constants')).$asObject();
+  constsync.$bindTo($scope, "consts");
+
   $scope.streetInCityFilter = function(street) {
     var cityId = document.getElementById('cityStreetRemove').value;
     return street && street.city_id === cityId;
