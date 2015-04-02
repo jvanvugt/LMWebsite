@@ -157,6 +157,10 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
   };
 
   this.teamBuyHotel = function(teamId, streetId, timestamp) {
+    if (this.events.balance(teamId) < this.constants.buy_hotel_costs) {
+      alert("Niet genoeg geld om een hotel te kopen!");
+      return;
+    };
     var streetref = DataRoot.child('streets').child(streetId)
     streetref.child('hotel_team_id').set(teamId);
     streetref.child('hotel_timestamp').set(timestamp);
