@@ -57,23 +57,23 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
   };
 
   $scope.incrementTask = function(taskId) {
-    Data.teamCompleteTask($scope.teamId, taskId, null, data.now);
+    Data.teamCompleteTask($scope.teamId, taskId, null, Data.now);
   };
 
   $scope.decrementTask = function(taskId) {
-    Data.teamUncompleteTask($scope.teamId, taskId, data.now);
+    Data.teamUncompleteTask($scope.teamId, taskId, Data.now);
   };
 
   $scope.completeCard = function(cardId) {
-    Data.teamCompleteCard($scope.teamId, cardId, data.now);
+    Data.teamCompleteCard($scope.teamId, cardId, Data.now);
   };
 
   $scope.uncompleteCard = function(cardId) {
-    Data.teamUncompleteCard($scope.teamId, cardId, data.now);
+    Data.teamUncompleteCard($scope.teamId, cardId, Data.now);
   };
 
   $scope.submitStraight = function(data) {
-    Data.teamStraightMoney($scope.teamId, data.amount, data.note, data.now);
+    Data.teamStraightMoney($scope.teamId, data.amount, data.note, Data.now);
   };
 
 });
