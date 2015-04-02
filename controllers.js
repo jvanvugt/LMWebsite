@@ -283,6 +283,7 @@ monopolyControllers.controller('AccountCtrl', function AdminCtrl($scope, Data, $
           console.log("Error creating user:", error);
         } else {
           console.log("Successfully created user account with uid:", userData.uid);
+          alert('Je account is geregistreerd');
           delete user.password;
           delete user.password2;
           new Firebase(FIREBASE_URL+'users').child(userData.uid).set(user);
