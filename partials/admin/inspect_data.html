@@ -1,0 +1,21 @@
+<h3>Data inspecteren<h3>
+  <form>
+    <div class='form-group'>
+      <label for='dataType'>Type:</label>
+      <select class='form-control' id='dataType' ng-model='dataType'>
+        <option value="" disabled selected>Selecteer een type</option>
+        <option value='cards'>Kanskaart</option>
+        <option value='tasks'>Opdracht</option>
+        <option value='users'>Gebruiker</option>
+        <option value='teams'>Teams</option>
+      </select>
+      <label for='dataSelect'>Waarde:</label>
+      <select class='form-control' id='dataSelect' ng-model='dataId'>
+        <option value="" disabled selected>Selecteer een waarde</option>
+        <option ng-repeat='(id, data) in data[dataType]' value='{{id}}'>{{data.name}}</option>
+      </select>
+      <div>
+        {{data.getData(dataType, dataId)}}
+      </div>
+    </div>
+  </form>
