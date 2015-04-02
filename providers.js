@@ -31,6 +31,93 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
 
   var chance = Chance(this);
 
+  this.addUser = function(user) {
+    DataRoot.child('users').push(user);
+  };
+
+  this.removeUser = function(userId) {
+    DataRoot.child('users').child(userId).remove();
+  };
+
+  this.setUserRights = function(userId, isJudge, isAdmin) {
+    var roles = DataRoot.child('users').child(userId).child('roles');
+    roles.child('judge').set(isJudge);
+    roles.child('admin').set(isAdmin);
+  };
+
+  this.addTeam = function(team, teamMembers) {
+    team.active = true;
+    var teamIdRef = DataRoot.child('teams').push(team);
+    var data = this;
+    teamIdRef.on('value', function (snapshot) {
+      angular.forEach(teamMembers, function (userId) {
+        data.teamAddMember(snapshot.key(), userId);
+      });
+    });
+  };
+
+  this.removeTeam = function(teamId) {
+    console.log(teamId);
+    DataRoot.child('teams').child(teamId).remove();
+    var that = this;
+    angular.forEach(data.users, function (user, id) {
+      if (user.team === teamId)
+        that.teamRemoveMember(id);
+    });
+  };
+  
+  this.teamAddMember = function(teamId, userId) {
+    DataRoot.child('users').child(userId).child('team').set(teamId);
+  };
+
+  this.teamRemoveMember = function(userId) {
+    DataRoot.child('users').child(userId).child('team').remove();
+  };
+
+  this.addCity = function(city) {
+    DataRoot.child('cities').push(city);
+  };
+
+  this.removeCity = function(cityId) {
+    DataRoot.child('cities').child(cityId).remove();
+    angular.forEach(data.streets, function (street, id) {
+      if (street.city_id === cityId)
+        this.removeStreet(id);
+    });
+  };
+
+  this.addStreet = function(street) {
+    DataRoot.child('streets').push(street);
+  };
+
+  this.removeStreet = function(streetId) {
+    DataRoot.child('streets').child(streetId).remove();
+  };
+
+  this.addTask = function(task) {
+    DataRoot.child('tasks').push(task);
+  };
+
+  this.removeTask = function(taskId) {
+    DataRoot.child('tasks').child(taskId).remove();
+  };
+
+  this.addCard = function(card) {
+    DataRoot.child('cards').push(card);
+  };
+
+  this.removeCard = function(cardId) {
+    DataRoot.child('cards').child(cardId).remove();
+  };
+
+  this.addSociety = function(society) {
+    DataRoot.child('static/societies').push(society);
+  };
+
+  this.removeSociety = function(societyId) {
+    DataRoot.child('static/societies').child(societyId).remove();
+  };
+
   this.teamVisitStreet = function(teamId, streetId, timestamp) {
     DataRoot.child('streets').child(streetId).child('visited').child(teamId).set(timestamp);
     this.addEvent(teamId, 'visit_street', {street: streetId}, timestamp);
@@ -151,16 +238,6 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
     });
     return rank;
   };
-
-  this.teamRank = function(teamId) {
-    var rank = 0;
-    var teamBalance = data.events.balance(teamId);
-    angular.forEach(data.teams, function (team, id) {
-      if (data.events.balance(id) > teamBalance)
-        rank += 1;
-    });
-    return rank;
-  }
 
   this.timestampOf = function(data) {
     if (data.timestamp)
