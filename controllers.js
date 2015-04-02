@@ -1,6 +1,9 @@
 var monopolyControllers = angular.module('monopolyControllers', []);
 
-monopolyControllers.controller('NavBarCtrl', function($scope, $firebase, FIREBASE_URL) {
+monopolyControllers.controller('NavBarCtrl', function($scope, $firebase, FIREBASE_URL, Data) {
+
+  $scope.data = Data;
+
   var sync = $firebase(new Firebase(FIREBASE_URL+'teams'));
   $scope.teams = sync.$asArray();
   var ref = new Firebase(FIREBASE_URL);

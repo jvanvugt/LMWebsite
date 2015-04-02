@@ -162,7 +162,6 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
       alert("Niet genoeg geld om een hotel te kopen!");
       return;
     };
-    console.log(this.teamNumberOfHotels(teamId), this.constants.max_hotels);
     if (this.teamNumberOfHotels(teamId) >= this.constants.max_hotels) {
       alert("Dit team bezit al het maximum aantal hotels!");
       return;
@@ -181,6 +180,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
 
   };
   this.teamCompleteTask = function(teamId, taskId, taskValue, timestamp) {
+    if (this.tasks[taskId] && this.tasks[taskId].repeated && this.tasks[taskId].repeated[teamId] >= this.tasks[taskId].repeatable) return;
     var taskref = DataRoot.child('tasks').child(taskId);
     var taskrepeatedteamref = taskref.child('repeated').child(teamId);
     var taskrankedteamref = taskref.child('ranked').child(teamId);
@@ -197,6 +197,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
   };
 
   this.teamUncompleteTask = function(teamId, taskId, timestamp) {
+    if (this.tasks[taskId] && this.tasks[taskId].repeated && this.tasks[taskId].repeated[teamId] <= 0) return;
     var taskref = DataRoot.child('tasks').child(taskId);
     var taskrepeatedteamref = taskref.child('repeated').child(teamId);
     var taskrankedteamref = taskref.child('ranked').child(teamId);
@@ -330,9 +331,8 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
         }
         break;
       case 'complete_task':
-        if (!(data.tasks[event.data.task] && data.tasks[event.data.task].repeated > 0)) break;
-        if (!(data.game_over.$value &&
-              data.tasks[event.data.task] &&
+        if (data.game_over.$value ||
+              !(data.tasks[event.data.task] &&
               data.tasks[event.data.task].repeated &&
               data.tasks[event.data.task].repeated[event.team] > 0)) break;
         if (data.tasks[event.data.task].rankable) {
