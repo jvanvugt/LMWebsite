@@ -232,7 +232,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
   this.teamAvailableCards = function(teamId) {
     var availableCards = {};
     this.cards.forEach(function(card, id) {
-      if(!card.visited || !card.visited[teamId])
+      if(!card.received || !card.received[teamId])
         availableCards[id] = card;
     });
     return availableCards;
@@ -318,6 +318,8 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
         }
         break;
       case 'buy_hotel':
+        if (!(data.streets[event.data.street] && data.streets[event.data.street].visited && data.streets[event.data.street].visited[event.team])) break;
+        if (!(data.streets[event.data.street].hotel_team_id === event.team)) break;
         value -= data.constants.buy_hotel_costs;
         if (data.streets[event.data.street] &&
             data.streets[event.data.street].visited) {
@@ -328,6 +330,7 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
         }
         break;
       case 'complete_task':
+        if (!(data.tasks[event.data.task] && data.tasks[event.data.task].repeated > 0)) break;
         if (!(data.game_over.$value &&
               data.tasks[event.data.task] &&
               data.tasks[event.data.task].repeated &&
