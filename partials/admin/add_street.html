@@ -6,7 +6,7 @@
     <label for='add_street_city'>Stad:</label>
     <select class='form-control' id='add_street_city' ng-model='streetForAdd.city_id'>
       <option value="" disabled selected>Selecteer een stad</option>
-      <option ng-repeat='city in cities' value='{{city.$id}}'>{{city.name}}</option>
+      <option ng-repeat='(id, city) in data.cities' value='{{id}}'>{{city.name}}</option>
     </select>
   </div>
   <button ng-disabled="!(streetForAdd.name && streetForAdd.city_id)" type='submit' class='btn btn-info' ng-click='addStreet(streetForAdd); streetForAdd=""'>Toevoegen</button>

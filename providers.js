@@ -24,6 +24,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
   this.tasks = $firebase(DataRoot.child('tasks')).$asObject();
   this.cards = $firebase(DataRoot.child('cards')).$asObject();
   this.events = EventsFactory(this);
+  this.eventsobj = $firebase(DataRoot.child('events')).$asObject();
   this.constants = $firebase(DataRoot.child('static').child('constants')).$asObject();
   this.societies = $firebase(DataRoot.child('static').child('societies')).$asObject();
 
@@ -209,13 +210,18 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
 
   var EventsFactory = $FirebaseArray.$extendFactory({
     balance: function(teamId) {
-              var balance = 0;
-              angular.forEach(this.$list, function(event) {
-                if (event.active && event.team == teamId)
-                  balance += eventValue(event) * (event.undo ? -1 : 1);
-              });
-              return balance;
-            },
+      var balance = 0;
+      angular.forEach(this.$list, function(event) {
+        if (event.active && event.team == teamId)
+          balance += eventValue(event) * (event.undo ? -1 : 1);
+      });
+      return balance;
+    },
+    $$added: function(snap) {
+      var rec = $FirebaseArray.prototype.$$added.call(this, snap);
+      rec._id = rec.$id;
+      return rec;
+    },
     latest: function(teamId) {
               var ordered = $filter('objectOrderBy')(this.$list, 'timestamp', true);
               for(var i = 0; i < ordered.length; i++) {

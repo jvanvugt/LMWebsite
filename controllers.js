@@ -98,30 +98,6 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $fi
 
   $scope.data = Data;
 
-  var societysync = $firebase(new Firebase(FIREBASE_URL+'static/societies'));
-  $scope.societies = societysync.$asArray();
-
-  var teamsync = $firebase(new Firebase(FIREBASE_URL+'teams'));
-  $scope.teams = teamsync.$asArray();
-
-  var usersync = $firebase(new Firebase(FIREBASE_URL+'users'));
-  $scope.users = usersync.$asArray();
-
-  var citysync = $firebase(new Firebase(FIREBASE_URL+'cities'));
-  $scope.cities = citysync.$asArray();
-
-  var streetsync = $firebase(new Firebase(FIREBASE_URL+'streets'));
-  $scope.streets = streetsync.$asArray();
-
-  var tasksync = $firebase(new Firebase(FIREBASE_URL+'tasks'));
-  $scope.tasks = tasksync.$asArray();
-
-  var cardsync = $firebase(new Firebase(FIREBASE_URL+'cards'));
-  $scope.cards = cardsync.$asArray();
-
-  var constsync = $firebase(new Firebase(FIREBASE_URL+'static/constants')).$asObject();
-  constsync.$bindTo($scope, "consts");
-
   $scope.streetInCityFilter = function(street) {
     var cityId = document.getElementById('cityStreetRemove').value;
     return street && street.city_id === cityId;
@@ -174,25 +150,17 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $fi
   }
 
   $scope.deleteTeam = function(teamId) {
-    var teamMembers = new Firebase(FIREBASE_URL+'teams/'+teamId+'/members');
-    teamMembers.on('value', function(snap) {
-      if (snap.numChildren() === 0)
-        teamMembers.parent().remove();
+
+    angular.forEach(data.users, function (user, id) {
+      if (user.team === teamId)
+        $scope.deleteTeamMember(id, teamId);
     });
 
-    teamMembers.on('child_added', function(snap) {
-      new Firebase(FIREBASE_URL+'users/'+snap.key()+'/team').remove();
-      snap.ref().remove();
-      teamMembers.on('value', function(snap) {
-        if (snap.numChildren() === 0)
-          teamMembers.parent().remove();
-      });
-    });
+    new Firebase(FIREBASE_URL+'teams/' + teamId).remove();
   };
 
-  $scope.deleteTeamMember = function(memberId, teamId) {
-    new Firebase(FIREBASE_URL+'users/'+memberId+'/team').remove();
-    new Firebase(FIREBASE_URL+'teams/' + teamId + '/members/' + memberId).remove();
+  $scope.deleteTeamMember = function(userId, teamId) {
+    new Firebase(FIREBASE_URL+'users/' + userId + '/team').remove();
   };
 
   $scope.addCity = function(city) {
@@ -217,6 +185,7 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $fi
   }
 
   $scope.addTask = function(task) {
+    task.rewards = task.rewards.split(' ').map(Number);
     new Firebase(FIREBASE_URL+'tasks').push(task);
   }
 

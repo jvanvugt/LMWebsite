@@ -10,23 +10,18 @@
       </label>
   </div>
 
-  <div ng-show='task.rankable' class='form-group'>
-    <label for='taskReward1Add'>1e prijs:</label>
-    <input type='number' class='form-control' min='0' ng-init='task.rank1_reward = 0' id='taskReward1Add' ng-model='task.rank1_reward'>
-    <label for='taskReward2Add'>2e prijs:</label>
-    <input type='number' class='form-control' min='0' ng-init='task.rank2_reward = 0' id='taskReward2Add' ng-model='task.rank2_reward'>
-    <label for='taskReward3Add'>3e prijs:</label>
-    <input type='number' class='form-control' min='0' ng-init='task.rank3_reward = 0' id='taskReward3Add' ng-model='task.rank3_reward'>
+  <div class='form-group'>
+    <label ng-hide='task.rankable' for='taskRewardAdd'>Beloning (in €):</label>
+    <label ng-show='task.rankable' for='taskRewardAdd'>Beloningen (in €, beginnen met 1ste prijs, scheiden met spaties):</label>
+    <input type='text' class='form-control' id='taskRewardAdd' min='0' ng-model='task.rewards' ng-init='task.rewards = 0'>
   </div>
 
   <div ng-hide='task.rankable' class='form-group'>
-    <label for='taskRewardAdd'>Beloning (in €):</label>
-    <input type='number' class='form-control' id='taskRewardAdd' min='0' ng-model='task.reward' ng-init='task.reward = 0'>
     <label for='taskRepeatableAdd'>Hoevaak herhaalbaar?</label>
     <input type='number' class='form-control' min='1' id='taskRepeatableAdd' ng-model='task.repeatable' ng-init='task.repeatable = 1'>
   </div>
 
   <div class='form-group'>
-    <button ng-disabled="!(task.name && (task.rankable && (task.rank1_reward || task.rank1_reward === 0) && (task.rank2_reward || task.rank2_reward === 0) && (task.rank3_reward || task.rank3_reward === 0) || !task.rankable && (task.reward || task.reward === 0) && task.repeatable))" type='submit' class='btn btn-info' ng-click='addTask(task); task=""'>Toevoegen</button>
+    <button ng-disabled="!(task.name && task.rewards && (task.rankable || task.repeatable))" type='submit' class='btn btn-info' ng-click='addTask(task); task=""'>Toevoegen</button>
   </div>
 </form>

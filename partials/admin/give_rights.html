@@ -7,15 +7,17 @@
       <option ng-repeat='(id, user) in data.users' value='{{id}}'>{{user.name}}</option>
     </select>
   </div>
-  <div class='checkbox'>
-    <label>
-      <input type='checkbox' id='userJury' ng-model='isJudge' ng-init='isJudge=false;'> Jury?
-    </label>
-  </div>
-  <div class='checkbox'>
-    <label>
-      <input type='checkbox' id='userAdmin' ng-model='isAdmin' ng-init='isAdmin=false;'> Admin?
-    </label>
+  <div ng-show='userRightsId'>
+    <div class='checkbox'>
+      <label>
+        <input type='checkbox' id='userJury' ng-model='isJudge' ng-init='isJudge=false;'> Jury?
+      </label>
+    </div>
+    <div class='checkbox'>
+      <label>
+        <input type='checkbox' id='userAdmin' ng-model='isAdmin' ng-init='isAdmin=false;'> Admin?
+      </label>
+    </div>
   </div>
 
 
