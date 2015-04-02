@@ -56,10 +56,12 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
 
   this.teamCompleteCard = function(teamId, cardId, timestamp) {
     DataRoot.child('cards').child(cardId).child('completed').child(teamId).set(timestamp);
+    this.addEvent(teamId, 'complete_card', {card: cardId}, timestamp);
   };
 
   this.teamUncompleteCard = function(teamId, cardId, timestamp) {
     DataRoot.child('cards').child(cardId).child('completed').child(teamId).remove();
+    this.addEvent(teamId, 'complete_card', {card: cardId}, timestamp, true);
   };
 
   this.teamBuyHotel = function(teamId, streetId, timestamp) {
@@ -133,7 +135,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
 
   $interval(function(){
       this.setNow();
-   }.bind(this), 1000); 
+   }.bind(this), 1000);
 });
 
 monopolyProviders.factory('Chance', function () {
@@ -210,8 +212,8 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
     balance: function(teamId) {
       var balance = 0;
       angular.forEach(this.$list, function(event) {
-        if (!event.active || !event.team == teamId) return;
-        balance += eventValue(event) * (event.undo ? -1 : 1);
+        if (event.active && event.team == teamId)
+          balance += eventValue(event) * (event.undo ? -1 : 1);
       });
       return balance;
     },
@@ -219,6 +221,36 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
       var rec = $FirebaseArray.prototype.$$added.call(this, snap);
       rec._id = rec.$id;
       return rec;
+    },
+    latest: function(teamId) {
+      for(var i = 0; i < this.$list.length; i++) {
+        var event = this.$list[i];
+        if(event.active && event.team === teamId) {
+          switch(event.type) {
+            case 'visit_street':
+              return 'Straat bezocht: ' + data.streets[event.data.street].name;
+            case 'buy_hotel':
+             return 'Hotel gebouwd op: ' + data.streets[event.data.street].name;
+            case 'receive_card':
+              return 'Kanskaart ontvangen: ' + data.cards[event.data.card].name;
+            case 'complete_task':
+              return 'Opdracht voltooid: ' + data.tasks[event.data.task].name;
+            case 'straight_money':
+              return 'Direct geld ontvangen: ' + event.data.amount + ' ' + event.data.note;
+              default:
+            return 'Onbekende update';
+          }
+        }
+      }
+    },
+    latestLocation: function(teamId) {
+      for(var i = 0; i < this.$list.length; i++) {
+        var event = this.$list[i];
+        if(event.active && event.team === teamId && event.type === 'visit_street') {
+          var street = data.streets[event.data.street];
+          return street.name + ', ' + data.cities[street.city_id].name;
+        }
+      }
     }
   });
 

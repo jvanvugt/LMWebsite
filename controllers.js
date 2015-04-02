@@ -3,14 +3,20 @@ var monopolyControllers = angular.module('monopolyControllers', []);
 monopolyControllers.controller('NavBarCtrl', function($scope, $firebase, FIREBASE_URL) {
   var sync = $firebase(new Firebase(FIREBASE_URL+'teams'));
   $scope.teams = sync.$asArray();
-
+  var ref = new Firebase(FIREBASE_URL);
+  $scope.isLoggedIn = ref.getAuth();
   $scope.logout = function() {
     new Firebase(FIREBASE_URL).unauth();
     location.reload(true);
   };
+
+  $scope.login = function() {
+    location.assign('/account');
+  }
 });
 
-monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, $firebase, FIREBASE_URL, $firebaseAuth) {
+monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, Data, $firebase, FIREBASE_URL, $firebaseAuth) {
+  $scope.data = Data;
   var ref = new Firebase(FIREBASE_URL);
   ref.child('users').child(ref.getAuth().uid).on('value', function(snap) {
     var user = snap.val();
@@ -18,9 +24,8 @@ monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, $
       location.assign('/#/error');
     }
   });
-  var auth = $firebaseAuth(new Firebase(FIREBASE_URL));
-  var sync = $firebase(new Firebase(FIREBASE_URL+'teams'));
-  $scope.teams = sync.$asArray();
+
+  var auth = $firebaseAuth(ref);
 
   $scope.pageName = 'Spel overzicht';
   $scope.pageDesc = 'Overzicht van alle teams';
@@ -197,7 +202,7 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $fi
   }
 
   $scope.unvisitStreet = function(streetId, teamId) {
-    new Firebase(FIREBASE_URL+'streets/'+streetId+'/visitors/'+teamId).remove();
+    new Firebase(FIREBASE_URL+'streets/'+streetId+'/visited/'+teamId).remove();
   }
 
   $scope.removeHotel = function(streetId) {

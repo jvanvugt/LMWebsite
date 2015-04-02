@@ -14,7 +14,8 @@
         <li><a href="/admin">Admin</a></li>
       </ul>
       <form class="navbar-form navbar-right" role="form">
-        <button type="submit" class="btn btn-danger" ng-click='logout();'>Logout</button>
+        <button ng-hide='isLoggedIn' type="submit" class="btn btn-primary" ng-click='login();'>Inloggen</button>
+        <button ng-show='isLoggedIn' type="submit" class="btn btn-danger" ng-click='logout();'>Uitloggen</button>
       </form>
     </div>
   </div>
