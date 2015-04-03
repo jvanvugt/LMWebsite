@@ -117,6 +117,10 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
     Data.teamStraightMoney($scope.teamId, data.amount, data.note, Data.now);
   };
 
+  $scope.submitChangeTaskRankValue = function(taskId, rankValue) {
+    Data.teamTaskSetRankValue($scope.teamId, taskId, rankValue);
+  };
+
   setTimeout(function() {document.title = Data.teams[$scope.teamId].name + ' | Levend Monopoly';}, 2000);
 });
 

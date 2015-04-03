@@ -214,6 +214,11 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
     this.addEvent(teamId, 'complete_task', {task: taskId}, timestamp, true);
   };
 
+  this.teamTaskSetRankValue = function(teamId, taskId, rankValue) {
+    // TODO: check validty (task is rankable etc)
+    DataRoot.child('tasks').child(taskId).child('ranked').child(teamId).set(rankValue);
+  };
+
   this.teamStraightMoney = function(teamId, amount, note, timestamp) {
     this.addEvent(teamId, 'straight_money', {amount: amount, note: note}, timestamp);
   };
