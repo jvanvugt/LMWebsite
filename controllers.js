@@ -42,29 +42,22 @@ monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, D
 
   uiGmapGoogleMapApi.then(function(maps) {
       $scope.map = { center: { latitude: 52.06, longitude: 5.07 }, zoom: 9 };
-      var geocoder = new google.maps.Geocoder();
       var i = 0;
       angular.forEach(Data.teams, function(team, id){
-        if(Data.events.latestLocation(id)) {
-          geocoder.geocode( { 'address': Data.events.latestLocation(id)}, function(results, status) {
-          if (status == google.maps.GeocoderStatus.OK) {
+        var location = Data.events.latestStreetId(id);
+        if(location) {
+
             var marker = {
                 idKey: i,
                 coords: {
-                  latitude: results[0].geometry.location.k,
-                  longitude: results[0].geometry.location.B,
+                  latitude: Data.streets[location].location.lat,
+                  longitude: Data.streets[location].location.lon
                 }
             };
             i++;
             $scope.markers.push(marker);
-          } else {
-            console.log("Geocode was not successful for the following reason: " + status);
           }
           });
-        }
-
-
-      });
   });
 });
 
