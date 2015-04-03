@@ -10,7 +10,7 @@
         <th>Omschrijving</th>
         <th>Tijd</th>
       </thead>
-      <tr ng-repeat="(id, event) in data.events" ng-show="event.team === teamId && event.type === 'straight_money'">
+      <tr ng-repeat="(id, event) in data.events | filter:{team: teamId, type: 'straight_money'}">
         <td>{{event.data.amount}}</td>
         <td>{{event.data.note}}</td>
         <td>{{event.timestamp | date:'H:mm:ss'}}</td>
