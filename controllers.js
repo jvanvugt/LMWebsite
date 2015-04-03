@@ -37,11 +37,10 @@ monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, D
   $scope.markers = [];
 
   uiGmapGoogleMapApi.then(function(maps) {
-      $scope.map = { center: { latitude: 52.06, longitude: 5.07 }, zoom: 8 };
+      $scope.map = { center: { latitude: 52.06, longitude: 5.07 }, zoom: 9 };
       var geocoder = new google.maps.Geocoder();
       var i = 0;
-      angular.forEach(Data.teams, function(id){
-        console.log(Data.events.latestLocation(id));
+      angular.forEach(Data.teams, function(team, id){
         geocoder.geocode( { 'address': Data.events.latestLocation(id)}, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
           var marker = {
