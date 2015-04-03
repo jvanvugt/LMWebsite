@@ -18,7 +18,7 @@ functions:
   - del(next): next.exists() === false
 
   # Data Validation
-  - validTaskRepeated(repeated): taskOfRepeated(repeated).rankable === true && repeated <= 1 || repeated <= taskOfRepeated(repeated).repeatable 
+  - validTaskRepeated(repeated): taskOfRepeated(repeated).rankable === true && repeated <= 1 || repeated <= taskOfRepeated(repeated).repeatable
 
   ### NON-PREDICATES ###
 
@@ -75,12 +75,18 @@ schema:
         required: [name, city_id]
         additionalProperties: false
         properties:
-          name: 
+          name:
             type: string
             constraint: isNotEmpty(next.val())
           city_id:
             type: string
             constraint: isCity(next.val())
+          location:
+            type: object
+            properties:
+              additionalProperties: false
+              lat: {type: number}
+              lon: {type: number}
           hotel_team_id: {constraint: del(next) || isTeam(next.val())}
           hotel_timestamp: {type: number}
           visited:
@@ -93,10 +99,10 @@ schema:
         required: [name, rewards]
         additionalProperties: false
         properties:
-          name: 
+          name:
             type: string
             constraint: isNotEmpty(next.val())
-          repeatable: 
+          repeatable:
             type: number
             minimum: 1
           rankable: {type: boolean}
