@@ -120,11 +120,44 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
   setTimeout(function() {document.title = Data.teams[$scope.teamId].name + ' | Levend Monopoly';}, 2000);
 });
 
-monopolyControllers.filter("canAddStreet", function() {
-  return function(streets, cityId, teamId) {
+monopolyControllers.filter("streetInCity", function() {
+  return function(streets, cityId) {
     var streetsCanAdd = {}
     angular.forEach(streets, function(street, id){
-      if (street.city_id === cityId && !(street.visited && street.visited[teamId]))
+      if (street.city_id === cityId)
+        streetsCanAdd[id] = street;
+    });
+    return streetsCanAdd;
+  };
+});
+
+monopolyControllers.filter("streetVisitedByTeam", function() {
+  return function(streets, teamId) {
+    var streetsCanAdd = {}
+    angular.forEach(streets, function(street, id){
+      if (street.visited && street.visited[teamId])
+        streetsCanAdd[id] = street;
+    });
+    return streetsCanAdd;
+  };
+});
+
+monopolyControllers.filter("streetNotVisitedByTeam", function() {
+  return function(streets, teamId) {
+    var streetsCanAdd = {}
+    angular.forEach(streets, function(street, id){
+      if (!(street.visited && street.visited[teamId]))
+        streetsCanAdd[id] = street;
+    });
+    return streetsCanAdd;
+  };
+});
+
+monopolyControllers.filter("streetNotHasHotel", function() {
+  return function(streets) {
+    var streetsCanAdd = {}
+    angular.forEach(streets, function(street, id){
+      if (!street.hotel_team_id)
         streetsCanAdd[id] = street;
     });
     return streetsCanAdd;
@@ -275,6 +308,5 @@ monopolyControllers.controller('AccountCtrl', function AdminCtrl($scope, Data, $
     } else {
       alert("Je moet twee keer hetzelfde wachtwoord invullen.");
     }
-
   };
 });
