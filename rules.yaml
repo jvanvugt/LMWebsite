@@ -166,7 +166,7 @@ schema:
 access:
   - location: /
     read: isStaff(auth.uid)
-    write: isStaff(auth.uid)
+    write: false
   - location: static/
     read: true
   - location: users/$user_id/
