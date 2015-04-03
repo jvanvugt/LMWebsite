@@ -18,7 +18,8 @@ monopolyControllers.controller('NavBarCtrl', function($scope, $firebase, FIREBAS
   }
 });
 
-monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, Data, $firebase, FIREBASE_URL, $firebaseAuth) {
+monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, Data, $firebase, FIREBASE_URL, $firebaseAuth, uiGmapGoogleMapApi) {
+
   $scope.data = Data;
   var ref = new Firebase(FIREBASE_URL);
   ref.child('users').child(ref.getAuth().uid).on('value', function(snap) {
@@ -32,6 +33,38 @@ monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, D
 
   $scope.pageName = 'Spel overzicht';
   $scope.pageDesc = 'Overzicht van alle teams';
+
+  $scope.markers = [];
+
+  uiGmapGoogleMapApi.then(function(maps) {
+      $scope.map = { center: { latitude: 52.06, longitude: 5.07 }, zoom: 8 };
+      var geocoder = new google.maps.Geocoder();
+      var i = 0;
+      angular.forEach(Data.teams, function(id){
+        console.log(Data.events.latestLocation(id));
+        geocoder.geocode( { 'address': Data.events.latestLocation(id)}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+          var marker = {
+              idKey: i,
+              coords: {
+                latitude: results[0].geometry.location.k,
+                longitude: results[0].geometry.location.B,
+              }
+          };
+          i++;
+          $scope.markers.push(marker);
+        } else {
+          alert("Geocode was not successful for the following reason: " + status);
+        }
+      });
+
+      });
+
+  });
+
+
+
+
 });
 
 monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParams, Data, $firebaseAuth, FIREBASE_URL) {

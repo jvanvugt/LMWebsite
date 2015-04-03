@@ -1,6 +1,6 @@
 "use strict";
 
-var monopoly = angular.module("monopoly", ["monopolyProviders", "monopolyControllers", "firebase", "ui.bootstrap", "ngRoute"]);
+var monopoly = angular.module("monopoly", ["monopolyProviders", "monopolyControllers", "firebase", "ui.bootstrap", "ngRoute", 'uiGmapgoogle-maps']);
 
 // let's create a re-usable factory that generates the $firebaseAuth instance
 monopoly.factory("Auth", ["$firebaseAuth", "FIREBASE_URL",
@@ -21,10 +21,18 @@ monopoly.run(["$rootScope", "$location", "FIREBASE_URL", function($rootScope, $l
 
 }]);
 
+monopoly.config(function(uiGmapGoogleMapApiProvider) {
+    uiGmapGoogleMapApiProvider.configure({
+        key: 'AIzaSyDsVIpYqm4AhyvolYEjoK8XxYmAMUDP_FE',
+        v: '3.17',
+        libraries: 'weather,geometry,visualization'
+    });
+});
+
 monopoly.config(function($locationProvider, $routeProvider) {
 
     $locationProvider.html5Mode(true);
-    
+
     $routeProvider.
       when('/team/:teamId', {
         templateUrl: 'partials/team.html',
