@@ -21,6 +21,9 @@
             {{street.hotel_timestamp | date:'H:mm:ss'}}
              - {{data.hotelAmountOfVisits(id)}} bezoek(en)
           </div>
+          <div ng-show="street.hotel_timestamp && street.visited[teamId] > street.hotel_timestamp">
+            Hotel van ander team bezocht!
+          </div>
         </td>
       </tr>
     </table>
