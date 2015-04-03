@@ -28,14 +28,17 @@
   <div id="game_management" class="panel-collapse collapse">
     <div class="panel-body">
 
+      <div ng-include="'partials/admin/unvisit_street.html'" class='col-md-4'></div>
+      <div ng-include="'partials/admin/remove_hotel.html'" class='col-md-4'></div>
+      <div ng-include="'partials/admin/remove_card_from_team.html'" class='col-md-4'></div>
+
+      <div class='clearfix'></div>
+
       <div ng-include="'partials/admin/streets.html'" class='col-md-12'></div>
 
       <div class='clearfix'></div>
 
-      <div ng-include="'partials/admin/unvisit_street.html'" class='col-md-6'></div>
-      <div ng-include="'partials/admin/remove_hotel.html'" class='col-md-6'></div>
-
-      <div ng-include="'partials/admin/remove_card_from_team.html'" class='col-md-6'></div>
+      <div ng-include="'partials/admin/tasks.html'" class='col-md-12'></div>
 
     </div>
   </div>

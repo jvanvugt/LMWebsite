@@ -1,0 +1,21 @@
+<h3>Taken</h3>
+
+<div class='form-group'>
+  <select class='form-control' ng-model='tasks.taskId'>
+    <option value="" disabled selected>Selecteer een opdracht</option>
+    <option ng-repeat="task in data.tasks | objectOrderBy:'name'" value='{{task._id}}'>{{task.name}}</option>
+  </select>
+</div>
+
+<table class="table" ng-show="tasks.taskId">
+  <thead>
+    <th>Team</th>
+    <th>Aantal</th>
+    <th>Rangwaarde</th>
+  </thead>
+  <tr ng-repeat="(teamId, repeats) in data.tasks[tasks.taskId].repeated" ng-show="data.teams[teamId] && repeats > 0">
+    <td>{{data.teams[teamId].name}}</td>
+    <td>{{repeats}}</td>
+    <td>{{data.tasks[tasks.taskId].ranked[teamId]}}</td>
+  </tr>
+</table>
