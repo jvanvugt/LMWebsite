@@ -83,8 +83,8 @@ schema:
             constraint: isCity(next.val())
           location:
             type: object
+            additionalProperties: false
             properties:
-              additionalProperties: false
               lat: {type: number}
               lon: {type: number}
           hotel_team_id: {constraint: del(next) || isTeam(next.val())}
