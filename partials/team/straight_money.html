@@ -1,0 +1,21 @@
+<div class="panel panel-info">
+  <div class="panel-heading">
+     <h3 class="panel-title">Geld bij/afgeschreven</h3>
+  </div>
+
+  <div id="streets-panel" class="panel-body">
+    <table class="table">
+      <thead>
+        <th>Bedrag</th>
+        <th>Omschrijving</th>
+        <th>Tijd</th>
+      </thead>
+      <tr ng-repeat="(id, event) in data.events | filter:{team: teamId, type: 'straight_money'}">
+        <td>{{event.data.amount}}</td>
+        <td>{{event.data.note}}</td>
+        <td>{{event.timestamp | date:'H:mm:ss'}}</td>
+      </tr>
+    </table>
+  </div>
+
+</div>
