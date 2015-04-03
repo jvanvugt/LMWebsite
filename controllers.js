@@ -52,6 +52,9 @@ monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, D
                 coords: {
                   latitude: Data.streets[location].location.lat,
                   longitude: Data.streets[location].location.lon
+                },
+                options: {
+                  title: team.name
                 }
             };
             i++;

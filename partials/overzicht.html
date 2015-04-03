@@ -11,7 +11,7 @@
   </thead>
   <tbody>
     <tr ng-repeat="team in data.teams | objectOrderBy:balanceSort:true">
-      <td><a href="/team/{{team.$id}}">{{team.name}}</a></td>
+      <td><a href="/team/{{team._id}}">{{team.name}}</a></td>
       <td>{{data.users[team.judge].name}}</td>
       <td>{{data.events.balance(team._id)}}</td>
       <td>{{data.teamRank(team._id) + 1}}</td>
@@ -27,6 +27,7 @@
         ng-repeat='marker in markers'
         idKey='marker.idKey'
         coords='marker.coords'
+        options='marker.options'
         >
 </ui-gmap-marker>
 
