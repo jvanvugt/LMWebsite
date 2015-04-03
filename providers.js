@@ -273,10 +273,12 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
 
   this.taskRank = function(teamId, taskId) {
     var task = this.tasks[taskId];
+    if (!(task.rankable && task.ranked)) return 0;
     var teamRankValue = task.ranked[teamId];
     var rank = 0;
+    var that = this;
     angular.forEach(task.ranked, function (rankValue, id) {
-      if (task.repeated[id] > 0 && Number(rankValue) > Number(teamRankValue) && this.teams[id])
+      if (task.repeated && task.repeated[id] > 0 && Number(rankValue) > Number(teamRankValue) && that.teams[id])
         rank += 1;
     });
     return rank;
