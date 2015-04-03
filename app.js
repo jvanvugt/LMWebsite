@@ -108,3 +108,28 @@ monopoly.directive("bootstrapNavbar", function() {
     }
   }});
 ;
+
+monopoly.filter('objectOrderBy', function() {
+
+  var isFunction = function (functionToCheck) {
+    var getType = {};
+    return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
+  };
+
+  return function(items, field, reverse) {
+    var filtered = [];
+    angular.forEach(items, function(item, id) {
+      item._id = id;
+      filtered.push(item);
+    });
+    filtered.sort(function (a, b) {
+      if (isFunction(field)) {
+        return (field(a) > field(b) ? 1 : -1);
+      } else {
+        return (a[field] > b[field] ? 1 : -1);
+      }
+    });
+    if(reverse) filtered.reverse();
+    return filtered;
+  };
+});

@@ -36,6 +36,10 @@ monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, D
 
   $scope.markers = [];
 
+  $scope.balanceSort = function(team) {
+    return data.events.balance(team._id);
+  };
+
   uiGmapGoogleMapApi.then(function(maps) {
       $scope.map = { center: { latitude: 52.06, longitude: 5.07 }, zoom: 9 };
       var geocoder = new google.maps.Geocoder();
@@ -61,12 +65,7 @@ monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, D
 
 
       });
-
   });
-
-
-
-
 });
 
 monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParams, Data, $firebaseAuth, FIREBASE_URL) {

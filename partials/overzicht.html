@@ -10,13 +10,13 @@
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="(id, team) in data.teams">
+    <tr ng-repeat="team in data.teams | objectOrderBy:balanceSort:true">
       <td>{{team.name}}</td>
       <td>{{data.users[team.judge].name}}</td>
-      <td>{{data.events.balance(id)}}</td>
-      <td>{{data.teamRank(id) + 1}}</td>
-      <td>{{data.events.latestLocation(id)}}</td>
-      <td>{{data.events.latest(id)}}</td>
+      <td>{{data.events.balance(team._id)}}</td>
+      <td>{{data.teamRank(team._id) + 1}}</td>
+      <td>{{data.events.latestLocation(team._id)}}</td>
+      <td>{{data.events.latest(team._id)}}</td>
     </tr>
   </tbody>
 </table>
