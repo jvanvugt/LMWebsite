@@ -28,8 +28,9 @@
 
         <td>{{task.rewards.join(', ')}}</td>
 
-        <td ng-show="task.rankable"></td>
-        <td ng-hide="task.rankable">{{task.rewards[0]*task.repeated[teamId]}}</td>
+        <td ng-show="task.rankable && !data.game_over.$value"></td>
+        <td ng-show="task.rankable && data.game_over.$value">{{data.tasks[taskId].rewards[data.taskRank(teamId,taskId)]}}</td>
+        <td ng-show="!task.rankable">{{task.rewards[0]*task.repeated[teamId]}}</td>
 
         <td ng-show="task.rankable && !task.editingRankValue">
           {{task.ranked[teamId]}}
