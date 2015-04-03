@@ -62,6 +62,9 @@ monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, D
           }
           });
   });
+
+  document.title = 'Overzicht | Levend Monopoly';
+
 });
 
 monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParams, Data, $firebaseAuth, FIREBASE_URL) {
@@ -112,6 +115,8 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
   $scope.submitStraight = function(data) {
     Data.teamStraightMoney($scope.teamId, data.amount, data.note, Data.now);
   };
+
+  document.title = Data.teams[$scope.teamId].name + ' | Levend Monopoly';
 
 });
 
@@ -214,6 +219,8 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $fi
   $scope.submitGiveRights = function(userId, isJudge, isAdmin) {
     Data.setUserRights(userId, isJudge, isAdmin);
   }
+
+  document.title = 'Admin | Levend Monopoly';
 
 });
 
