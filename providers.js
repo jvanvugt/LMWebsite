@@ -136,7 +136,8 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
   };
 
   this.teamUnvisitStreet = function(teamId, streetId, timestamp) {
-    this.teamUnbuyHotel(teamId, streetId, timestamp);
+    if (this.streets[streetId].hotel_team_id && this.streets[streetId].hotel_team_id === teamId)
+      this.teamUnbuyHotel(teamId, streetId, timestamp);
     DataRoot.child('streets').child(streetId).child('visited').child(teamId).remove();
     this.addEvent(teamId, 'visit_street', {street: streetId}, timestamp, true);
   };
@@ -178,6 +179,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
   };
 
   this.teamUnbuyHotel = function(teamId, streetId, timestamp) {
+    if (!(this.streets[streetId].hotel_team_id && this.streets[streetId].hotel_team_id === teamId)) return;
     var streetref = DataRoot.child('streets').child(streetId)
     streetref.child('hotel_team_id').remove();
     streetref.child('hotel_timestamp').remove();
