@@ -54,8 +54,9 @@ monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, D
                   longitude: Data.streets[location].location.lon
                 },
                 options: {
-                  title: team.name
-                }
+                  title: team.name,
+                  draggable: true
+                },
             };
             i++;
             $scope.markers.push(marker);
