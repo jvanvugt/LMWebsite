@@ -25,7 +25,7 @@ monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, D
   ref.child('users').child(ref.getAuth().uid).on('value', function(snap) {
     var user = snap.val();
     if(!user.roles || !user.roles.admin) {
-      location.assign('/#/error');
+      //location.assign('/#/error');
     }
   });
 
@@ -75,7 +75,7 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
   ref.child('users').child(ref.getAuth().uid).on('value', function(snap) {
     var user = snap.val();
     if(!(user.roles && (user.roles.judge || user.roles.admin))) {
-      location.assign('/#/error');
+      //location.assign('/#/error');
     }
   });
 
@@ -177,7 +177,7 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $fi
   ref.child('users').child(ref.getAuth().uid).on('value', function(snap) {
     var user = snap.val();
     if(!user.roles || !user.roles.admin) {
-      location.assign('/#/error');
+      //location.assign('/#/error');
     }
   });
 
