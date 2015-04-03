@@ -23,7 +23,7 @@
         <th>Data</th>
         <th>Inactief</th>
       </thead>
-      <tr ng-repeat="(id, event) in data.events | filter:{'team': events.team} | orderBy:'timestamp':true | limitTo:15">
+      <tr ng-repeat="(id, event) in data.events | filter:{'team': events.team} | orderBy:'timestamp':true | limitTo:(events.all ? 10000 : events.amount)">
         <td><span ng-show="event.undo" class="glyphicon glyphicon-share-alt"></span> {{event.type}}</td>
         <td>{{event.timestamp | date:'H:mm:ss'}}</td>
         <td>
