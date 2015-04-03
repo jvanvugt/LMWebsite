@@ -103,7 +103,7 @@ monopoly.directive("bootstrapNavbar", function() {
       for (index = 0, length = liElements.length; index < length; index++) {
         li = liElements[index];
         links = $(li).find("a");
-        if (links[0].textContent === attrs.currentTab) $(li).addClass("active");
+        if (links[0] && links[0].textContent === attrs.currentTab) $(li).addClass("active");
       }
     }
   }});
