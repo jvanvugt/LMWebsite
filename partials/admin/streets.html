@@ -1,31 +1,25 @@
-<div class="panel panel-info">
+<h3 class="panel-title">Straten</h3>
 
-  <div class="panel-heading">
-     <h3 class="panel-title">Straten</h3>
-  </div>
-
-  <div id="streets-panel" class="panel-body">
-    <table class="table">
-      <thead>
-        <th>Naam</th>
-        <th>Stad</th>
-        <th>Hotel</th>
-      </thead>
-      <tr ng-repeat="(id, street) in data.streets" ng-show="street">
-        <td>{{street.name}}</td>
-        <td>{{data.cities[street.city_id].name}}</td>
-        <td>
-          <div ng-show="street.hotel_team_id">
-            <span class="glyphicon glyphicon-home"></span>
-            {{data.teams[street.hotel_team_id].name}}
-             -
-            {{street.hotel_timestamp | date:'H:mm:ss'}}
-             -
-            {{data.hotelAmountOfVisits(id)}} bezoek(en)
-          </div>
-        </td>
-      </tr>
-    </table>
-  </div>
-
+<div id="streets-panel" class="panel-body">
+  <table class="table">
+    <thead>
+      <th>Naam</th>
+      <th>Stad</th>
+      <th>Hotel</th>
+    </thead>
+    <tr ng-repeat="(id, street) in data.streets" ng-show="street">
+      <td>{{street.name}}</td>
+      <td>{{data.cities[street.city_id].name}}</td>
+      <td>
+        <div ng-show="street.hotel_team_id">
+          <span class="glyphicon glyphicon-home"></span>
+          {{data.teams[street.hotel_team_id].name}}
+           -
+          {{street.hotel_timestamp | date:'H:mm:ss'}}
+           -
+          {{data.hotelAmountOfVisits(id)}} bezoek(en)
+        </div>
+      </td>
+    </tr>
+  </table>
 </div>
