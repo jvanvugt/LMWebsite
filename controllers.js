@@ -115,8 +115,8 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
   $scope.submitStraight = function(data) {
     Data.teamStraightMoney($scope.teamId, data.amount, data.note, Data.now);
   };
+  setTimeout(function() {document.title = Data.teams[$scope.teamId].name + ' | Levend Monopoly';}, 2000);
 
-  document.title = Data.teams[$scope.teamId].name + ' | Levend Monopoly';
 
 });
 
