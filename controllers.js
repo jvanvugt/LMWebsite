@@ -35,7 +35,7 @@ monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, D
   $scope.pageDesc = 'Overzicht van alle teams';
 
   $scope.markers = [];
-
+  /*
   uiGmapGoogleMapApi.then(function(maps) {
       $scope.map = { center: { latitude: 52.06, longitude: 5.07 }, zoom: 9 };
       var geocoder = new google.maps.Geocoder();
@@ -60,7 +60,7 @@ monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, D
       });
 
   });
-
+  */
 
 
 
