@@ -447,6 +447,15 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
           return street.name + ', ' + data.cities[street.city_id].name;
         }
       }
+    },
+    latestStreetId: function(teamId) {
+      var ordered = $filter('objectOrderBy')(this.$list, 'timestamp', true);
+      for(var i = 0; i < ordered.length; i++) {
+        var event = ordered[i];
+        if(event.active && event.team === teamId && event.type === 'visit_street') {
+          return event.data.street;
+        }
+      }
     }
   });
 
