@@ -276,7 +276,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
     var teamRankValue = task.ranked[teamId];
     var rank = 0;
     angular.forEach(task.ranked, function (rankValue, id) {
-      if (task.repeated[id] > 0 && Number(rankValue) > Number(teamRankValue))
+      if (task.repeated[id] > 0 && Number(rankValue) > Number(teamRankValue) && this.teams[id])
         rank += 1;
     });
     return rank;
@@ -368,7 +368,8 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
         value += data.constants.visit_street_profits;
         if (data.streets[event.data.street] &&
             data.streets[event.data.street].hotel_timestamp &&
-            data.streets[event.data.street].hotel_timestamp <= event.timestamp) {
+            data.streets[event.data.street].hotel_timestamp <= event.timestamp &&
+            data.teams[data.streets[event.data.street].hotel_team_id]) {
           value -= data.constants.visit_hotel_costs;
         }
         break;
@@ -378,8 +379,8 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
         value -= data.constants.buy_hotel_costs;
         if (data.streets[event.data.street] &&
             data.streets[event.data.street].visited) {
-          angular.forEach(data.streets[event.data.street].visited, function (visit) {
-            if (visit >= event.timestamp)
+          angular.forEach(data.streets[event.data.street].visited, function (visit, id) {
+            if (visit >= event.timestamp && data.teams[id])
               value += data.constants.visit_hotel_profits;
           });
         }
