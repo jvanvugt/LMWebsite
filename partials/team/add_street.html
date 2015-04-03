@@ -13,7 +13,7 @@
         </select>
         <select ng-show='addStreet.cityId' class='form-control' ng-model='addStreet.streetId'>
           <option value="" disabled selected>Selecteer een straat</option>
-          <option ng-repeat='(id, street) in data.streets' ng-show="street.city_id === addStreet.cityId && !street.visited[teamId]" value='{{id}}'>{{street.name}}</option>
+          <option ng-repeat="(id, street) in data.streets | canAddStreet: addStreet.cityId:teamId" value='{{id}}'>{{street.name}}</option>
         </select>
       </div>
       <div ng-hide='!(addStreet.streetId)' class='form-group'>

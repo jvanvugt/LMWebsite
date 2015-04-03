@@ -116,9 +116,19 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
   $scope.submitStraight = function(data) {
     Data.teamStraightMoney($scope.teamId, data.amount, data.note, Data.now);
   };
+
   setTimeout(function() {document.title = Data.teams[$scope.teamId].name + ' | Levend Monopoly';}, 2000);
+});
 
-
+monopolyControllers.filter("canAddStreet", function() {
+  return function(streets, cityId, teamId) {
+    var streetsCanAdd = {}
+    angular.forEach(streets, function(street, id){
+      if (street.city_id === cityId && !(street.visited && street.visited[teamId]))
+        streetsCanAdd[id] = street;
+    });
+    return streetsCanAdd;
+  };
 });
 
 monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $firebase, FIREBASE_URL, $firebaseAuth) {
