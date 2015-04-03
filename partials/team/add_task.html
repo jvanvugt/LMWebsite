@@ -9,7 +9,7 @@
       <div class='form-group'>
         <select class='form-control' ng-model='addTask.taskId'>
           <option value="" disabled selected>Selecteer een opdracht</option>
-          <option ng-repeat="task in data.tasks | objectOrderBy:'name'" ng-show="!task.completed[teamId]" value='{{task._id}}'>{{task.name}}</option>
+          <option ng-repeat="task in data.tasks | objectOrderBy:'name'" ng-show="!task.repeated[teamId] || task.repeated[teamId] < 1" value='{{task._id}}'>{{task.name}}</option>
         </select>
       </div>
       <div class='form-group' ng-show='data.tasks[addTask.taskId].rankable'>
