@@ -380,16 +380,17 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
         }
         break;
       case 'complete_task':
-        if (data.game_over.$value ||
-              !(data.tasks[event.data.task] &&
-              data.tasks[event.data.task].repeated &&
-              data.tasks[event.data.task].repeated[event.team] > 0)) break;
+        if (!(data.tasks[event.data.task] &&
+            data.tasks[event.data.task].repeated &&
+            data.tasks[event.data.task].repeated[event.team] > 0)) break;
         if (data.tasks[event.data.task].rankable) {
+          if (!data.game_over.$value) break;
           var rank = data.taskRank(event.team, event.data.task);
           if (rank < data.tasks[event.data.task].rewards.length)
             value += data.tasks[event.data.task].rewards[rank];
-        }  else
+        } else {
           value += data.tasks[event.data.task].rewards[0];
+        };
         break;
       case 'receive_card':
         var card = data.cards[event.data.card];
