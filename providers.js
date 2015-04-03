@@ -256,6 +256,16 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
     return numberOfHotels;
   };
 
+  this.hotelAmountOfVisits = function(streetId) {
+    var amount = 0;
+    var that = this;
+    angular.forEach(this.streets[streetId].visited, function (timestamp, team) {
+      if (timestamp > that.streets[streetId].hotel_timestamp)
+        amount += 1;
+    });
+    return amount;
+  };
+
   this.taskRank = function(teamId, taskId) {
     var task = this.tasks[taskId];
     var teamRankValue = task.ranked[teamId];

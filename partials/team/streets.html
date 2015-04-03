@@ -15,7 +15,16 @@
         <td>{{street.name}}</td>
         <td>{{data.cities[street.city_id].name}}</td>
         <td>{{street.visited[teamId] | date:'H:mm:ss'}}</td>
-        <td><div ng-show="street.hotel_team_id == teamId"><span class="glyphicon glyphicon-home"></span> {{street.hotel_timestamp | date:'H:mm:ss'}}</div></td>
+        <td>
+          <div ng-show="street.hotel_team_id == teamId">
+            <span class="glyphicon glyphicon-home"></span>
+            {{street.hotel_timestamp | date:'H:mm:ss'}}
+             - {{data.hotelAmountOfVisits(id)}} bezoek(en)
+          </div>
+          <div ng-show="street.hotel_timestamp && street.visited[teamId] > street.hotel_timestamp">
+            Hotel van ander team bezocht!
+          </div>
+        </td>
       </tr>
     </table>
   </div>
