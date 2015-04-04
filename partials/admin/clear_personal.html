@@ -1,0 +1,13 @@
+<h3>Gevoelige gegevens verwijderen</h3>
+
+<p>Verwijder emailadressen en telefoonnummers van alle gebruikers.</p>
+
+<form>
+  <div class='form-group' ng-init='goingToClearPersonal=false'>
+    <button type='submit' class='btn btn-warning' ng-click='goingToClearPersonal=!goingToClearPersonal'>Gegevens verwijderen</button>
+  </div class='form-group'>
+  <div ng-show="goingToClearPersonal">
+    <button type='submit' class='btn btn-success' ng-click='goingToClearPersonal=false'>Annuleren</button>
+    <button type='submit'  class='btn btn-danger' ng-click='data.clearDatabasePersonal(); goingToClearPersonal=false'>Gegevens verwijderen</button>
+  </div>
+</form>

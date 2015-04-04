@@ -341,6 +341,24 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
 
   };
 
+
+  this.clearDatabasePersonal = function() {
+    var uid = DataRoot.getAuth().uid;
+    if (!this.users[uid].roles.admin) {
+      alert("Je hebt niet voldoende rechten om deze actie uit te voeren.")
+      return;
+    }
+
+    if (!confirm("Weet je zeker dat je alle persoonlijke gegevens uit de database wilt verwijderen?")) return;
+    if (!confirm("Weet je echt echt echt zeker dat je dit wilt doen? Dit is je laatste kans!")) return;
+
+    angular.forEach(this.users, function (user, id) {
+      DataRoot.child('users').child(id).child('mail').remove()
+      DataRoot.child('users').child(id).child('phone').remove()
+    });
+
+  };
+  
 });
 
 monopolyProviders.factory('Chance', function () {

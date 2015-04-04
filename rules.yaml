@@ -40,7 +40,7 @@ schema:
     users:
       ~$user_id:
         type: object
-        required: [name, phone, mail]
+        required: [name]
         additionalProperties: false
         properties:
           name:
@@ -48,11 +48,11 @@ schema:
             constraint: isNotEmpty(next.val())
           phone:
             type: string
-            constraint: isNotEmpty(next.val())
+            constraint: del(next) || isNotEmpty(next.val())
           smartphone: {type: boolean}
           mail:
             type: string
-            constraint: isNotEmpty(next.val())
+            constraint: del(next) || isNotEmpty(next.val())
           society: {constraint: isSociety(next.val())}
           team: {constraint: true || del(next) || isTeam(next.val())} # 'true' hack to fix roles...
           roles:
