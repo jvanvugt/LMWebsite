@@ -32,7 +32,7 @@ monopoly.run(["$rootScope", "$location", "FIREBASE_URL", function($rootScope, $l
 
 monopoly.config(function(uiGmapGoogleMapApiProvider) {
     uiGmapGoogleMapApiProvider.configure({
-        key: 'AIzaSyDsVIpYqm4AhyvolYEjoK8XxYmAMUDP_FE',
+        key: '!!!YOUR KEY HERE!!!',
         v: '3.17',
         libraries: 'weather,geometry,visualization'
     });
