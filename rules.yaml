@@ -165,10 +165,10 @@ schema:
 
 access:
   - location: /
+    read: isStaff(auth.uid)
+    write: isStaff(auth.uid)
+  - location: static/
     read: true
-    write: false
-  #- location: static/
-  #  read: true
-  #- location: users/$user_id/
-  #  read: isStaff(auth.uid) || $user_id === auth.uid
-  #  write: isStaff(auth.uid) || $user_id === auth.uid
+  - location: users/$user_id/
+    read: isStaff(auth.uid) || $user_id === auth.uid
+    write: isStaff(auth.uid) || $user_id === auth.uid

@@ -15,16 +15,7 @@ monopoly.run(["$rootScope", "$location", "FIREBASE_URL", function($rootScope, $l
     // We can catch the error thrown when the $requireAuth promise is rejected
     // and redirect the user back to the home page
     if (error === "AUTH_REQUIRED") {
-
-      var ref = new Firebase(FIREBASE_URL);
-      ref.authAnonymously(function(error, authData) {
-        if (error) {
-          console.log("Login Failed!", error);
-        } else {
-          console.log("Authenticated successfully with payload:", authData);
-          location.reload();
-        }
-      });
+        $location.path('/account');
     }
   });
 
@@ -92,7 +83,7 @@ monopoly.config(function($locationProvider, $routeProvider) {
         }
       }).
       when('/error', {
-        templateURl: 'partials/error.html',
+        templateUrl: 'partials/error.html',
       }).
       otherwise( {
         redirectTo: '/error'
