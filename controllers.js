@@ -24,7 +24,7 @@ monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, D
   var ref = new Firebase(FIREBASE_URL);
   ref.child('users').child(ref.getAuth().uid).on('value', function(snap) {
     var user = snap.val();
-    if(!user.roles || !user.roles.admin) {
+    if(!(user.roles && (user.roles.judge || user.roles.admin))) {
       location.assign('/#/error');
     }
   });
