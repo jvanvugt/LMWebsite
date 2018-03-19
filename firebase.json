@@ -1,14 +1,17 @@
 {
-  "firebase": "cognac-monopoly",
-  "rules": "rules.json",
-  "public": ".",
-  "ignore": [
-    "firebase.json",
-    "**/.*",
-    "**/node_modules/**"
-  ],
-  "rewrites": [ {
-    "source": "**",
-    "destination": "/index.html"
-  } ]
+  "database": {
+    "rules": "rules.json"
+  },
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [ {
+      "source": "**",
+      "destination": "/index.html"
+    } ]
+  }
 }

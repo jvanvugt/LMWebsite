@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "cognac-monopoly": "cognac-monopoly",
+    "default": "cognac-monopoly"
+  }
+}
