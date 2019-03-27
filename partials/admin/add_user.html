@@ -13,7 +13,8 @@
 
   <div class='form-group'>
     <label for='userPhone'>Telefoonnummer:</label>
-    <input type='text' class='form-control' id='userPhone' placeholder='Voer telefoonnummer in' ng-model='addUser.phone'>
+    <input type='text' class='form-control' id='userPhone' placeholder='Voer telefoonnummer in'
+      ng-model='addUser.phone'>
   </div>
 
   <div class='checkbox'>
@@ -36,6 +37,7 @@
     </label>
   </div>
 
-  <button ng-disabled="!(addUser.name && addUser.mail && addUser.phone && addUser.society)" type='submit' class='btn btn-info' ng-click='submitAddUser(addUser); addUser={}'>Toevoegen</button>
+  <button ng-disabled="!(addUser.name && addUser.mail && addUser.phone && addUser.society)" type='submit'
+    class='btn btn-info' ng-click='submitAddUser(addUser); addUser={}'>Toevoegen</button>
 
 </form>

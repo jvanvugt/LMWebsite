@@ -23,12 +23,7 @@
 
 <ui-gmap-google-map center='map.center' zoom='map.zoom'>
 
-<ui-gmap-marker
-        ng-repeat='marker in markers'
-        idKey='marker.idKey'
-        coords='marker.coords'
-        options='marker.options'
-        >
-</ui-gmap-marker>
+  <ui-gmap-marker ng-repeat='marker in markers' idKey='marker.idKey' coords='marker.coords' options='marker.options'>
+  </ui-gmap-marker>
 
 </ui-gmap-google-map>

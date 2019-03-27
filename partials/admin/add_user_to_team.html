@@ -11,8 +11,10 @@
     <label for='memberAdd'>Gebruiker:</label>
     <select class='form-control' id='memberAdd' ng-model='memberForAdd'>
       <option value="" disabled selected>Selecteer een gebruiker</option>
-      <option ng-repeat='(id, user) in data.users' ng-show='!user.team && !user.roles.judge' value='{{id}}'>{{user.name}}</option>
+      <option ng-repeat='(id, user) in data.users' ng-show='!user.team && !user.roles.judge' value='{{id}}'>
+        {{user.name}}</option>
     </select>
   </div>
-  <button ng-disabled="!(teamMemberForAdd && memberForAdd)" type='submit' class='btn btn-info' ng-click='submitAddMember(memberForAdd, teamMemberForAdd); memberForAdd=""'>Toevoegen</button>
+  <button ng-disabled="!(teamMemberForAdd && memberForAdd)" type='submit' class='btn btn-info'
+    ng-click='submitAddMember(memberForAdd, teamMemberForAdd); memberForAdd=""'>Toevoegen</button>
 </form>

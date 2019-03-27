@@ -18,22 +18,26 @@
 
   <div class='form-group'>
     <label for='userEmail'>Emailadres:</label>
-    <input type='text' class='form-control' id='userEmail' placeholder='Voer emailadres in' ng-model='userToCreate.mail'>
+    <input type='text' class='form-control' id='userEmail' placeholder='Voer emailadres in'
+      ng-model='userToCreate.mail'>
   </div>
 
   <div class='form-group'>
     <label for='userPassword'>Wachtwoord:</label>
-    <input type='password' class='form-control' id='userPassword' placeholder='Voer wachtwoord in' ng-model='userToCreate.password'>
+    <input type='password' class='form-control' id='userPassword' placeholder='Voer wachtwoord in'
+      ng-model='userToCreate.password'>
   </div>
 
   <div class='form-group'>
     <label for='userPassword2'>Herhaal wachtwoord:</label>
-    <input type='password' class='form-control' id='userPassword2' placeholder='Voer wachtwoord in' ng-model='userToCreate.password2'>
+    <input type='password' class='form-control' id='userPassword2' placeholder='Voer wachtwoord in'
+      ng-model='userToCreate.password2'>
   </div>
 
   <div class='form-group'>
     <label for='userPhone'>Telefoonnummer:</label>
-    <input type='text' class='form-control' id='userPhone' placeholder='Voer telefoonnummer in' ng-model='userToCreate.phone'>
+    <input type='text' class='form-control' id='userPhone' placeholder='Voer telefoonnummer in'
+      ng-model='userToCreate.phone'>
   </div>
 
   <div class='checkbox'>
@@ -50,5 +54,7 @@
     </select>
   </div>
 
-  <button ng-disabled="!(userToCreate.name && userToCreate.mail && userToCreate.password && userToCreate.password2 && userToCreate.phone && userToCreate.society)" type='submit' class='btn btn-info' ng-click='createAccount(userToCreate);'>Aanmelden</button>
+  <button
+    ng-disabled="!(userToCreate.name && userToCreate.mail && userToCreate.password && userToCreate.password2 && userToCreate.phone && userToCreate.society)"
+    type='submit' class='btn btn-info' ng-click='createAccount(userToCreate);'>Aanmelden</button>
 </form>

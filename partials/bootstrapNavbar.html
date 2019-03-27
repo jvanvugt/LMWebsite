@@ -16,7 +16,8 @@
       </ul>
       <form class="navbar-form navbar-right" role="form">
         <button ng-hide='isLoggedIn' type="submit" class="btn btn-primary" ng-click='login();'>Inloggen</button>
-        <button ng-show='isLoggedIn' type="submit" class="btn btn-danger" ng-click='logout();'> {{data.users[isLoggedIn.uid].name}} uitloggen</button>
+        <button ng-show='isLoggedIn' type="submit" class="btn btn-danger" ng-click='logout();'>
+          {{data.users[isLoggedIn.uid].name}} uitloggen</button>
       </form>
     </div>
   </div>

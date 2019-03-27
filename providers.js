@@ -1,18 +1,18 @@
 var monopolyProviders = angular.module('monopolyProviders', []);
 
-monopolyProviders.factory('WithFilterableId', function($FirebaseArray, $firebaseUtils) {
-   return $FirebaseArray.$extendFactory({
-       $$added:  function(snap) {
-           var rec = $FirebaseArray.prototype.$$added.call(this, snap);
-           rec._id = rec.$id;
-           return rec;
-       }
-   });
+monopolyProviders.factory('WithFilterableId', function ($FirebaseArray, $firebaseUtils) {
+  return $FirebaseArray.$extendFactory({
+    $$added: function (snap) {
+      var rec = $FirebaseArray.prototype.$$added.call(this, snap);
+      rec._id = rec.$id;
+      return rec;
+    }
+  });
 });
 
-monopolyProviders.constant('FIREBASE_URL','https://cognac-monopoly.firebaseio.com/');
+monopolyProviders.constant('FIREBASE_URL', 'https://cognac-monopoly.firebaseio.com/');
 
-monopolyProviders.service('DataRoot', function($firebase, FIREBASE_URL) {
+monopolyProviders.service('DataRoot', function ($firebase, FIREBASE_URL) {
   return new Firebase(FIREBASE_URL);
 });
 
@@ -31,27 +31,27 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
 
   var chance = Chance(this);
 
-  this.getData = function(dataType, dataId) {
-    if(dataType && dataId) {
+  this.getData = function (dataType, dataId) {
+    if (dataType && dataId) {
       return this[dataType][dataId];
     }
   }
 
-  this.addUser = function(user) {
+  this.addUser = function (user) {
     DataRoot.child('users').push(user);
   };
 
-  this.removeUser = function(userId) {
+  this.removeUser = function (userId) {
     DataRoot.child('users').child(userId).remove();
   };
 
-  this.setUserRights = function(userId, isJudge, isAdmin) {
+  this.setUserRights = function (userId, isJudge, isAdmin) {
     var roles = DataRoot.child('users').child(userId).child('roles');
     roles.child('judge').set(isJudge);
     roles.child('admin').set(isAdmin);
   };
 
-  this.addTeam = function(team, teamMembers) {
+  this.addTeam = function (team, teamMembers) {
     team.active = true;
     var teamIdRef = DataRoot.child('teams').push(team);
     var data = this;
@@ -62,7 +62,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
     });
   };
 
-  this.removeTeam = function(teamId) {
+  this.removeTeam = function (teamId) {
     DataRoot.child('teams').child(teamId).remove();
     var that = this;
     angular.forEach(data.users, function (user, id) {
@@ -71,19 +71,19 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
     });
   };
 
-  this.teamAddMember = function(teamId, userId) {
+  this.teamAddMember = function (teamId, userId) {
     DataRoot.child('users').child(userId).child('team').set(teamId);
   };
 
-  this.teamRemoveMember = function(userId) {
+  this.teamRemoveMember = function (userId) {
     DataRoot.child('users').child(userId).child('team').remove();
   };
 
-  this.addCity = function(city) {
+  this.addCity = function (city) {
     DataRoot.child('cities').push(city);
   };
 
-  this.removeCity = function(cityId) {
+  this.removeCity = function (cityId) {
     DataRoot.child('cities').child(cityId).remove();
     angular.forEach(data.streets, function (street, id) {
       if (street.city_id === cityId)
@@ -91,41 +91,41 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
     });
   };
 
-  this.addStreet = function(street) {
+  this.addStreet = function (street) {
     DataRoot.child('streets').push(street);
   };
 
-  this.removeStreet = function(streetId) {
+  this.removeStreet = function (streetId) {
     DataRoot.child('streets').child(streetId).remove();
   };
 
-  this.addTask = function(task) {
+  this.addTask = function (task) {
     DataRoot.child('tasks').push(task);
   };
 
-  this.removeTask = function(taskId) {
+  this.removeTask = function (taskId) {
     DataRoot.child('tasks').child(taskId).remove();
   };
 
-  this.addCard = function(card) {
+  this.addCard = function (card) {
     DataRoot.child('cards').push(card);
   };
 
-  this.removeCard = function(cardId) {
+  this.removeCard = function (cardId) {
     DataRoot.child('cards').child(cardId).remove();
   };
 
-  this.addSociety = function(society) {
+  this.addSociety = function (society) {
     DataRoot.child('static/societies').push(society);
   };
 
-  this.removeSociety = function(societyId) {
+  this.removeSociety = function (societyId) {
     DataRoot.child('static/societies').child(societyId).remove();
   };
 
-  this.teamVisitStreet = function(teamId, streetId, timestamp) {
+  this.teamVisitStreet = function (teamId, streetId, timestamp) {
     DataRoot.child('streets').child(streetId).child('visited').child(teamId).set(timestamp);
-    this.addEvent(teamId, 'visit_street', {street: streetId}, timestamp);
+    this.addEvent(teamId, 'visit_street', { street: streetId }, timestamp);
     if (this.streets[streetId].hotel_team_id && this.streets[streetId].hotel_team_id !== teamId)
       alert("Op deze straat is een hotel van een ander team!")
 
@@ -135,35 +135,35 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
     };
   };
 
-  this.teamUnvisitStreet = function(teamId, streetId, timestamp) {
+  this.teamUnvisitStreet = function (teamId, streetId, timestamp) {
     if (this.streets[streetId].hotel_team_id && this.streets[streetId].hotel_team_id === teamId)
       this.teamUnbuyHotel(teamId, streetId, timestamp);
     DataRoot.child('streets').child(streetId).child('visited').child(teamId).remove();
-    this.addEvent(teamId, 'visit_street', {street: streetId}, timestamp, true);
+    this.addEvent(teamId, 'visit_street', { street: streetId }, timestamp, true);
   };
 
-  this.teamGetCard = function(teamId, timestamp) {
+  this.teamGetCard = function (teamId, timestamp) {
     var card = chance.objectProperty(this.teamAvailableCards(teamId));
     DataRoot.child('cards').child(card.id).child('received').child(teamId).set(timestamp);
-    this.addEvent(teamId, 'receive_card', {card: card.id}, timestamp);
+    this.addEvent(teamId, 'receive_card', { card: card.id }, timestamp);
   };
 
-  this.teamUngetCard = function(teamId, cardId, timestamp) {
+  this.teamUngetCard = function (teamId, cardId, timestamp) {
     DataRoot.child('cards').child(cardId).child('received').child(teamId).remove();
-    this.addEvent(teamId, 'receive_card', {card: cardId}, timestamp, true);
+    this.addEvent(teamId, 'receive_card', { card: cardId }, timestamp, true);
   };
 
-  this.teamCompleteCard = function(teamId, cardId, timestamp) {
+  this.teamCompleteCard = function (teamId, cardId, timestamp) {
     DataRoot.child('cards').child(cardId).child('completed').child(teamId).set(timestamp);
-    this.addEvent(teamId, 'complete_card', {card: cardId}, timestamp);
+    this.addEvent(teamId, 'complete_card', { card: cardId }, timestamp);
   };
 
-  this.teamUncompleteCard = function(teamId, cardId, timestamp) {
+  this.teamUncompleteCard = function (teamId, cardId, timestamp) {
     DataRoot.child('cards').child(cardId).child('completed').child(teamId).remove();
-    this.addEvent(teamId, 'complete_card', {card: cardId}, timestamp, true);
+    this.addEvent(teamId, 'complete_card', { card: cardId }, timestamp, true);
   };
 
-  this.teamBuyHotel = function(teamId, streetId, timestamp) {
+  this.teamBuyHotel = function (teamId, streetId, timestamp) {
     if (this.events.balance(teamId) < this.constants.buy_hotel_costs) {
       alert("Niet genoeg geld om een hotel te kopen!");
       return;
@@ -175,56 +175,56 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
     var streetref = DataRoot.child('streets').child(streetId)
     streetref.child('hotel_team_id').set(teamId);
     streetref.child('hotel_timestamp').set(timestamp);
-    this.addEvent(teamId, 'buy_hotel', {street: streetId}, timestamp);
+    this.addEvent(teamId, 'buy_hotel', { street: streetId }, timestamp);
   };
 
-  this.teamUnbuyHotel = function(teamId, streetId, timestamp) {
+  this.teamUnbuyHotel = function (teamId, streetId, timestamp) {
     if (!(this.streets[streetId].hotel_team_id && this.streets[streetId].hotel_team_id === teamId)) return;
     var streetref = DataRoot.child('streets').child(streetId)
     streetref.child('hotel_team_id').remove();
     streetref.child('hotel_timestamp').remove();
-    this.addEvent(teamId, 'buy_hotel', {street: streetId}, timestamp, true);
+    this.addEvent(teamId, 'buy_hotel', { street: streetId }, timestamp, true);
 
   };
-  this.teamCompleteTask = function(teamId, taskId, taskValue, timestamp) {
+  this.teamCompleteTask = function (teamId, taskId, taskValue, timestamp) {
     if (this.tasks[taskId] && this.tasks[taskId].repeated && this.tasks[taskId].repeated[teamId] >= this.tasks[taskId].repeatable) return;
     var taskref = DataRoot.child('tasks').child(taskId);
     var taskrepeatedteamref = taskref.child('repeated').child(teamId);
     var taskrankedteamref = taskref.child('ranked').child(teamId);
     if (this.tasks[taskId].repeated && this.tasks[taskId].repeated[teamId]) {
-      taskrepeatedteamref.transaction(function(current) {
-        return current+1;
+      taskrepeatedteamref.transaction(function (current) {
+        return current + 1;
       });
     } else {
       if (taskValue)
         taskrankedteamref.set(taskValue);
       taskrepeatedteamref.set(1);
     }
-    this.addEvent(teamId, 'complete_task', {task: taskId}, timestamp);
+    this.addEvent(teamId, 'complete_task', { task: taskId }, timestamp);
   };
 
-  this.teamUncompleteTask = function(teamId, taskId, timestamp) {
+  this.teamUncompleteTask = function (teamId, taskId, timestamp) {
     if (this.tasks[taskId] && this.tasks[taskId].repeated && this.tasks[taskId].repeated[teamId] <= 0) return;
     var taskref = DataRoot.child('tasks').child(taskId);
     var taskrepeatedteamref = taskref.child('repeated').child(teamId);
     var taskrankedteamref = taskref.child('ranked').child(teamId);
-    taskrepeatedteamref.transaction(function(current) {
-      return current-1;
+    taskrepeatedteamref.transaction(function (current) {
+      return current - 1;
     });
-    this.addEvent(teamId, 'complete_task', {task: taskId}, timestamp, true);
+    this.addEvent(teamId, 'complete_task', { task: taskId }, timestamp, true);
   };
 
-  this.teamTaskSetRankValue = function(teamId, taskId, rankValue) {
+  this.teamTaskSetRankValue = function (teamId, taskId, rankValue) {
     // TODO: check validty (task is rankable etc)
     DataRoot.child('tasks').child(taskId).child('ranked').child(teamId).set(rankValue);
   };
 
-  this.teamStraightMoney = function(teamId, amount, note, timestamp) {
-    this.addEvent(teamId, 'straight_money', {amount: amount, note: note}, timestamp);
+  this.teamStraightMoney = function (teamId, amount, note, timestamp) {
+    this.addEvent(teamId, 'straight_money', { amount: amount, note: note }, timestamp);
   };
 
-  this.addEvent = function(teamId, type, data, timestamp, undo) {
-    if (typeof(undo) === 'undefined') undo = false;
+  this.addEvent = function (teamId, type, data, timestamp, undo) {
+    if (typeof (undo) === 'undefined') undo = false;
     evnt = {};
     evnt['timestamp'] = timestamp;
     evnt['type'] = type;
@@ -236,32 +236,32 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
     DataRoot.child('events').push(evnt);
   };
 
-  this.toggleEvent = function(eventId) {
+  this.toggleEvent = function (eventId) {
     var eventref = DataRoot.child('events').child(eventId);
-    eventref.child('active').transaction(function(current) {
+    eventref.child('active').transaction(function (current) {
       return !current;
     });
   };
 
-  this.teamAvailableCards = function(teamId) {
+  this.teamAvailableCards = function (teamId) {
     var availableCards = {};
-    this.cards.forEach(function(card, id) {
-      if(!card.received || !card.received[teamId])
+    this.cards.forEach(function (card, id) {
+      if (!card.received || !card.received[teamId])
         availableCards[id] = card;
     });
     return availableCards;
   };
 
-  this.teamNumberOfHotels = function(teamId) {
+  this.teamNumberOfHotels = function (teamId) {
     var numberOfHotels = 0;
-    this.streets.forEach(function(street, id) {
-      if(street.hotel_team_id === teamId)
+    this.streets.forEach(function (street, id) {
+      if (street.hotel_team_id === teamId)
         numberOfHotels += 1;
     });
     return numberOfHotels;
   };
 
-  this.hotelAmountOfVisits = function(streetId) {
+  this.hotelAmountOfVisits = function (streetId) {
     var amount = 0;
     var that = this;
     angular.forEach(this.streets[streetId].visited, function (timestamp, team) {
@@ -271,7 +271,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
     return amount;
   };
 
-  this.taskRank = function(teamId, taskId) {
+  this.taskRank = function (teamId, taskId) {
     var task = this.tasks[taskId];
     if (!(task.rankable && task.ranked)) return 0;
     var teamRankValue = task.ranked[teamId];
@@ -284,7 +284,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
     return rank;
   };
 
-  this.teamRank = function(teamId) {
+  this.teamRank = function (teamId) {
     var rank = 0;
     var teamBalance = data.events.balance(teamId);
     angular.forEach(data.teams, function (team, id) {
@@ -294,24 +294,24 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
     return rank;
   }
 
-  this.timestampOf = function(data) {
+  this.timestampOf = function (data) {
     if (data.timestamp)
       return data.timestamp.getTime();
     else
       return Firebase.ServerValue.TIMESTAMP;
   };
 
-  this.setNow = function() {
+  this.setNow = function () {
     this.now = new Date().getTime();
   };
 
   this.setNow();
 
-  $interval(function(){
-      this.setNow();
-   }.bind(this), 1000);
+  $interval(function () {
+    this.setNow();
+  }.bind(this), 1000);
 
-  this.clearDatabaseGameplay = function() {
+  this.clearDatabaseGameplay = function () {
     var uid = DataRoot.getAuth().uid;
     if (!this.users[uid].roles.admin) {
       alert("Je hebt niet voldoende rechten om deze actie uit te voeren.")
@@ -342,7 +342,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
   };
 
 
-  this.clearDatabasePersonal = function() {
+  this.clearDatabasePersonal = function () {
     var uid = DataRoot.getAuth().uid;
     if (!this.users[uid].roles.admin) {
       alert("Je hebt niet voldoende rechten om deze actie uit te voeren.")
@@ -358,38 +358,38 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
     });
 
   };
-  
+
 });
 
 monopolyProviders.factory('Chance', function () {
-  return function(data) {
+  return function (data) {
 
-    this.cardOnVisitStreet = function() {
+    this.cardOnVisitStreet = function () {
       return Math.random() * 100 <= data.constants.probability_card_per_street;
     };
 
-    this.objectProperty = function(obj) {
+    this.objectProperty = function (obj) {
       var keys = Object.keys(obj)
       var rand = keys[keys.length * Math.random() << 0];
-      return {id: rand, card: obj[rand]};
+      return { id: rand, card: obj[rand] };
     };
 
     return this;
   };
 });
 
-monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, DataRoot, $filter) {
+monopolyProviders.service("EventsFactory", function ($FirebaseArray, $firebase, DataRoot, $filter) {
 
-  var eventValue = function(event) {
+  var eventValue = function (event) {
     var value = 0;
     switch (event.type) {
       case 'visit_street':
         if (!(data.streets[event.data.street] && data.streets[event.data.street].visited && data.streets[event.data.street].visited[event.team])) break;
         value += data.constants.visit_street_profits;
         if (data.streets[event.data.street] &&
-            data.streets[event.data.street].hotel_timestamp &&
-            data.streets[event.data.street].hotel_timestamp <= event.timestamp &&
-            data.teams[data.streets[event.data.street].hotel_team_id]) {
+          data.streets[event.data.street].hotel_timestamp &&
+          data.streets[event.data.street].hotel_timestamp <= event.timestamp &&
+          data.teams[data.streets[event.data.street].hotel_team_id]) {
           value -= data.constants.visit_hotel_costs;
         }
         break;
@@ -398,7 +398,7 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
         if (!(data.streets[event.data.street].hotel_team_id === event.team)) break;
         value -= data.constants.buy_hotel_costs;
         if (data.streets[event.data.street] &&
-            data.streets[event.data.street].visited) {
+          data.streets[event.data.street].visited) {
           angular.forEach(data.streets[event.data.street].visited, function (visit, id) {
             if (visit >= event.timestamp && data.teams[id])
               value += data.constants.visit_hotel_profits;
@@ -407,8 +407,8 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
         break;
       case 'complete_task':
         if (!(data.tasks[event.data.task] &&
-            data.tasks[event.data.task].repeated &&
-            data.tasks[event.data.task].repeated[event.team] > 0)) break;
+          data.tasks[event.data.task].repeated &&
+          data.tasks[event.data.task].repeated[event.team] > 0)) break;
         if (data.tasks[event.data.task].rankable) {
           if (!data.game_over.$value) break;
           var rank = data.taskRank(event.team, event.data.task);
@@ -425,7 +425,7 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
           if (card.is_positive)
             value += card.amount;
         } else {
-          if (!card.is_positive && data.now > card.received[event.team] + data.constants.card_max_time*60*1000)
+          if (!card.is_positive && data.now > card.received[event.team] + data.constants.card_max_time * 60 * 1000)
             value -= card.amount;
         }
         break;
@@ -438,25 +438,25 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
   };
 
   var EventsFactory = $FirebaseArray.$extendFactory({
-    balance: function(teamId) {
+    balance: function (teamId) {
       var balance = 0;
-      angular.forEach(this.$list, function(event) {
+      angular.forEach(this.$list, function (event) {
         if (event.active && event.team == teamId)
           balance += eventValue(event) * (event.undo ? -1 : 1);
       });
       return balance;
     },
-    $$added: function(snap) {
+    $$added: function (snap) {
       var rec = $FirebaseArray.prototype.$$added.call(this, snap);
       rec._id = rec.$id;
       return rec;
     },
-    latest: function(teamId) {
+    latest: function (teamId) {
       var ordered = $filter('objectOrderBy')(this.$list, 'timestamp', true);
-      for(var i = 0; i < ordered.length; i++) {
+      for (var i = 0; i < ordered.length; i++) {
         var event = ordered[i];
-        if(event.active && event.team === teamId) {
-          switch(event.type) {
+        if (event.active && event.team === teamId) {
+          switch (event.type) {
             case 'visit_street':
               return 'Straat bezocht: ' + data.streets[event.data.street].name;
             case 'buy_hotel':
@@ -475,63 +475,63 @@ monopolyProviders.service("EventsFactory", function($FirebaseArray, $firebase, D
         }
       }
     },
-    latestLocation: function(teamId) {
+    latestLocation: function (teamId) {
       var ordered = $filter('objectOrderBy')(this.$list, 'timestamp', true);
-      for(var i = 0; i < ordered.length; i++) {
+      for (var i = 0; i < ordered.length; i++) {
         var event = ordered[i];
-        if(event.active && event.team === teamId && event.type === 'visit_street') {
+        if (event.active && event.team === teamId && event.type === 'visit_street') {
           var street = data.streets[event.data.street];
           return street.name + ', ' + data.cities[street.city_id].name;
         }
       }
     },
-    latestStreetId: function(teamId) {
+    latestStreetId: function (teamId) {
       var ordered = $filter('objectOrderBy')(this.$list, 'timestamp', true);
-      for(var i = 0; i < ordered.length; i++) {
+      for (var i = 0; i < ordered.length; i++) {
         var event = ordered[i];
-        if(event.active && event.team === teamId && event.type === 'visit_street') {
+        if (event.active && event.team === teamId && event.type === 'visit_street') {
           return event.data.street;
         }
       }
     }
   });
 
-  return function(data) {
+  return function (data) {
     this.data = data;
-    var sync = $firebase(DataRoot.child('events'), {arrayFactory: EventsFactory});
+    var sync = $firebase(DataRoot.child('events'), { arrayFactory: EventsFactory });
     return sync.$asArray();
   }
 });
 
-monopolyProviders.filter('objectLimitTo', [function(){
-    return function(obj, limit){
-        if (!obj) return [];
-        var keys = Object.keys(obj);
-        if(keys.length < 1) return [];
+monopolyProviders.filter('objectLimitTo', [function () {
+  return function (obj, limit) {
+    if (!obj) return [];
+    var keys = Object.keys(obj);
+    if (keys.length < 1) return [];
 
-        var ret = new Object,
-        count = 0;
-        angular.forEach(keys, function(key, arrayIndex){
-           if(count >= limit){
-                return false;
-            }
-            ret[key] = obj[key];
-            count++;
-        });
-        return ret;
-    };
+    var ret = new Object,
+      count = 0;
+    angular.forEach(keys, function (key, arrayIndex) {
+      if (count >= limit) {
+        return false;
+      }
+      ret[key] = obj[key];
+      count++;
+    });
+    return ret;
+  };
 }]);
 
-monopolyProviders.filter('objectOrderBy', function() {
-  return function(items, field, reverse) {
+monopolyProviders.filter('objectOrderBy', function () {
+  return function (items, field, reverse) {
     var filtered = [];
-    angular.forEach(items, function(item) {
+    angular.forEach(items, function (item) {
       filtered.push(item);
     });
     filtered.sort(function (a, b) {
       return (a[field] > b[field] ? 1 : -1);
     });
-    if(reverse) filtered.reverse();
+    if (reverse) filtered.reverse();
     return filtered;
   };
 });
@@ -541,7 +541,7 @@ monopolyProviders.filter('toArray', function () {
     if (!(obj instanceof Object)) return obj;
 
     return Object.keys(obj).map(function (key) {
-      return Object.defineProperty(obj[key], '$key', {__proto__: null, value: key});
+      return Object.defineProperty(obj[key], '$key', { __proto__: null, value: key });
     });
   }
 });

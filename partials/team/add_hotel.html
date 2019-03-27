@@ -1,7 +1,7 @@
 <div class="panel panel-info">
 
   <div class="panel-heading">
-     <h3 class="panel-title">Hotel toevoegen</h3>
+    <h3 class="panel-title">Hotel toevoegen</h3>
   </div>
 
   <div class="panel-body">
@@ -13,7 +13,9 @@
         </select>
         <select ng-show='addHotel.cityId' class='form-control' ng-model='addHotel.streetId'>
           <option value="" disabled selected>Selecteer een straat</option>
-          <option ng-repeat='(id, street) in data.streets | streetInCity:addHotel.cityId | streetVisitedByTeam:teamId | streetNotHasHotel' value='{{id}}'>{{street.name}}</option>
+          <option
+            ng-repeat='(id, street) in data.streets | streetInCity:addHotel.cityId | streetVisitedByTeam:teamId | streetNotHasHotel'
+            value='{{id}}'>{{street.name}}</option>
         </select>
       </div>
       <div ng-hide='!(addHotel.streetId)' class='form-group'>
@@ -24,7 +26,8 @@
         <timepicker ng-hide="addHotel.now" ng-model="addHotel.timestamp" show-meridian="false"></timepicker>
       </div>
       <div class='form-group'>
-        <button ng-disabled="!(addHotel.streetId)" type='submit' class='btn btn-info' ng-click='submitAddHotel(addHotel); addHotel={now: true}'>Toevoegen</button>
+        <button ng-disabled="!(addHotel.streetId)" type='submit' class='btn btn-info'
+          ng-click='submitAddHotel(addHotel); addHotel={now: true}'>Toevoegen</button>
       </div>
     </form>
   </div>

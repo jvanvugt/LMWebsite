@@ -8,11 +8,12 @@
     </select>
   </div>
   <div ng-show='teamId' class='form-group'>
-      <label for='teamMemberDelete'>Lid:</label>
-      <select class='form-control' id='teamMemberDelete' ng-model='memberId'>
-        <option value="" disabled selected>Selecteer een gebruiker</option>
-        <option ng-repeat='(id, user) in data.users' ng-show='user.team === teamId' value='{{id}}'>{{user.name}}</option>
-      </select>
+    <label for='teamMemberDelete'>Lid:</label>
+    <select class='form-control' id='teamMemberDelete' ng-model='memberId'>
+      <option value="" disabled selected>Selecteer een gebruiker</option>
+      <option ng-repeat='(id, user) in data.users' ng-show='user.team === teamId' value='{{id}}'>{{user.name}}</option>
+    </select>
   </div>
-  <button ng-disabled='!(teamId && memberId)' type='submit' class='btn btn-info' ng-click='submitRemoveMember(memberId); teamId=""; memberId=""'>Verwijderen</button>
+  <button ng-disabled='!(teamId && memberId)' type='submit' class='btn btn-info'
+    ng-click='submitRemoveMember(memberId); teamId=""; memberId=""'>Verwijderen</button>
 </form>

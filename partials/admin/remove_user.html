@@ -7,5 +7,6 @@
       <option ng-repeat='(id, user) in data.users' value='{{id}}'>{{user.name}}</option>
     </select>
   </div>
-  <button ng-disabled='!removeUser.userId' type='submit' class='btn btn-info' ng-click='submitRemoveUser(removeUser.userId); removeUser={}'>Verwijderen</button>
+  <button ng-disabled='!removeUser.userId' type='submit' class='btn btn-info'
+    ng-click='submitRemoveUser(removeUser.userId); removeUser={}'>Verwijderen</button>
 </form>

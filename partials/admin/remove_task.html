@@ -7,5 +7,6 @@
       <option ng-repeat='(id, task) in data.tasks' value='{{id}}'>{{task.name}}</option>
     </select>
   </div>
-    <button ng-disabled='!taskForDelete' type='submit' class='btn btn-info' ng-click='submitRemoveTask(taskForDelete); taskForDelete=""'>Verwijderen</button>
+  <button ng-disabled='!taskForDelete' type='submit' class='btn btn-info'
+    ng-click='submitRemoveTask(taskForDelete); taskForDelete=""'>Verwijderen</button>
 </form>

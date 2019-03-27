@@ -12,5 +12,6 @@
       <option ng-repeat="(id, card) in data.cards" ng-show="card.received[rcTeamId]" value={{id}}>{{card.name}}</option>
     </select>
   </div>
-  <button ng-disabled="!(rcTeamId && rcCardId)" type='submit' class='btn btn-info' ng-click='submitRemoveCardFromTeam(rcTeamId, rcCardId); rcTeamId=""; rcCardId=""'>Verwijderen</button>
+  <button ng-disabled="!(rcTeamId && rcCardId)" type='submit' class='btn btn-info'
+    ng-click='submitRemoveCardFromTeam(rcTeamId, rcCardId); rcTeamId=""; rcCardId=""'>Verwijderen</button>
 </form>

@@ -2,18 +2,22 @@
 <form>
   <div class='form-group'>
     <label for='cardNameAdd'>Naam:</label>
-    <input type='text' id='cardNameAdd' class='form-control' placeholder='Voer de naam van de kanskaart in' ng-model='card.name'>
+    <input type='text' id='cardNameAdd' class='form-control' placeholder='Voer de naam van de kanskaart in'
+      ng-model='card.name'>
   </div>
   <div class='form-group'>
     <label for='cardAmountAdd'>Bedrag:</label>
-    <input type='number' min='0' id='cardAmountAdd' class='form-control' ng-model='card.amount' ng-init='card.amount = 0'>
+    <input type='number' min='0' id='cardAmountAdd' class='form-control' ng-model='card.amount'
+      ng-init='card.amount = 0'>
   </div>
   <div class='form-group'>
     <div class='checkbox'>
       <label>
-        <input type='checkbox' ng-model='card.is_positive' id='cardIsPositive' ng-init='card.is_positive = true'>Positief?
+        <input type='checkbox' ng-model='card.is_positive' id='cardIsPositive'
+          ng-init='card.is_positive = true'>Positief?
       </label>
     </div>
   </div>
-  <button ng-disabled="!(card.name && (card.amount || card.amount === 0))" type='submit' class='btn btn-info' ng-click='submitAddCard(card); card=""; card.is_positive=true'>Toevoegen</button>
+  <button ng-disabled="!(card.name && (card.amount || card.amount === 0))" type='submit' class='btn btn-info'
+    ng-click='submitAddCard(card); card=""; card.is_positive=true'>Toevoegen</button>
 </form>

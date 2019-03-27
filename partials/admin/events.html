@@ -7,7 +7,8 @@
   </div>
   <div class='form-group' ng-hide="events.all">
     Laatste zoveel laten zien:
-    <input style="width: 100px" type='number' class='form-control' ng-init="events.amount = 15" ng-model='events.amount'>
+    <input style="width: 100px" type='number' class='form-control' ng-init="events.amount = 15"
+      ng-model='events.amount'>
   </div>
   <div class='form-group'>
     <select class='form-control' id='events-team' ng-model='events.team'>
@@ -23,7 +24,8 @@
         <th>Data</th>
         <th>Inactief</th>
       </thead>
-      <tr ng-repeat="(id, event) in data.events | filter:{'team': events.team} | orderBy:'timestamp':true | limitTo:(events.all ? 10000 : events.amount)">
+      <tr
+        ng-repeat="(id, event) in data.events | filter:{'team': events.team} | orderBy:'timestamp':true | limitTo:(events.all ? 10000 : events.amount)">
         <td><span ng-show="event.undo" class="glyphicon glyphicon-share-alt"></span> {{event.type}}</td>
         <td>{{event.timestamp | date:'H:mm:ss'}}</td>
         <td>
@@ -32,8 +34,10 @@
           </div>
         </td>
         <td>
-            <button ng-show="event.active" type="button" class="btn btn-info btn-xs" ng-click="data.toggleEvent(event._id)"><span class="glyphicon glyphicon-ok-circle"></span></button>
-            <button ng-hide="event.active" type="button" class="btn btn-warning btn-xs" ng-click="data.toggleEvent(event._id)"><span class="glyphicon glyphicon-ban-circle"></span></button>
+          <button ng-show="event.active" type="button" class="btn btn-info btn-xs"
+            ng-click="data.toggleEvent(event._id)"><span class="glyphicon glyphicon-ok-circle"></span></button>
+          <button ng-hide="event.active" type="button" class="btn btn-warning btn-xs"
+            ng-click="data.toggleEvent(event._id)"><span class="glyphicon glyphicon-ban-circle"></span></button>
         </td>
       </tr>
     </table>

@@ -18,8 +18,11 @@
     <label for='streetUnvisit'>Straat:</label>
     <select class='form-control' id='streetUnvisit' ng-model='streetIdUnvisit'>
       <option value="" disabled selected>Selecteer een straat</option>
-      <option ng-repeat="(id, street) in data.streets" ng-show="street.visited[teamIdUnvisit] && street.city_id === cityIdUnvisit" value='{{id}}'>{{street.name}}</option>
+      <option ng-repeat="(id, street) in data.streets"
+        ng-show="street.visited[teamIdUnvisit] && street.city_id === cityIdUnvisit" value='{{id}}'>{{street.name}}
+      </option>
     </select>
   </div>
-    <button ng-disabled='!(teamIdUnvisit && cityIdUnvisit && streetIdUnvisit)' type='submit' class='btn btn-info' ng-click='submitUnvisitStreet(streetIdUnvisit, teamIdUnvisit); teamIdUnvisit=""; streetIdUnvisit=""; cityIdUnvisit=""'>Onbezoeken</button>
+  <button ng-disabled='!(teamIdUnvisit && cityIdUnvisit && streetIdUnvisit)' type='submit' class='btn btn-info'
+    ng-click='submitUnvisitStreet(streetIdUnvisit, teamIdUnvisit); teamIdUnvisit=""; streetIdUnvisit=""; cityIdUnvisit=""'>Onbezoeken</button>
 </form>

@@ -1,6 +1,6 @@
 <div class="panel panel-info">
   <div class="panel-heading">
-     <h3 class="panel-title">Bezochte straten</h3>
+    <h3 class="panel-title">Bezochte straten</h3>
   </div>
 
   <div id="streets-panel" class="panel-body">
@@ -19,7 +19,7 @@
           <div ng-show="street.hotel_team_id == teamId">
             <span class="glyphicon glyphicon-home"></span>
             {{street.hotel_timestamp | date:'H:mm:ss'}}
-             - {{data.hotelAmountOfVisits(id)}} bezoek(en)
+            - {{data.hotelAmountOfVisits(id)}} bezoek(en)
           </div>
           <div ng-show="street.hotel_timestamp && street.visited[teamId] > street.hotel_timestamp">
             Hotel van ander team bezocht!

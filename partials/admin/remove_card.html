@@ -7,5 +7,6 @@
       <option ng-repeat='(id,card) in data.cards' value='{{id}}'>{{card.name}}</option>
     </select>
   </div>
-    <button ng-disabled='!cardForDelete' type='submit' class='btn btn-info' ng-click='submitRemoveCard(cardForDelete); cardForDelete=""'>Verwijderen</button>
+  <button ng-disabled='!cardForDelete' type='submit' class='btn btn-info'
+    ng-click='submitRemoveCard(cardForDelete); cardForDelete=""'>Verwijderen</button>
 </form>

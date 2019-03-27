@@ -7,5 +7,6 @@
       <option ng-repeat='(id,team) in data.teams' value='{{id}}'>{{team.name}}</option>
     </select>
   </div>
-  <button ng-disabled='!teamForDelete' type='submit' class='btn btn-info' ng-click='submitRemoveTeam(teamForDelete); teamForDelete=""'>Verwijderen</button>
+  <button ng-disabled='!teamForDelete' type='submit' class='btn btn-info'
+    ng-click='submitRemoveTeam(teamForDelete); teamForDelete=""'>Verwijderen</button>
 </form>

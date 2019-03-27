@@ -1,19 +1,19 @@
 var monopolyControllers = angular.module('monopolyControllers', []);
 
-monopolyControllers.controller('NavBarCtrl', function($scope, $firebase, FIREBASE_URL, Data) {
+monopolyControllers.controller('NavBarCtrl', function ($scope, $firebase, FIREBASE_URL, Data) {
 
   $scope.data = Data;
 
-  var sync = $firebase(new Firebase(FIREBASE_URL+'teams'));
+  var sync = $firebase(new Firebase(FIREBASE_URL + 'teams'));
   $scope.teams = sync.$asArray();
   var ref = new Firebase(FIREBASE_URL);
   $scope.isLoggedIn = ref.getAuth();
-  $scope.logout = function() {
+  $scope.logout = function () {
     new Firebase(FIREBASE_URL).unauth();
     location.reload(true);
   };
 
-  $scope.login = function() {
+  $scope.login = function () {
     location.assign('/account');
   }
 });
@@ -22,9 +22,9 @@ monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, D
 
   $scope.data = Data;
   var ref = new Firebase(FIREBASE_URL);
-  ref.child('users').child(ref.getAuth().uid).on('value', function(snap) {
+  ref.child('users').child(ref.getAuth().uid).on('value', function (snap) {
     var user = snap.val();
-    if(!(user.roles && (user.roles.judge || user.roles.admin))) {
+    if (!(user.roles && (user.roles.judge || user.roles.admin))) {
       location.assign('/#/error');
     }
   });
@@ -36,32 +36,32 @@ monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, D
 
   $scope.markers = [];
 
-  $scope.balanceSort = function(team) {
+  $scope.balanceSort = function (team) {
     return data.events.balance(team._id);
   };
 
-  uiGmapGoogleMapApi.then(function(maps) {
-      $scope.map = { center: { latitude: 52.06, longitude: 5.07 }, zoom: 9 };
-      var i = 0;
-      angular.forEach(Data.teams, function(team, id){
-        var location = Data.events.latestStreetId(id);
-        if(location) {
+  uiGmapGoogleMapApi.then(function (maps) {
+    $scope.map = { center: { latitude: 52.06, longitude: 5.07 }, zoom: 9 };
+    var i = 0;
+    angular.forEach(Data.teams, function (team, id) {
+      var location = Data.events.latestStreetId(id);
+      if (location) {
 
-            var marker = {
-                idKey: i,
-                coords: {
-                  latitude: Data.streets[location].location.lat,
-                  longitude: Data.streets[location].location.lon
-                },
-                options: {
-                  title: team.name,
-                  draggable: true
-                },
-            };
-            i++;
-            $scope.markers.push(marker);
-          }
-          });
+        var marker = {
+          idKey: i,
+          coords: {
+            latitude: Data.streets[location].location.lat,
+            longitude: Data.streets[location].location.lon
+          },
+          options: {
+            title: team.name,
+            draggable: true
+          },
+        };
+        i++;
+        $scope.markers.push(marker);
+      }
+    });
   });
 
   document.title = 'Overzicht | Levend Monopoly';
@@ -72,9 +72,9 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
   var ref = new Firebase(FIREBASE_URL);
   var auth = $firebaseAuth(ref);
 
-  ref.child('users').child(ref.getAuth().uid).on('value', function(snap) {
+  ref.child('users').child(ref.getAuth().uid).on('value', function (snap) {
     var user = snap.val();
-    if(!(user.roles && (user.roles.judge || user.roles.admin))) {
+    if (!(user.roles && (user.roles.judge || user.roles.admin))) {
       location.assign('/#/error');
     }
   });
@@ -85,49 +85,49 @@ monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParam
   $scope.teamId = $routeParams.teamId;
   $scope.data = Data;
 
-  $scope.submitAddStreet = function(data) {
+  $scope.submitAddStreet = function (data) {
     Data.teamVisitStreet($scope.teamId, data.streetId, Data.timestampOf(data));
   };
 
-  $scope.submitAddHotel = function(data) {
+  $scope.submitAddHotel = function (data) {
     Data.teamBuyHotel($scope.teamId, data.streetId, Data.timestampOf(data))
   };
 
-  $scope.submitAddTask = function(data) {
+  $scope.submitAddTask = function (data) {
     Data.teamCompleteTask($scope.teamId, data.taskId, data.taskValue, Data.timestampOf(data));
   };
 
-  $scope.incrementTask = function(taskId) {
+  $scope.incrementTask = function (taskId) {
     Data.teamCompleteTask($scope.teamId, taskId, null, Data.now);
   };
 
-  $scope.decrementTask = function(taskId) {
+  $scope.decrementTask = function (taskId) {
     Data.teamUncompleteTask($scope.teamId, taskId, Data.now);
   };
 
-  $scope.completeCard = function(cardId) {
+  $scope.completeCard = function (cardId) {
     Data.teamCompleteCard($scope.teamId, cardId, Data.now);
   };
 
-  $scope.uncompleteCard = function(cardId) {
+  $scope.uncompleteCard = function (cardId) {
     Data.teamUncompleteCard($scope.teamId, cardId, Data.now);
   };
 
-  $scope.submitStraight = function(data) {
+  $scope.submitStraight = function (data) {
     Data.teamStraightMoney($scope.teamId, data.amount, data.note, Data.now);
   };
 
-  $scope.submitChangeTaskRankValue = function(taskId, rankValue) {
+  $scope.submitChangeTaskRankValue = function (taskId, rankValue) {
     Data.teamTaskSetRankValue($scope.teamId, taskId, rankValue);
   };
 
-  setTimeout(function() {document.title = Data.teams[$scope.teamId].name + ' | Levend Monopoly';}, 2000);
+  setTimeout(function () { document.title = Data.teams[$scope.teamId].name + ' | Levend Monopoly'; }, 2000);
 });
 
-monopolyControllers.filter("streetInCity", function() {
-  return function(streets, cityId) {
+monopolyControllers.filter("streetInCity", function () {
+  return function (streets, cityId) {
     var streetsCanAdd = {}
-    angular.forEach(streets, function(street, id){
+    angular.forEach(streets, function (street, id) {
       if (street.city_id === cityId)
         streetsCanAdd[id] = street;
     });
@@ -135,10 +135,10 @@ monopolyControllers.filter("streetInCity", function() {
   };
 });
 
-monopolyControllers.filter("streetVisitedByTeam", function() {
-  return function(streets, teamId) {
+monopolyControllers.filter("streetVisitedByTeam", function () {
+  return function (streets, teamId) {
     var streetsCanAdd = {}
-    angular.forEach(streets, function(street, id){
+    angular.forEach(streets, function (street, id) {
       if (street.visited && street.visited[teamId])
         streetsCanAdd[id] = street;
     });
@@ -146,10 +146,10 @@ monopolyControllers.filter("streetVisitedByTeam", function() {
   };
 });
 
-monopolyControllers.filter("streetNotVisitedByTeam", function() {
-  return function(streets, teamId) {
+monopolyControllers.filter("streetNotVisitedByTeam", function () {
+  return function (streets, teamId) {
     var streetsCanAdd = {}
-    angular.forEach(streets, function(street, id){
+    angular.forEach(streets, function (street, id) {
       if (!(street.visited && street.visited[teamId]))
         streetsCanAdd[id] = street;
     });
@@ -157,10 +157,10 @@ monopolyControllers.filter("streetNotVisitedByTeam", function() {
   };
 });
 
-monopolyControllers.filter("streetNotHasHotel", function() {
-  return function(streets) {
+monopolyControllers.filter("streetNotHasHotel", function () {
+  return function (streets) {
     var streetsCanAdd = {}
-    angular.forEach(streets, function(street, id){
+    angular.forEach(streets, function (street, id) {
       if (!street.hotel_team_id)
         streetsCanAdd[id] = street;
     });
@@ -174,97 +174,97 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $fi
   $scope.pageName = 'Admin';
   $scope.pageDesc = 'Voer admin functies uit';
 
-  ref.child('users').child(ref.getAuth().uid).on('value', function(snap) {
+  ref.child('users').child(ref.getAuth().uid).on('value', function (snap) {
     var user = snap.val();
-    if(!user.roles || !user.roles.admin) {
+    if (!user.roles || !user.roles.admin) {
       location.assign('/#/error');
     }
   });
 
   $scope.data = Data;
 
-  var constsync = $firebase(new Firebase(FIREBASE_URL+'static/constants')).$asObject();
+  var constsync = $firebase(new Firebase(FIREBASE_URL + 'static/constants')).$asObject();
   constsync.$bindTo($scope, "consts");
 
-  $scope.submitAddUser = function(user) {
+  $scope.submitAddUser = function (user) {
     Data.addUser(user);
   };
 
-  $scope.submitRemoveUser = function(userId) {
+  $scope.submitRemoveUser = function (userId) {
     Data.removeUser(userId);
   };
 
-  $scope.submitAddTeam = function(team, teamMembers) {
+  $scope.submitAddTeam = function (team, teamMembers) {
     Data.addTeam(team, teamMembers);
   };
 
-  $scope.submitRemoveTeam = function(teamId) {
+  $scope.submitRemoveTeam = function (teamId) {
     Data.removeTeam(teamId);
   };
 
-  $scope.submitAddMember = function(userId, teamId) {
+  $scope.submitAddMember = function (userId, teamId) {
     Data.teamAddMember(teamId, userId)
   }
 
-  $scope.submitRemoveMember = function(userId, teamId) {
+  $scope.submitRemoveMember = function (userId, teamId) {
     Data.teamRemoveMember(userId);
   };
 
-  $scope.submitAddCity = function(city) {
+  $scope.submitAddCity = function (city) {
     Data.addCity(city);
   };
 
-  $scope.submitRemoveCity = function(cityId) {
+  $scope.submitRemoveCity = function (cityId) {
     Data.removeCity(cityId);
   };
 
-  $scope.submitAddStreet = function(street) {
+  $scope.submitAddStreet = function (street) {
     Data.addStreet(street);
   }
 
-  $scope.submitRemoveStreet = function(streetId) {
+  $scope.submitRemoveStreet = function (streetId) {
     Data.removeStreet(streetId);
   }
 
-  $scope.submitAddTask = function(task) {
+  $scope.submitAddTask = function (task) {
     task.rewards = task.rewards.split(' ').map(Number);
     Data.addTask(task);
   }
 
-  $scope.submitRemoveTask = function(taskId) {
+  $scope.submitRemoveTask = function (taskId) {
     Data.removeTask(taskId);
   }
 
-  $scope.submitAddCard = function(card) {
+  $scope.submitAddCard = function (card) {
     Data.addCard(card);
   }
 
-  $scope.submitRemoveCard = function(cardId) {
+  $scope.submitRemoveCard = function (cardId) {
     Data.removeCard(cardId);
   }
 
-  $scope.submitAddSociety = function(society) {
+  $scope.submitAddSociety = function (society) {
     Data.addSociety(society);
   }
 
-  $scope.submitRemoveSociety = function(society) {
+  $scope.submitRemoveSociety = function (society) {
     Data.removeSociety(society);
   }
 
-  $scope.submitRemoveHotel = function(streetId) {
+  $scope.submitRemoveHotel = function (streetId) {
     var teamId = Data.streets[streetId].hotel_team_id;
     Data.teamUnbuyHotel(teamId, streetId, Data.now);
   }
 
-  $scope.submitUnvisitStreet = function(streetId, teamId) {
+  $scope.submitUnvisitStreet = function (streetId, teamId) {
     Data.teamUnvisitStreet(teamId, streetId, Data.now);
   }
 
-  $scope.submitRemoveCardFromTeam = function(teamId, cardId) {
+  $scope.submitRemoveCardFromTeam = function (teamId, cardId) {
     Data.teamUngetCard(teamId, cardId, Data.now);
   }
 
-  $scope.submitGiveRights = function(userId, isJudge, isAdmin) {
+  $scope.submitGiveRights = function (userId, isJudge, isAdmin) {
     Data.setUserRights(userId, isJudge, isAdmin);
   }
 
@@ -277,8 +277,8 @@ monopolyControllers.controller('AccountCtrl', function AdminCtrl($scope, Data, $
   var auth = $firebaseAuth(ref);
   $scope.data = Data;
 
-  $scope.login = function(user, callback) {
-    ref.authWithPassword(user, function(error, authData) {
+  $scope.login = function (user, callback) {
+    ref.authWithPassword(user, function (error, authData) {
       if (error) {
         alert('Login failed: ' + error);
         console.log("Login Failed!", error);
@@ -290,22 +290,22 @@ monopolyControllers.controller('AccountCtrl', function AdminCtrl($scope, Data, $
     });
   }
 
-  $scope.createAccount = function(user) {
-    if(user.password === user.password2) {
+  $scope.createAccount = function (user) {
+    if (user.password === user.password2) {
       ref.createUser({
         email: user.mail,
         password: user.password
-      }, function(error, userData) {
+      }, function (error, userData) {
         if (error) {
           console.log("Error creating user:", error);
         } else {
           console.log("Successfully created user account with uid:", userData.uid);
           alert('Je account is geregistreerd');
-          $scope.login({email: user.mail, password: user.password}, function () {
+          $scope.login({ email: user.mail, password: user.password }, function () {
             delete user.password;
             delete user.password2;
             console.log(user);
-            new Firebase(FIREBASE_URL+'users').child(userData.uid).set(user);
+            new Firebase(FIREBASE_URL + 'users').child(userData.uid).set(user);
           });
         }
       });

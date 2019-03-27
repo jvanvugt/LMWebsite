@@ -2,12 +2,14 @@
 <form>
   <div class='form-group'>
     <label for='add-street-name'>Straatnaam:</label>
-    <input type='text' class='form-control' id='add-street-name' placeholder='Voer straatnaam in' ng-model='streetForAdd.name'>
+    <input type='text' class='form-control' id='add-street-name' placeholder='Voer straatnaam in'
+      ng-model='streetForAdd.name'>
     <label for='add_street_city'>Stad:</label>
     <select class='form-control' id='add_street_city' ng-model='streetForAdd.city_id'>
       <option value="" disabled selected>Selecteer een stad</option>
       <option ng-repeat='(id, city) in data.cities' value='{{id}}'>{{city.name}}</option>
     </select>
   </div>
-  <button ng-disabled="!(streetForAdd.name && streetForAdd.city_id)" type='submit' class='btn btn-info' ng-click='submitAddStreet(streetForAdd); streetForAdd=""'>Toevoegen</button>
+  <button ng-disabled="!(streetForAdd.name && streetForAdd.city_id)" type='submit' class='btn btn-info'
+    ng-click='submitAddStreet(streetForAdd); streetForAdd=""'>Toevoegen</button>
 </form>

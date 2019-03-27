@@ -1,11 +1,12 @@
 <h3>Stad verwijderen</h3>
 <form>
   <div class='form-group'>
-  <label for='cityDelete'>Stad:</label>
-  <select class='form-control' id='cityDelete' ng-model='cityForDelete'>
-    <option value="" disabled selected>Selecteer een stad</option>
-    <option ng-repeat='(id, city) in data.cities' value='{{id}}'>{{city.name}}</option>
-  </select>
+    <label for='cityDelete'>Stad:</label>
+    <select class='form-control' id='cityDelete' ng-model='cityForDelete'>
+      <option value="" disabled selected>Selecteer een stad</option>
+      <option ng-repeat='(id, city) in data.cities' value='{{id}}'>{{city.name}}</option>
+    </select>
   </div>
-  <button ng-disabled='!cityForDelete' type='submit' class='btn btn-info' ng-click='submitRemoveCity(cityForDelete); cityForDelete=""'>Verwijderen</button>
+  <button ng-disabled='!cityForDelete' type='submit' class='btn btn-info'
+    ng-click='submitRemoveCity(cityForDelete); cityForDelete=""'>Verwijderen</button>
 </form>
