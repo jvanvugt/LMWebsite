@@ -5,7 +5,7 @@ var monopoly = angular.module("monopoly", ["monopolyProviders", "monopolyControl
 // let's create a re-usable factory that generates the $firebaseAuth instance
 monopoly.factory("Auth", ["$firebaseAuth", "FIREBASE_URL",
   function ($firebaseAuth, FIREBASE_URL) {
-    var ref = new Firebase(FIREBASE_URL);
+    var ref = firebase.database().ref;
     return $firebaseAuth(ref);
   }
 ]);

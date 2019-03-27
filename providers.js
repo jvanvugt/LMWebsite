@@ -13,7 +13,7 @@ monopolyProviders.factory('WithFilterableId', function ($FirebaseArray, $firebas
 monopolyProviders.constant('FIREBASE_URL', 'https://cognac-monopoly.firebaseio.com/');
 
 monopolyProviders.service('DataRoot', function ($firebase, FIREBASE_URL) {
-  return new Firebase(FIREBASE_URL);
+  return firebase.database().ref();
 });
 
 monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsFactory, $interval) {

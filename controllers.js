@@ -4,12 +4,12 @@ monopolyControllers.controller('NavBarCtrl', function ($scope, $firebase, FIREBA
 
   $scope.data = Data;
 
-  var sync = $firebase(new Firebase(FIREBASE_URL + 'teams'));
+  var sync = $firebase(firebase.database().ref.child('teams'));
   $scope.teams = sync.$asArray();
-  var ref = new Firebase(FIREBASE_URL);
+  var ref = firebase.database().ref;
   $scope.isLoggedIn = ref.getAuth();
   $scope.logout = function () {
-    new Firebase(FIREBASE_URL).unauth();
+    firebase.database().ref.unauth();
     location.reload(true);
   };
 
@@ -21,7 +21,7 @@ monopolyControllers.controller('NavBarCtrl', function ($scope, $firebase, FIREBA
 monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, Data, $firebase, FIREBASE_URL, $firebaseAuth, uiGmapGoogleMapApi) {
 
   $scope.data = Data;
-  var ref = new Firebase(FIREBASE_URL);
+  var ref = firebase.database().ref;
   ref.child('users').child(ref.getAuth().uid).on('value', function (snap) {
     var user = snap.val();
     if (!(user.roles && (user.roles.judge || user.roles.admin))) {
@@ -69,7 +69,7 @@ monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, D
 });
 
 monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParams, Data, $firebaseAuth, FIREBASE_URL) {
-  var ref = new Firebase(FIREBASE_URL);
+  var ref = firebase.database().ref;
   var auth = $firebaseAuth(ref);
 
   ref.child('users').child(ref.getAuth().uid).on('value', function (snap) {
@@ -169,7 +169,7 @@ monopolyControllers.filter("streetNotHasHotel", function () {
 });
 
 monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $firebase, FIREBASE_URL, $firebaseAuth) {
-  var ref = new Firebase(FIREBASE_URL);
+  var ref = firebase.database().ref;
   var auth = $firebaseAuth(ref);
   $scope.pageName = 'Admin';
   $scope.pageDesc = 'Voer admin functies uit';
@@ -183,7 +183,7 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $fi
 
   $scope.data = Data;
 
-  var constsync = $firebase(new Firebase(FIREBASE_URL + 'static/constants')).$asObject();
+  var constsync = $firebase(firebase.database().ref.child('static/constants')).$asObject();
   constsync.$bindTo($scope, "consts");
 
   $scope.submitAddUser = function (user) {
@@ -273,7 +273,7 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $fi
 });
 
 monopolyControllers.controller('AccountCtrl', function AdminCtrl($scope, Data, $firebase, FIREBASE_URL, $firebaseAuth) {
-  var ref = new Firebase(FIREBASE_URL);
+  var ref = firebase.database().ref;
   var auth = $firebaseAuth(ref);
   $scope.data = Data;
 
@@ -305,7 +305,7 @@ monopolyControllers.controller('AccountCtrl', function AdminCtrl($scope, Data, $
             delete user.password;
             delete user.password2;
             console.log(user);
-            new Firebase(FIREBASE_URL + 'users').child(userData.uid).set(user);
+            firebase.database().ref.child('users').child(userData.uid).set(user);
           });
         }
       });
