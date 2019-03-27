@@ -57,7 +57,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsF
     var data = this;
     teamIdRef.on('value', function (snapshot) {
       angular.forEach(teamMembers, function (userId) {
-        data.teamAddMember(snapshot.key(), userId);
+        data.teamAddMember(snapshot.key, userId);
       });
     });
   };
