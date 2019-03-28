@@ -12,22 +12,18 @@ monopolyProviders.factory('WithFilterableId', function ($FirebaseArray, $firebas
 
 monopolyProviders.constant('FIREBASE_URL', 'https://cognac-monopoly.firebaseio.com/');
 
-monopolyProviders.service('DataRoot', function () {
-  return firebase.database().ref();
-});
-
-monopolyProviders.service('Data', function (DataRoot, Chance, $firebaseObject, EventsFactory, $interval) {
-  this.teams = $firebaseObject(DataRoot.child('teams'));
-  this.users = $firebaseObject(DataRoot.child('users'));
-  this.cities = $firebaseObject(DataRoot.child('cities'));
-  this.streets = $firebaseObject(DataRoot.child('streets'));
-  this.tasks = $firebaseObject(DataRoot.child('tasks'));
-  this.cards = $firebaseObject(DataRoot.child('cards'));
+monopolyProviders.service('Data', function (Chance, $firebaseObject, EventsFactory, $interval) {
+  this.teams = $firebaseObject(firebase.database().ref('teams'));
+  this.users = $firebaseObject(firebase.database().ref('users'));
+  this.cities = $firebaseObject(firebase.database().ref('cities'));
+  this.streets = $firebaseObject(firebase.database().ref('streets'));
+  this.tasks = $firebaseObject(firebase.database().ref('tasks'));
+  this.cards = $firebaseObject(firebase.database().ref('cards'));
   this.events = EventsFactory(this);
-  this.eventsobj = $firebaseObject(DataRoot.child('events'));
-  this.constants = $firebaseObject(DataRoot.child('static').child('constants'));
-  this.societies = $firebaseObject(DataRoot.child('static').child('societies'));
-  this.game_over = $firebaseObject(DataRoot.child('static').child('game_over'));
+  this.eventsobj = $firebaseObject(firebase.database().ref('events'));
+  this.constants = $firebaseObject(firebase.database().ref('static/constants'));
+  this.societies = $firebaseObject(firebase.database().ref('static/societies'));
+  this.game_over = $firebaseObject(firebase.database().ref('static/game_over'));
 
   var chance = Chance(this);
 
@@ -38,22 +34,22 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebaseObject, E
   }
 
   this.addUser = function (user) {
-    DataRoot.child('users').push(user);
+    firebase.database().ref('users').push(user);
   };
 
   this.removeUser = function (userId) {
-    DataRoot.child('users').child(userId).remove();
+    firebase.database().ref('users/'+userId).remove();
   };
 
   this.setUserRights = function (userId, isJudge, isAdmin) {
-    var roles = DataRoot.child('users').child(userId).child('roles');
+    var roles = firebase.database().ref('users').child(userId).child('roles');
     roles.child('judge').set(isJudge);
     roles.child('admin').set(isAdmin);
   };
 
   this.addTeam = function (team, teamMembers) {
     team.active = true;
-    var teamIdRef = DataRoot.child('teams').push(team);
+    var teamIdRef = firebase.database().ref('teams').push(team);
     var data = this;
     teamIdRef.on('value', function (snapshot) {
       angular.forEach(teamMembers, function (userId) {
@@ -63,7 +59,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebaseObject, E
   };
 
   this.removeTeam = function (teamId) {
-    DataRoot.child('teams').child(teamId).remove();
+    firebase.database().ref('teams').child(teamId).remove();
     var that = this;
     angular.forEach(data.users, function (user, id) {
       if (user.team === teamId)
@@ -72,19 +68,19 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebaseObject, E
   };
 
   this.teamAddMember = function (teamId, userId) {
-    DataRoot.child('users').child(userId).child('team').set(teamId);
+    firebase.database().ref('users').child(userId).child('team').set(teamId);
   };
 
   this.teamRemoveMember = function (userId) {
-    DataRoot.child('users').child(userId).child('team').remove();
+    firebase.database().ref('users').child(userId).child('team').remove();
   };
 
   this.addCity = function (city) {
-    DataRoot.child('cities').push(city);
+    firebase.database().ref('cities').push(city);
   };
 
   this.removeCity = function (cityId) {
-    DataRoot.child('cities').child(cityId).remove();
+    firebase.database().ref('cities').child(cityId).remove();
     angular.forEach(data.streets, function (street, id) {
       if (street.city_id === cityId)
         this.removeStreet(id);
@@ -92,39 +88,39 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebaseObject, E
   };
 
   this.addStreet = function (street) {
-    DataRoot.child('streets').push(street);
+    firebase.database().ref('streets').push(street);
   };
 
   this.removeStreet = function (streetId) {
-    DataRoot.child('streets').child(streetId).remove();
+    firebase.database().ref('streets').child(streetId).remove();
   };
 
   this.addTask = function (task) {
-    DataRoot.child('tasks').push(task);
+    firebase.database().ref('tasks').push(task);
   };
 
   this.removeTask = function (taskId) {
-    DataRoot.child('tasks').child(taskId).remove();
+    firebase.database().ref('tasks').child(taskId).remove();
   };
 
   this.addCard = function (card) {
-    DataRoot.child('cards').push(card);
+    firebase.database().ref('cards').push(card);
   };
 
   this.removeCard = function (cardId) {
-    DataRoot.child('cards').child(cardId).remove();
+    firebase.database().ref('cards').child(cardId).remove();
   };
 
   this.addSociety = function (society) {
-    DataRoot.child('static/societies').push(society);
+    firebase.database().ref('static/societies').push(society);
   };
 
   this.removeSociety = function (societyId) {
-    DataRoot.child('static/societies').child(societyId).remove();
+    firebase.database().ref('static/societies').child(societyId).remove();
   };
 
   this.teamVisitStreet = function (teamId, streetId, timestamp) {
-    DataRoot.child('streets').child(streetId).child('visited').child(teamId).set(timestamp);
+    firebase.database().ref('streets').child(streetId).child('visited').child(teamId).set(timestamp);
     this.addEvent(teamId, 'visit_street', { street: streetId }, timestamp);
     if (this.streets[streetId].hotel_team_id && this.streets[streetId].hotel_team_id !== teamId)
       alert("Op deze straat is een hotel van een ander team!")
@@ -138,28 +134,28 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebaseObject, E
   this.teamUnvisitStreet = function (teamId, streetId, timestamp) {
     if (this.streets[streetId].hotel_team_id && this.streets[streetId].hotel_team_id === teamId)
       this.teamUnbuyHotel(teamId, streetId, timestamp);
-    DataRoot.child('streets').child(streetId).child('visited').child(teamId).remove();
+    firebase.database().ref('streets').child(streetId).child('visited').child(teamId).remove();
     this.addEvent(teamId, 'visit_street', { street: streetId }, timestamp, true);
   };
 
   this.teamGetCard = function (teamId, timestamp) {
     var card = chance.objectProperty(this.teamAvailableCards(teamId));
-    DataRoot.child('cards').child(card.id).child('received').child(teamId).set(timestamp);
+    firebase.database().ref('cards').child(card.id).child('received').child(teamId).set(timestamp);
     this.addEvent(teamId, 'receive_card', { card: card.id }, timestamp);
   };
 
   this.teamUngetCard = function (teamId, cardId, timestamp) {
-    DataRoot.child('cards').child(cardId).child('received').child(teamId).remove();
+    firebase.database().ref('cards').child(cardId).child('received').child(teamId).remove();
     this.addEvent(teamId, 'receive_card', { card: cardId }, timestamp, true);
   };
 
   this.teamCompleteCard = function (teamId, cardId, timestamp) {
-    DataRoot.child('cards').child(cardId).child('completed').child(teamId).set(timestamp);
+    firebase.database().ref('cards').child(cardId).child('completed').child(teamId).set(timestamp);
     this.addEvent(teamId, 'complete_card', { card: cardId }, timestamp);
   };
 
   this.teamUncompleteCard = function (teamId, cardId, timestamp) {
-    DataRoot.child('cards').child(cardId).child('completed').child(teamId).remove();
+    firebase.database().ref('cards').child(cardId).child('completed').child(teamId).remove();
     this.addEvent(teamId, 'complete_card', { card: cardId }, timestamp, true);
   };
 
@@ -172,7 +168,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebaseObject, E
       alert("Dit team bezit al het maximum aantal hotels!");
       return;
     };
-    var streetref = DataRoot.child('streets').child(streetId)
+    var streetref = firebase.database().ref('streets').child(streetId)
     streetref.child('hotel_team_id').set(teamId);
     streetref.child('hotel_timestamp').set(timestamp);
     this.addEvent(teamId, 'buy_hotel', { street: streetId }, timestamp);
@@ -180,7 +176,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebaseObject, E
 
   this.teamUnbuyHotel = function (teamId, streetId, timestamp) {
     if (!(this.streets[streetId].hotel_team_id && this.streets[streetId].hotel_team_id === teamId)) return;
-    var streetref = DataRoot.child('streets').child(streetId)
+    var streetref = firebase.database().ref('streets').child(streetId)
     streetref.child('hotel_team_id').remove();
     streetref.child('hotel_timestamp').remove();
     this.addEvent(teamId, 'buy_hotel', { street: streetId }, timestamp, true);
@@ -188,7 +184,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebaseObject, E
   };
   this.teamCompleteTask = function (teamId, taskId, taskValue, timestamp) {
     if (this.tasks[taskId] && this.tasks[taskId].repeated && this.tasks[taskId].repeated[teamId] >= this.tasks[taskId].repeatable) return;
-    var taskref = DataRoot.child('tasks').child(taskId);
+    var taskref = firebase.database().ref('tasks').child(taskId);
     var taskrepeatedteamref = taskref.child('repeated').child(teamId);
     var taskrankedteamref = taskref.child('ranked').child(teamId);
     if (this.tasks[taskId].repeated && this.tasks[taskId].repeated[teamId]) {
@@ -205,7 +201,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebaseObject, E
 
   this.teamUncompleteTask = function (teamId, taskId, timestamp) {
     if (this.tasks[taskId] && this.tasks[taskId].repeated && this.tasks[taskId].repeated[teamId] <= 0) return;
-    var taskref = DataRoot.child('tasks').child(taskId);
+    var taskref = firebase.database().ref('tasks').child(taskId);
     var taskrepeatedteamref = taskref.child('repeated').child(teamId);
     var taskrankedteamref = taskref.child('ranked').child(teamId);
     taskrepeatedteamref.transaction(function (current) {
@@ -216,7 +212,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebaseObject, E
 
   this.teamTaskSetRankValue = function (teamId, taskId, rankValue) {
     // TODO: check validty (task is rankable etc)
-    DataRoot.child('tasks').child(taskId).child('ranked').child(teamId).set(rankValue);
+    firebase.database().ref('tasks').child(taskId).child('ranked').child(teamId).set(rankValue);
   };
 
   this.teamStraightMoney = function (teamId, amount, note, timestamp) {
@@ -233,11 +229,11 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebaseObject, E
     evnt['data'] = data;
     evnt['active'] = true;
     console.log("Event added: ", evnt)
-    DataRoot.child('events').push(evnt);
+    firebase.database().ref('events').push(evnt);
   };
 
   this.toggleEvent = function (eventId) {
-    var eventref = DataRoot.child('events').child(eventId);
+    var eventref = firebase.database().ref('events').child(eventId);
     eventref.child('active').transaction(function (current) {
       return !current;
     });
@@ -312,7 +308,7 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebaseObject, E
   }.bind(this), 1000);
 
   this.clearDatabaseGameplay = function () {
-    var uid = DataRoot.getAuth().uid;
+    var uid = firebase.auth().currentUser.uid;
     if (!this.users[uid].roles.admin) {
       alert("Je hebt niet voldoende rechten om deze actie uit te voeren.")
       return;
@@ -322,28 +318,28 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebaseObject, E
     if (!confirm("Weet je echt echt echt zeker dat je dit wilt doen? Dit is je laatste kans!")) return;
 
     angular.forEach(this.streets, function (street, id) {
-      DataRoot.child('streets').child(id).child('visited').remove()
-      DataRoot.child('streets').child(id).child('hotel_team_id').remove()
-      DataRoot.child('streets').child(id).child('hotel_timestamp').remove()
+      firebase.database().ref('streets').child(id).child('visited').remove()
+      firebase.database().ref('streets').child(id).child('hotel_team_id').remove()
+      firebase.database().ref('streets').child(id).child('hotel_timestamp').remove()
     });
 
     angular.forEach(this.tasks, function (task, id) {
-      DataRoot.child('tasks').child(id).child('repeated').remove()
-      DataRoot.child('tasks').child(id).child('ranked').remove()
+      firebase.database().ref('tasks').child(id).child('repeated').remove()
+      firebase.database().ref('tasks').child(id).child('ranked').remove()
     });
 
     angular.forEach(this.cards, function (card, id) {
-      DataRoot.child('cards').child(id).child('received').remove()
-      DataRoot.child('cards').child(id).child('completed').remove()
+      firebase.database().ref('cards').child(id).child('received').remove()
+      firebase.database().ref('cards').child(id).child('completed').remove()
     });
 
-    DataRoot.child('events').remove();
+    firebase.database().ref('events').remove();
 
   };
 
 
   this.clearDatabasePersonal = function () {
-    var uid = DataRoot.getAuth().uid;
+    var uid = firebase.auth().currentUser.uid;
     if (!this.users[uid].roles.admin) {
       alert("Je hebt niet voldoende rechten om deze actie uit te voeren.")
       return;
@@ -353,8 +349,8 @@ monopolyProviders.service('Data', function (DataRoot, Chance, $firebaseObject, E
     if (!confirm("Weet je echt echt echt zeker dat je dit wilt doen? Dit is je laatste kans!")) return;
 
     angular.forEach(this.users, function (user, id) {
-      DataRoot.child('users').child(id).child('mail').remove()
-      DataRoot.child('users').child(id).child('phone').remove()
+      firebase.database().ref('users').child(id).child('mail').remove()
+      firebase.database().ref('users').child(id).child('phone').remove()
     });
 
   };
@@ -378,7 +374,7 @@ monopolyProviders.factory('Chance', function () {
   };
 });
 
-monopolyProviders.service("EventsFactory", function ($FirebaseArray, $firebaseArray, DataRoot, $filter) {
+monopolyProviders.service("EventsFactory", function ($FirebaseArray, $firebaseArray, $filter) {
 
   var eventValue = function (event) {
     var value = 0;
@@ -498,7 +494,7 @@ monopolyProviders.service("EventsFactory", function ($FirebaseArray, $firebaseAr
 
   return function (data) {
     this.data = data;
-    return $firebaseArray(DataRoot.child('events'), { arrayFactory: EventsFactory });
+    return new EventsFactory(firebase.database().ref('events'));
   }
 });
 

@@ -18,18 +18,15 @@ monopolyControllers.controller('NavBarCtrl', function ($scope, $firebaseArray, D
   }
 });
 
-monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, Data, $firebaseAuth, uiGmapGoogleMapApi) {
+monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, Data, uiGmapGoogleMapApi) {
 
   $scope.data = Data;
-  var ref = firebase.database().ref;
-  ref('users/'+firebase.auth().currentUser.uid).on('value', function (snap) {
+  firebase.database().ref('users/'+firebase.auth().currentUser.uid).on('value', function (snap) {
     var user = snap.val();
     if (!(user.roles && (user.roles.judge || user.roles.admin))) {
       location.assign('/#/error');
     }
   });
-
-  var auth = $firebaseAuth();
 
   $scope.pageName = 'Spel overzicht';
   $scope.pageDesc = 'Overzicht van alle teams';
@@ -68,11 +65,8 @@ monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, D
 
 });
 
-monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParams, Data, $firebaseAuth) {
-  var ref = firebase.database().ref;
-  var auth = $firebaseAuth();
-
-  ref('users/'+firebase.auth().currentUser.uid).on('value', function (snap) {
+monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParams, Data) {
+  firebase.database().ref('users/'+firebase.auth().currentUser.uid).on('value', function (snap) {
     var user = snap.val();
     if (!(user.roles && (user.roles.judge || user.roles.admin))) {
       location.assign('/#/error');
@@ -168,13 +162,11 @@ monopolyControllers.filter("streetNotHasHotel", function () {
   };
 });
 
-monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $firebaseObject, $firebaseAuth) {
-  var ref = firebase.database().ref;
-  var auth = $firebaseAuth();
+monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $firebaseObject) {
   $scope.pageName = 'Admin';
   $scope.pageDesc = 'Voer admin functies uit';
 
-  ref('users/'+firebase.auth().currentUser.uid).on('value', function (snap) {
+  firebase.database().ref('users/'+firebase.auth().currentUser.uid).on('value', function (snap) {
     var user = snap.val();
     if (!user.roles || !user.roles.admin) {
       location.assign('/#/error');
@@ -272,9 +264,7 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $fi
 
 });
 
-monopolyControllers.controller('AccountCtrl', function AdminCtrl($scope, Data, $firebase, FIREBASE_URL, $firebaseAuth) {
-  var ref = firebase.database().ref;
-  var auth = $firebaseAuth();
+monopolyControllers.controller('AccountCtrl', function AdminCtrl($scope, Data) {
   $scope.data = Data;
 
   $scope.login = function (user, callback) {
