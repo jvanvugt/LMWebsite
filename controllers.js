@@ -9,7 +9,7 @@ monopolyControllers.controller('NavBarCtrl', function ($scope, $firebaseArray, D
     $scope.isLoggedIn = Boolean(user);
   });
   $scope.logout = function () {
-    firebase.auth().SignOut();
+    firebase.auth().signOut();
     location.reload(true);
   };
 
