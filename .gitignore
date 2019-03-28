@@ -1,3 +1,4 @@
 *.swp
 rules.json
 .firebase/
+firebase-debug.log
