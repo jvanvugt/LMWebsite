@@ -1,2 +1,3 @@
 *.swp
 rules.json
+.firebase/
