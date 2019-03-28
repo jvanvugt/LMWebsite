@@ -12,22 +12,22 @@ monopolyProviders.factory('WithFilterableId', function ($FirebaseArray, $firebas
 
 monopolyProviders.constant('FIREBASE_URL', 'https://cognac-monopoly.firebaseio.com/');
 
-monopolyProviders.service('DataRoot', function ($firebase, FIREBASE_URL) {
+monopolyProviders.service('DataRoot', function () {
   return firebase.database().ref();
 });
 
-monopolyProviders.service('Data', function (DataRoot, Chance, $firebase, EventsFactory, $interval) {
-  this.teams = $firebase(DataRoot.child('teams')).$asObject();
-  this.users = $firebase(DataRoot.child('users')).$asObject();
-  this.cities = $firebase(DataRoot.child('cities')).$asObject();
-  this.streets = $firebase(DataRoot.child('streets')).$asObject();
-  this.tasks = $firebase(DataRoot.child('tasks')).$asObject();
-  this.cards = $firebase(DataRoot.child('cards')).$asObject();
+monopolyProviders.service('Data', function (DataRoot, Chance, $firebaseObject, EventsFactory, $interval) {
+  this.teams = $firebaseObject(DataRoot.child('teams'));
+  this.users = $firebaseObject(DataRoot.child('users'));
+  this.cities = $firebaseObject(DataRoot.child('cities'));
+  this.streets = $firebaseObject(DataRoot.child('streets'));
+  this.tasks = $firebaseObject(DataRoot.child('tasks'));
+  this.cards = $firebaseObject(DataRoot.child('cards'));
   this.events = EventsFactory(this);
-  this.eventsobj = $firebase(DataRoot.child('events')).$asObject();
-  this.constants = $firebase(DataRoot.child('static').child('constants')).$asObject();
-  this.societies = $firebase(DataRoot.child('static').child('societies')).$asObject();
-  this.game_over = $firebase(DataRoot.child('static').child('game_over')).$asObject();
+  this.eventsobj = $firebaseObject(DataRoot.child('events'));
+  this.constants = $firebaseObject(DataRoot.child('static').child('constants'));
+  this.societies = $firebaseObject(DataRoot.child('static').child('societies'));
+  this.game_over = $firebaseObject(DataRoot.child('static').child('game_over'));
 
   var chance = Chance(this);
 
@@ -378,7 +378,7 @@ monopolyProviders.factory('Chance', function () {
   };
 });
 
-monopolyProviders.service("EventsFactory", function ($FirebaseArray, $firebase, DataRoot, $filter) {
+monopolyProviders.service("EventsFactory", function ($FirebaseArray, $firebaseArray, DataRoot, $filter) {
 
   var eventValue = function (event) {
     var value = 0;
@@ -437,7 +437,7 @@ monopolyProviders.service("EventsFactory", function ($FirebaseArray, $firebase, 
     return value;
   };
 
-  var EventsFactory = $FirebaseArray.$extendFactory({
+  var EventsFactory = $firebaseArray.$extend({
     balance: function (teamId) {
       var balance = 0;
       angular.forEach(this.$list, function (event) {
@@ -498,8 +498,7 @@ monopolyProviders.service("EventsFactory", function ($FirebaseArray, $firebase, 
 
   return function (data) {
     this.data = data;
-    var sync = $firebase(DataRoot.child('events'), { arrayFactory: EventsFactory });
-    return sync.$asArray();
+    return $firebaseArray(DataRoot.child('events'), { arrayFactory: EventsFactory });
   }
 });
 

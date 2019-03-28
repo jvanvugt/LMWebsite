@@ -1,0 +1,52 @@
+[debug] [2019-03-27T17:48:43.056Z] ----------------------------------------------------------------------
+[debug] [2019-03-27T17:48:43.062Z] Command:       /home/marein/.nvm/versions/node/v8.12.0/bin/node /home/marein/.nvm/versions/node/v8.12.0/bin/firebase serve
+[debug] [2019-03-27T17:48:43.063Z] CLI Version:   6.5.0
+[debug] [2019-03-27T17:48:43.063Z] Platform:      linux
+[debug] [2019-03-27T17:48:43.063Z] Node Version:  v8.12.0
+[debug] [2019-03-27T17:48:43.063Z] Time:          Wed Mar 27 2019 18:48:43 GMT+0100 (CET)
+[debug] [2019-03-27T17:48:43.064Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2019-03-27T17:48:43.142Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-03-27T17:48:43.142Z] > authorizing via signed-in user
+[debug] [2019-03-27T17:48:43.143Z] [iam] checking project cognac-monopoly for permissions ["firebase.projects.get"]
+[debug] [2019-03-27T17:48:43.147Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/cognac-monopoly:testIamPermissions  
+
+[debug] [2019-03-27T17:48:44.324Z] <<< HTTP RESPONSE 200
+[debug] [2019-03-27T17:48:44.328Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/cognac-monopoly  
+ 
+[debug] [2019-03-27T17:48:45.066Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/home/marein/projects/levend-monopoly'...
+[info] 
+[debug] [2019-03-27T17:48:45.069Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/693545866129/clients/_:getWebAppConfig  
+ 
+[debug] [2019-03-27T17:48:45.346Z] <<< HTTP RESPONSE 200
+[info] ✔  hosting: Local server: http://localhost:5000
+[debug] [2019-03-28T07:20:56.832Z] ----------------------------------------------------------------------
+[debug] [2019-03-28T07:20:56.838Z] Command:       /home/marein/.nvm/versions/node/v8.12.0/bin/node /home/marein/.nvm/versions/node/v8.12.0/bin/firebase serve
+[debug] [2019-03-28T07:20:56.838Z] CLI Version:   6.5.0
+[debug] [2019-03-28T07:20:56.838Z] Platform:      linux
+[debug] [2019-03-28T07:20:56.838Z] Node Version:  v8.12.0
+[debug] [2019-03-28T07:20:56.838Z] Time:          Thu Mar 28 2019 08:20:56 GMT+0100 (CET)
+[debug] [2019-03-28T07:20:56.838Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2019-03-28T07:20:56.913Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-03-28T07:20:56.913Z] > authorizing via signed-in user
+[debug] [2019-03-28T07:20:56.913Z] [iam] checking project cognac-monopoly for permissions ["firebase.projects.get"]
+[debug] [2019-03-28T07:20:56.915Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2019-03-28T07:20:56.916Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2019-03-28T07:20:58.078Z] <<< HTTP RESPONSE 200
+[debug] [2019-03-28T07:20:58.141Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/cognac-monopoly:testIamPermissions  
+
+[debug] [2019-03-28T07:20:59.566Z] <<< HTTP RESPONSE 200
+[debug] [2019-03-28T07:20:59.569Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/cognac-monopoly  
+ 
+[debug] [2019-03-28T07:21:01.072Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/home/marein/projects/levend-monopoly'...
+[info] 
+[debug] [2019-03-28T07:21:01.075Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/693545866129/clients/_:getWebAppConfig  
+ 
+[debug] [2019-03-28T07:21:02.663Z] <<< HTTP RESPONSE 200
+[info] ✔  hosting: Local server: http://localhost:5000

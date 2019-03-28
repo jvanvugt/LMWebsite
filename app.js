@@ -4,15 +4,15 @@ var monopoly = angular.module("monopoly", ["monopolyProviders", "monopolyControl
 
 // let's create a re-usable factory that generates the $firebaseAuth instance
 monopoly.factory("Auth", ["$firebaseAuth", "FIREBASE_URL",
-  function ($firebaseAuth, FIREBASE_URL) {
+  function ($firebaseAuth) {
     var ref = firebase.database().ref;
-    return $firebaseAuth(ref);
+    return $firebaseAuth();
   }
 ]);
 
-monopoly.run(["$rootScope", "$location", "FIREBASE_URL", function ($rootScope, $location, FIREBASE_URL) {
+monopoly.run(["$rootScope", "$location", "FIREBASE_URL", function ($rootScope, $location) {
   $rootScope.$on("$routeChangeError", function (event, next, previous, error) {
-    // We can catch the error thrown when the $requireAuth promise is rejected
+    // We can catch the error thrown when the $requireSignIn promise is rejected
     // and redirect the user back to the home page
     if (error === "AUTH_REQUIRED") {
       $location.path('/account');
@@ -38,11 +38,11 @@ monopoly.config(function ($locationProvider, $routeProvider) {
       templateUrl: 'partials/team.html',
       controller: 'TeamCtrl',
       resolve: {
-        // controller will not be loaded until $waitForAuth resolves
+        // controller will not be loaded until $waitForSignIn resolves
         // Auth refers to our $firebaseAuth wrapper in the example above
         "currentAuth": ["Auth", function (Auth) {
-          // $waitForAuth returns a promise so the resolve waits for it to complete
-          return Auth.$requireAuth();
+          // $waitForSignIn returns a promise so the resolve waits for it to complete
+          return Auth.$requireSignIn();
         }]
       }
     }).
@@ -50,11 +50,11 @@ monopoly.config(function ($locationProvider, $routeProvider) {
       templateUrl: 'partials/overzicht.html',
       controller: 'OverzichtCtrl',
       resolve: {
-        // controller will not be loaded until $waitForAuth resolves
+        // controller will not be loaded until $waitForSignIn resolves
         // Auth refers to our $firebaseAuth wrapper in the example above
         "currentAuth": ["Auth", function (Auth) {
-          // $waitForAuth returns a promise so the resolve waits for it to complete
-          return Auth.$requireAuth();
+          // $waitForSignIn returns a promise so the resolve waits for it to complete
+          return Auth.$requireSignIn();
         }]
       }
     }).
@@ -62,11 +62,11 @@ monopoly.config(function ($locationProvider, $routeProvider) {
       templateUrl: 'partials/admin.html',
       controller: 'AdminCtrl',
       resolve: {
-        // controller will not be loaded until $waitForAuth resolves
+        // controller will not be loaded until $waitForSignIn resolves
         // Auth refers to our $firebaseAuth wrapper in the example above
         "currentAuth": ["Auth", function (Auth) {
-          // $waitForAuth returns a promise so the resolve waits for it to complete
-          return Auth.$requireAuth();
+          // $waitForSignIn returns a promise so the resolve waits for it to complete
+          return Auth.$requireSignIn();
         }]
       }
     }).
@@ -74,11 +74,11 @@ monopoly.config(function ($locationProvider, $routeProvider) {
       templateUrl: 'partials/account.html',
       controller: 'AccountCtrl',
       resolve: {
-        // controller will not be loaded until $waitForAuth resolves
+        // controller will not be loaded until $waitForSignIn resolves
         // Auth refers to our $firebaseAuth wrapper in the example above
         "currentAuth": ["Auth", function (Auth) {
-          // $waitForAuth returns a promise so the resolve waits for it to complete
-          return Auth.$waitForAuth();
+          // $waitForSignIn returns a promise so the resolve waits for it to complete
+          return Auth.$waitForSignIn();
         }]
       }
     }).

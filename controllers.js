@@ -1,15 +1,15 @@
 var monopolyControllers = angular.module('monopolyControllers', []);
 
-monopolyControllers.controller('NavBarCtrl', function ($scope, $firebase, FIREBASE_URL, Data) {
+monopolyControllers.controller('NavBarCtrl', function ($scope, $firebaseArray, Data) {
 
   $scope.data = Data;
 
-  var sync = $firebase(firebase.database().ref.child('teams'));
-  $scope.teams = sync.$asArray();
-  var ref = firebase.database().ref;
-  $scope.isLoggedIn = ref.getAuth();
+  $scope.teams = $firebaseArray(firebase.database().ref('teams'));
+  firebase.auth().onAuthStateChanged(function(user) {
+    $scope.isLoggedIn = Boolean(user);
+  });
   $scope.logout = function () {
-    firebase.database().ref.unauth();
+    firebase.auth().SignOut();
     location.reload(true);
   };
 
@@ -18,18 +18,18 @@ monopolyControllers.controller('NavBarCtrl', function ($scope, $firebase, FIREBA
   }
 });
 
-monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, Data, $firebase, FIREBASE_URL, $firebaseAuth, uiGmapGoogleMapApi) {
+monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, Data, $firebaseAuth, uiGmapGoogleMapApi) {
 
   $scope.data = Data;
   var ref = firebase.database().ref;
-  ref.child('users').child(ref.getAuth().uid).on('value', function (snap) {
+  ref('users/'+firebase.auth().currentUser.uid).on('value', function (snap) {
     var user = snap.val();
     if (!(user.roles && (user.roles.judge || user.roles.admin))) {
       location.assign('/#/error');
     }
   });
 
-  var auth = $firebaseAuth(ref);
+  var auth = $firebaseAuth();
 
   $scope.pageName = 'Spel overzicht';
   $scope.pageDesc = 'Overzicht van alle teams';
@@ -68,11 +68,11 @@ monopolyControllers.controller('OverzichtCtrl', function OverzichtCtrl($scope, D
 
 });
 
-monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParams, Data, $firebaseAuth, FIREBASE_URL) {
+monopolyControllers.controller('TeamCtrl', function TeamCtrl($scope, $routeParams, Data, $firebaseAuth) {
   var ref = firebase.database().ref;
-  var auth = $firebaseAuth(ref);
+  var auth = $firebaseAuth();
 
-  ref.child('users').child(ref.getAuth().uid).on('value', function (snap) {
+  ref('users/'+firebase.auth().currentUser.uid).on('value', function (snap) {
     var user = snap.val();
     if (!(user.roles && (user.roles.judge || user.roles.admin))) {
       location.assign('/#/error');
@@ -168,13 +168,13 @@ monopolyControllers.filter("streetNotHasHotel", function () {
   };
 });
 
-monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $firebase, FIREBASE_URL, $firebaseAuth) {
+monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $firebaseObject, $firebaseAuth) {
   var ref = firebase.database().ref;
-  var auth = $firebaseAuth(ref);
+  var auth = $firebaseAuth();
   $scope.pageName = 'Admin';
   $scope.pageDesc = 'Voer admin functies uit';
 
-  ref.child('users').child(ref.getAuth().uid).on('value', function (snap) {
+  ref('users/'+firebase.auth().currentUser.uid).on('value', function (snap) {
     var user = snap.val();
     if (!user.roles || !user.roles.admin) {
       location.assign('/#/error');
@@ -183,7 +183,7 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $fi
 
   $scope.data = Data;
 
-  var constsync = $firebase(firebase.database().ref.child('static/constants')).$asObject();
+  var constsync = $firebaseObject(firebase.database().ref('static/constants'));
   constsync.$bindTo($scope, "consts");
 
   $scope.submitAddUser = function (user) {
@@ -274,40 +274,33 @@ monopolyControllers.controller('AdminCtrl', function AdminCtrl($scope, Data, $fi
 
 monopolyControllers.controller('AccountCtrl', function AdminCtrl($scope, Data, $firebase, FIREBASE_URL, $firebaseAuth) {
   var ref = firebase.database().ref;
-  var auth = $firebaseAuth(ref);
+  var auth = $firebaseAuth();
   $scope.data = Data;
 
   $scope.login = function (user, callback) {
-    ref.authWithPassword(user, function (error, authData) {
-      if (error) {
-        alert('Login failed: ' + error);
-        console.log("Login Failed!", error);
-      } else {
-        console.log("Authenticated successfully with payload:", authData);
-        if (callback) callback();
-        location.assign('/');
-      }
+    firebase.auth().signInWithEmailAndPassword(user.email, user.password).then((authData) => {
+      console.log("Authenticated successfully with payload:", authData);
+      if (callback) callback();
+      location.assign('/');
+    }).catch((error) => {
+      alert('Login failed: ' + error);
+      console.log("Login Failed!", error);
     });
   }
 
   $scope.createAccount = function (user) {
     if (user.password === user.password2) {
-      ref.createUser({
-        email: user.mail,
-        password: user.password
-      }, function (error, userData) {
-        if (error) {
-          console.log("Error creating user:", error);
-        } else {
-          console.log("Successfully created user account with uid:", userData.uid);
-          alert('Je account is geregistreerd');
-          $scope.login({ email: user.mail, password: user.password }, function () {
-            delete user.password;
-            delete user.password2;
-            console.log(user);
-            firebase.database().ref.child('users').child(userData.uid).set(user);
-          });
-        }
+      firebase.auth().createUserWithEmailAndPassword(user.mail, user.password).then((userData) => {
+        console.log("Successfully created user account with uid:", userData.uid);
+        alert('Je account is geregistreerd');
+        $scope.login({ email: user.mail, password: user.password }, function () {
+          delete user.password;
+          delete user.password2;
+          console.log(user);
+          firebase.database().ref('users/'+userData.uid).set(user);
+        });
+      }).catch((error) => {
+        console.log("Error creating user:", error);
       });
     } else {
       alert("Je moet twee keer hetzelfde wachtwoord invullen.");
