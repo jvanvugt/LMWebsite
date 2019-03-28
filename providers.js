@@ -1,16 +1,14 @@
 var monopolyProviders = angular.module('monopolyProviders', []);
 
-monopolyProviders.factory('WithFilterableId', function ($FirebaseArray, $firebaseUtils) {
-  return $FirebaseArray.$extendFactory({
+monopolyProviders.factory('WithFilterableId', function () {
+  return $firebaseArray.$extend({
     $$added: function (snap) {
-      var rec = $FirebaseArray.prototype.$$added.call(this, snap);
+      var rec = $firebaseArray.prototype.$$added.call(this, snap);
       rec._id = rec.$id;
       return rec;
     }
   });
 });
-
-monopolyProviders.constant('FIREBASE_URL', 'https://cognac-monopoly.firebaseio.com/');
 
 monopolyProviders.service('Data', function (Chance, $firebaseObject, EventsFactory, $interval) {
   this.teams = $firebaseObject(firebase.database().ref('teams'));
@@ -374,7 +372,7 @@ monopolyProviders.factory('Chance', function () {
   };
 });
 
-monopolyProviders.service("EventsFactory", function ($FirebaseArray, $firebaseArray, $filter) {
+monopolyProviders.service("EventsFactory", function ($firebaseArray, $filter) {
 
   var eventValue = function (event) {
     var value = 0;
@@ -443,7 +441,7 @@ monopolyProviders.service("EventsFactory", function ($FirebaseArray, $firebaseAr
       return balance;
     },
     $$added: function (snap) {
-      var rec = $FirebaseArray.prototype.$$added.call(this, snap);
+      var rec = $firebaseArray.prototype.$$added.call(this, snap);
       rec._id = rec.$id;
       return rec;
     },
